@@ -1,0 +1,228 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PlushCV - One Page Two Column Resume
+% LaTeX Template
+% Version 1.0 (11/28/2021)
+% Author:
+% Shubham Mazumder (http://mazumder.me)
+%
+% Hacked together from:
+% https://github.com/deedydas/Deedy-Resume
+%
+% IMPORTANT: THIS TEMPLATE NEEDS TO BE COMPILED WITH XeLaTeX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% 1. Figure out a smoother way for the document to flow onto the next page.
+% 3. Add more icon options
+% 4. Fix hacky left alignment on contact line
+% 5. Remove Hacky fix for awkward extra vertical space
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHANGELOG:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Known Issues:
+% 1. Overflows onto second page if any column's contents are more than the vertical limit.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%Icons:
+%%Main: https://icons8.com/icons/carbon-copy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\documentclass[]{plantillas/PlushCV}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\begin{document}
+% TITLE NAME
+	\namesection{Francisco}{Costa Cano}{Investigador en tecnologías cuánticas}{
+		\contactline{\href{https://www.researchgate.net/profile/Francisco-Costa-Cano}{researchgate.net}}
+		{\href{https://www.github.com/podxboq}{podxboq}}
+		{\href{https://www.linkedin.com/in/podxboq}{podxboq}}
+		{\href{mailto:podxboq@gmail.com}{podxboq@gmail.com}}
+		{\href{tel:+346780416}{678 04 16 72}}
+	}
+
+% COLUMN ONE
+	\begin{minipage}[t]{0.70\textwidth}
+		\section{Experiencia}
+		\runsubsection{Qubitalent}
+		\descript{| Investigador en tecnologías cuánticas}
+		\location{Febrero 2024 – Actualidad | Latex}
+		\vspace{\topsep}
+		\begin{tightemize}
+			\sectionsep
+			\item Investigación en Correción cuántica de errores.
+			\item Estudio de framework para una blockchain cuántica.
+		\end{tightemize}
+		\sectionsep
+
+		\runsubsection{GADE Gestión y asesoramiento de empresas}
+		\descript{| Responsable departamento de informática}
+		\location{Abril 2015 – Febrero 2024 | Java, PHP, MariaDB, HTML, CSS, jQuery, Bootstrap, Yii, Wordpress}
+		\vspace{\topsep} % Hacky fix for awkward extra vertical space
+		\begin{tightemize}
+			\sectionsep
+			\item Desarrollo de soluciones internas a petición de los departamentos. Desarrollo del ERP para gestión multidepartamental (Despacho jurídico, correduría de seguros y asesoría laboral, fiscal y contable).
+			\item Programación en Wordpress para página web intranet.
+			\item Soporte usuarios, gestión de incidencias y gestor de compras.
+		\end{tightemize}
+		\sectionsep
+
+		\runsubsection{Leverade, S.L.}
+		\descript{| Jefe de desarrollo }
+		\location{Febrero 2014 – Diciembre 2014 | PHP, mySql, Laravel, HTML, CSS, jQuery, Android, Objective-C}
+		\begin{tightemize}
+			\sectionsep
+			\item Analista y arquitecto de soluciones móviles y entorno web para red social deportiva.
+			\item Jefe de equipo multidisciplinar con desarrollo en Web, dispositivos basados en iOS y android.
+			\item Ganadores del premio Emprendedor XXI en la Región de Murcia.
+		\end{tightemize}
+		\sectionsep
+
+		\runsubsection{DIGIO SOLUCIONES DIGITALES SLNE}
+		\descript{| Analista de proyectos }
+		\location{Septiembre 2009 – Octubre 2013 | Oracle, Forms, Android, PL/SQL, HTML, CSS, XML}
+		\begin{tightemize}
+			\sectionsep
+			\item Desarrollo a medida de soluciones para terceros basado en plataforma cliente/servidor con Oracle y Oracle Forms.
+			\item Desarrollo de aplicaciones móviles basados en android.
+		\end{tightemize}
+		\sectionsep
+
+		\runsubsection{OESIA S.L.}
+		\descript{| Programador Senior y Analista }
+		\location{Octubre 1999 – Septiembre 2009 | Oracle, Forms, Android, PL/SQL, C++, VisualBasic, Pascal}
+		\begin{tightemize}
+			\sectionsep
+			\item Desarrollo a medida de soluciones para terceros basado en plataforma cliente/servidor con Oracle y Oracle Forms.
+			\item Desarrollo de aplicaciones internas en diversos lenguajes.
+		\end{tightemize}
+		\sectionsep
+
+		\runsubsection{Universidad de Murcia}
+		\descript{| Docente }
+		\location{Marzo 1998 – Julio 1998 | Algebra lineal y Geometría Euclidea}
+		\begin{tightemize}
+			\sectionsep
+			\item Profesor en el departamento de álgebra de la facultad de matemáticas.
+			\item Docencia del segundo cuatrimestre en la licenciatura de matemáticas.
+		\end{tightemize}
+		\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     Projects
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\section{Proyectos}
+
+		\runsubsection{SuperTeam}
+		\descript{| Desarrollador, Coordinador}
+		\location{Marzo 2011 - Diciembre 2015 | Android, bash}
+		\begin{tightemize}
+			\item Desarrollo de ROMS personalizadas para dispositivos basados en Android. Desarrollado como proyecto Open Source en \href{https://github.com/SuperTeam}{GitHub} y basado en el proyecto original de Android desarrollado por Google.
+			\item Desarrollo de versiones oficiales de ROMS para \href{https://sonitron.net/nvsbl-colabora-con-superteam-para-el-desarrollo-de-roms/}{NVSBL}.
+		\end{tightemize}
+		\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     AWARDS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section{Awards}
+% \begin{tabular}{rll}
+% 2020	     & Finalist & Lorem Ipsum\\
+% 2018	     & $2^{nd}$ & Dolor Sit Amet\\
+% 2015	     & Finalist  & Cras posuere\\
+% \\
+% \end{tabular}
+% \sectionsep
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     COLUMN TWO
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.25\textwidth}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     SKILLS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		\section{Conocimientos}
+
+		\subsection{Programación}
+		\sectionsep
+		\location{Nivel alto:}
+		PHP \textbullet{} Java \textbullet{} JavaScript \textbullet{} SQL \\ \textbullet{} CSS \textbullet{} HTML \textbullet{} \LaTeX\
+		\location{Experiencia:}
+		Python \textbullet{} C++ \textbullet{} PL/SQL \textbullet{} Shell
+		\location{Familiar:}
+		Lua \textbullet{} Shell \textbullet{} VisualBasic
+		\sectionsep
+
+		\subsection{Librerias/Frameworks}
+		\sectionsep
+		jQuery \textbullet{} Yii \textbullet{} Laravel \textbullet{} WordPress \textbullet{} Qiskit\\
+		\sectionsep
+		\sectionsep
+
+		\subsection{Herramientas/IDES}
+		\sectionsep
+		Git \textbullet{} VisualCode \textbullet{} IntelliJ \textbullet{} Eclipse \textbullet{} Jira
+
+		\sectionsep
+
+%     EDUCATION
+		\section{Educación}
+
+		\subsection{UNIR. Universidad internacional de la Rioja}
+		\descript{Máster en Computación Cuántica}
+		\location{2023}
+		Área de Ingeniería y Tecnología \\
+
+		\sectionsep
+
+		\subsection{Universidad de Murcia}
+		\descript{Doctor en matemáticas}
+		\location{2006}
+		Facultad de Matemáticas \\
+		\sectionsep
+
+		\section{Otros méritos}
+		\href{https://www.credly.com/badges/dfb0ee71-da1d-4627-84e6-526c244d323d}{\textbf{Qiskit Global Summer School}\\ Quantum Excellence}
+		\\
+		\location{2023}
+		\sectionsep
+		{\textbf{Premio Emprendedor XXI}} Ganadores
+		\\
+		\location{2014}
+%		\begingroup
+%		\setbox0=\hbox{
+%			\includegraphics[scale=0.1,trim={0 1.25cm -0.4cm 0cm}]{icons/main/phone.png}\hspace{0.3cm}+19999999999
+%		}
+%		\parbox{\wd0}{\box0}\endgroup
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     COURSEWORK
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section{Coursework}
+
+% \subsection{Graduate}
+% Graduate Algorithms \textbullet{}\\
+% Advanced Computer Architecture \textbullet{}\\
+% Operating Systems \textbullet{}\\
+% Artificial Intelligence \textbullet{}\\
+% Visualization For Scientific Data \\
+% \sectionsep
+
+% \subsection{Undergraduate}
+
+% Database Management Systems \textbullet{}\\
+% Object Oriented Analysis and Design \textbullet{}\\
+% Artificial Intelligence and Expert Systems \textbullet{}\\
+% Scripting Languages and Web Tech \textbullet{}\\
+% Software Engineering \\
+
+	\end{minipage}
+\end{document}  \documentclass[]{article}
