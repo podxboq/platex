@@ -1,0 +1,49 @@
+\section{Quantum Operators on a (real-valued) Qubit}
+\begin{introduction}
+	\item Operations on the Unit Circle
+	\item Rotations
+	\item Reflections
+	\item Quantum Tomography
+\end{introduction}
+
+\subsection{Operations on the Unit Circle}
+Any real-valued quantum state $\ket{a}$ is a point in the unit circle, and it can be described by an angle, say $\theta\in [0, 2\pi)$:
+\begin{equation*}
+	\ket{a} = (\cos\theta, \sin\theta)
+\end{equation*}
+
+We can set the qubit to the state $\ket{a}$ by using a rotation operator between $\ket{0}$ and $\ket{1}$ with angle $\theta$.
+
+\subsection{Rotations}
+The matrix form of a rotation is as follows:
+\begin{equation*}
+	R(\theta)=\begin{pmatrix}
+		          \cos\theta & \sin\theta\\ -\sin\theta & \cos\theta
+	\end{pmatrix}
+\end{equation*}
+
+where $\theta$ is the angle of rotation (in counter-clockwise direction).
+
+\subsection{Reflections}
+The following operators are reflections on the unit circle.
+\begin{itemize}
+	\item Z: The line of reflection is x-axis.
+	\item X: The line of reflection is y=x.
+	\item H: The line of reflection is y=$\tan(\pi/8)$x.
+\end{itemize}
+
+The matrix form of reflection with the angle $\theta$ of the line of reflection, is represented as follows:
+\begin{equation*}
+\gate{Ref}(\theta)=\begin{pmatrix}
+	                   \cos(2\theta) & \sin(2\theta) \\ \sin(2\theta) & -\cos(2\theta)
+\end{pmatrix}
+\end{equation*}
+
+\subsection{Quantum Tomography}
+We study a simplified version of quantum tomography here.
+Suppose that you are given 1000 copies of a qubit and your task is to learn the state of this qubit.
+
+But this is not possible, because if we have a qubit and its state is either $\ket{a}$ or $-\ket{a}$, after measurement, the probabilities of observing state $\ket{0}$ and state $\ket{1}$ are the same for $\ket{a}$ and $-\ket{a}$.
+Therefore, we cannot distinguish them.
+
+Even though the states $\ket{a}$ and $-\ket{a}$ are different mathematically, they are assumed as identical from the physical point of view.

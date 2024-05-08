@@ -1,0 +1,68 @@
+\section{Basics of Classical Systems}
+\begin{introduction}
+	\item One Bit
+	\item Coin Flip
+	\item Probabilistic Operator
+	\item Probabilistic Evolution
+	\item Correlation
+\end{introduction}
+
+\subsection{One Bit}
+Bit (or binary digit) is the basic unit of information used in computer science and information theory.
+It can also be seen as the smallest `useful' memory unit, which has two states named 0 and 1.
+At any moment, a bit can be in either state 0 or state 1.
+
+We can apply four different operators to a single bit:
+\begin{itemize}
+	\item Identity: I(0)=0 and I(1)=1
+	\item Negation: NOT(0)=1 and NOT(1)=0
+	\item Constant (Zero): ZERO(0)=0 and ZERO(1)=0
+	\item Constant (One): ONE(0)=1 and ONE(1)=1
+\end{itemize}
+
+Based on this observation, we can classify the operators into two types: Reversible and Irreversible.
+\begin{itemize}
+	\item If we can recover the initial value(s) from the final value(s), then the operator is called reversible like Identity and NOT operators.
+	\item If we cannot know the initial value(s) from the final value(s), then the operator is called irreversible like ZERO and ONE operators.
+\end{itemize}
+
+\subsection{Coin Flip: A Probabilistic Bit}
+We have two different outcomes: heads (0) and tails (1).
+We use a column of size 2 to show the probabilities of getting heads and getting tails.
+For the fair coin, our information after the coin-flip will be $\begin{pmatrix} 0.5\\0.5
+\end{pmatrix}$.
+
+
+In general, a probabilistic state is a vector with coefficients over the standard basis, with certain properties:
+\begin{itemize}
+	\item Each coefficient is non-negative.
+	\item The summation of coefficients is 1.
+\end{itemize}
+
+\begin{definition}
+We can say that a probabilistic state is a probability distribution over deterministic states.
+We can show all information as a single mathematical object, which is called as a \textbf{stochastic vector}.
+\end{definition}
+
+\subsection{Probabilistic Operator}
+
+\begin{definition}
+The transition probabilities between two stochastics vectors is called a \textbf{probabilistic operator}, and can be represented as a square matrix called \textbf{stochastic matrix}.
+\end{definition}
+
+For a probabilistic matrix, each column represents the transition probabilities from a state to all states.
+Therefore, the summation of all entries in each column is 1.
+
+\subsection{Probabilistic Evolution}
+A probabilistic state is a stochastic vector, say $v$.
+A probabilistic operator is a stochastic matrix, say $A$,
+If probabilistic operator A is applied to probabilistic state $v$, the new state, say $v^\prime$, is calculated as
+\begin{equation*}
+v^\prime=Av
+\end{equation*}
+\begin{definition}
+In this situation, we call that $v^\prime$ is a \textbf{probabilistic evolution} of $v$.
+\end{definition}
+
+\subsection{Correlation}
+If the state of a composite system cannot be written as the tensor product of the states of its sub-systems, then we can say that the sub-systems are correlated.

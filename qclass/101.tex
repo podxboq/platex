@@ -1,0 +1,56 @@
+\section{Introduction to Programming in Python Applied to Math}
+
+\begin{introduction}
+	\item How to Run the Notebooks
+	\item Math with Python
+\end{introduction}
+
+\subsection{How to Run the Notebooks}
+
+In order to access the content of the QBook101, you have two main options: through Google Colab or by installing a local Jupyter environment.
+
+\subsubsection*{Google Colab}
+
+The notebooks that constitute the QBook101 are ready to be used on the Google Colab platform; the links to access each of them can be found on this webpage that shows the content: https://qworld.net/qbook101/.
+
+We strongly recommend that you keep a copy of the notebook in your personal account, for that choose the option Save a copy in Drive (note that you need a Gmail account for doing this).
+
+\subsubsection*{Local Environment}
+
+To run QBook101 notebooks locally (on your computer), you must install Python and Jupyter and optionally (although highly recommended) Anaconda.
+
+The content of QBook101 is in the repository: https://gitlab.com/qworld/qeducation/qbook101 (the starting point is the notebook START.ipynb).
+
+\subsection{Math with Python}
+
+In Python, we can use code written by others through the import of packages; for example, the math package includes lots of predefine functions that we can use, for instance, the sin() function or the variable pi.
+
+\begin{code}
+from math import sin, pi
+\end{code}
+
+\subsubsection*{Complex Numbers}
+
+In python, we can write complex numbers with the complex() function as follows:
+\begin{code}
+z1 = complex(2, 3)
+print(z1)         # print the complex number 'z1'
+print(z1.real)    # get the real part
+print(z1.imag)    # get the imaginary part
+\end{code}
+
+In Python we can obtain the conjugate of a complex number with the conjugate() method.
+
+\subsubsection*{Vectors and Matrices}
+
+In Python a vector we can write with a list, and a matrix as a list of vectors, as follows:
+
+\begin{code}
+a = [3, -1, 5, -8]
+A =[[-2 ,  3 , 5],
+    [-3 , -3 , 4],
+    [ 1 ,  5 , 6]]
+\end{code}
+
+In Python to find the eigenvalues and eigenvectors of a matrix, we can obtain these values with the linalg.eig() function of the numpy package.
+To calculate the kronecker product of two matrices we use the kron() function of the numpy package.

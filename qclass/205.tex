@@ -1,0 +1,37 @@
+\section{Entanglement and Protocols}
+\begin{introduction}
+	\item Two Qubits
+	\item Phase Kickback
+	\item Entanglement and Superdense Coding
+	\item Quantum Teleportation
+	\item Multiple Control Constructions
+\end{introduction}
+
+\subsection{Two Qubits}
+The state $\ket{ab}$ means that $\ket{a}\otimes\ket{b}$.
+
+The gate $\gate{H}^{\otimes 2}$ means that $\gate{H}\otimes\gate{H}$.
+
+\subsection{Phase Kickback}
+We observe another interesting quantum effect.
+We apply a Controlled-NOT operator, but the controller qubit will be affected!
+
+$\gate{X}^1_2\ket{+-}=\ket{--}$
+
+\subsection{Entanglement and Superdense Coding}
+If the quantum state of two qubits can be written as $\ket{uv}$, then two qubits are not correlated.
+On the other hand, if the quantum state of two qubits cannot be written as $\ket{uv}$, then there is an entanglement between the qubits.
+
+The superdense coding circuit is
+\begin{equation*}
+\gate{H}_1 \gate{X}^1_2 \gate{Z}_{1}\gate{X}^1_2\gate{H}_1
+\end{equation*}
+
+\subsection{Quantum Teleportation}
+The quantum teleportation circuit is
+\begin{equation*}
+	\gate{Z}^1_3\gate{X}^2_3\gate{H}_1\gate{X}^1_{2}\gate{X}^2_3\gate{H}_2
+\end{equation*}
+
+\subsection{Multiple Control Constructions}
+We can have a multi controled gate, for example $X^{1,2}_3$ the Toffoli gate.
