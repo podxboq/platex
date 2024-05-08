@@ -250,25 +250,11 @@
 %import physics package whitout the \qty command for problems with sixunits package
 \usepackage{plantillas/myphysics}
 
-%personal commands
-\newcommand{\B}{\Theta}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\N}{\mathbb{N}}
-\renewcommand{\H}{\mathcal{H}}
-\newcommand{\Q}{\mathcal{Q}}
-\newcommand{\so}{\Rightarrow}
-\newcommand{\define}[1]{\textbf{#1}}
-\newcommand{\pendiente}{\rule{0.5cm}{0.5cm}}
-\newcommand{\set}[1]{\left\{#1\right\}}
-\newcommand{\by}[1]{\stackrel{#1}{\mathstrut{=}}}
-\newcommand{\gate}[1]{\text{#1}}
-\newcommand{\stateket}[3]{\ket{#1}^{#2}_{#3}}
-\newcommand{\stategate}[3]{\gate{#1}^{#2}_{#3}}
-\renewcommand{\boxed}[2]{\textcolor{#1}{%
-	\tikz[baseline={([yshift=-1ex]current bounding box.center)}] \node [rectangle, minimum width=1ex,rounded corners,draw] {\normalcolor$\displaystyle#2$};}}
 \newtheorem{definition}{Definition}[section]
 \newtheorem{notation}{Notation}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{problem}{Problem}[section]
 \newtheorem{solution}{Solution}[section]
+
+%personal commands
+\input{plantillas/mycommands}
