@@ -1,0 +1,136 @@
+\section{Códigos perfectos}
+
+Sobre $\Z_q^n$, como extensión de las operaciones sobre $Z_q$ podemos definir las operaciones : $\forall x, y\in\Z_q^n$
+\begin{align*}
+	x\mas y &= x_1\mas y_1\cdots x_n\mas y_n\\
+	x\menos y &= x\mas (-y)\\
+	x\por y &= x_1\por y_1\cdots x_n\por y_n
+\end{align*}
+
+\begin{definition}
+	Sea $x$ una palabra de longitud $n$, definimos el \define{soporte}{soporte} de $x$ como $sop(x)=\set{i\tq x_i\neq 0, i=1,\dots, n}$.
+\end{definition}
+
+\begin{definition}
+	Sea $x$ una palabra de longitud $n$, se define el \define{peso}{peso} de $x$ a $w(x)=|sop(x)|$.
+\end{definition}
+\begin{lemma}
+	\label{res:distancia-peso}
+	Sean $x, y$ dos palabras de longitud $n$, se tienen los siguientes resultados:
+	\begin{enumerate}
+		\item $w(x) = d(\vec{0},x)\so w(x)=n-\sum_{i=1}^n \delta_{0x_i}$.
+		\item $d(x,y)=w(x\menos y)$.
+		\item Si $q$ es primo, $w(x\menos y)=w(x)+w(y)-2w(x\por y)$.
+	\end{enumerate}
+\end{lemma}
+
+\begin{lemma}
+	Sean $q, n, k, d\in\N$ con $d$ impar y $q$ primo.\ Existe $C$ un $(q, n, k, d)$-código con $q$ primo si y sólo si existe $C'$ un $(q, n+1, k, d+1)$-código.
+\end{lemma}
+\begin{proof}
+	$\so$) Dado $C=\set{x_1, \dots, x_k}$ un $(q, n, k, d)$-código, podemos construir $C'=\set{y_1,\dots, y_k}$ un $(q, n+1, k, d+1)$-código binario definiendo
+
+	\[
+		y_i=\begin{cases}
+			    x_{i1}\cdots x_{in}0 & \text{ si $w(x_i)$ es par}\\
+			    x_{i1}\dots x_{in}1 & \text{ si $w(x_i)$ es impar}
+		\end{cases}
+	\]
+	Por construcción se tiene que $w(y_i)$ siempre es par y por tanto se tendrá también que $d(y_i, y_j)$ es par pues
+	\[
+		d(y_i, y_j) = w(y_i) + w(y_j) - 2 w(y_i\por y_j)
+	\]
+	Por lo tanto $r(C')$ es par.\ Por otra parte se tiene que
+	\begin{align*}
+		d(y_i, y_j) = d(x_i, x_j)+\delta_{x_{in+1}x_{jn+1}}\so d(y_i, y_j)\geq d(x_i, x_j) \so r(C')\geq r(C)
+	\end{align*}
+	Como $d=r(C)$ es impar, la desigualdad es estricta, pero como existen al menos dos palabras clave $x_l, x_m$ tal que $d(x_l, x_m) = d$, tenemos que $d(y_l, y_m) = d+1$ alcanzando la igualdad buscada.
+
+	$\Leftarrow$) Para el recíproco sea $C$ un $(q, n+1, k, d+1)$-código y dos palabras clave $x_l$ y $x_m$ de $C$  para las cuales $d(x_l, x_m) = d+1$, sea $i$ un índice donde $x_{li}\neq x_{mi}$, y por permutación llevemos $C$ a otro código equivalente, y por tanto con el mismo radio interior, para que $i=n+1$.
+
+	Se construye $C'=\set{y_1,\dots y_k}$ de la siguiente forma
+	\[
+		y_i = x_{i1}\dots x_{in}
+	\]
+	Con el mismo desarrollo que arriba se tiene que $d(y_i, y_j) < d(x_i, x_j)$ con lo que $r(C')< r(C)$ y para comprobar que se alcanza la igualdad buscada tenemos que $d(y_l, y_k) = d(x_l, x_k)-1=d+1-1=d$.
+\end{proof}
+
+\begin{theorem}[Sphere-packing o Hamming bound]
+	Un $(q, n, M, 2t+1)$-código satisface $M|B(0, t)|\leq 2^n$.
+\end{theorem}
+
+\begin{definition}
+	Diremos que un $(q, n, M, 2t+1)$-código es un \define{código perfecto}{codigo_perfecto} si $M|B(0, t)|= 2^n$.
+\end{definition}
+
+Para buscar códigos perfectos no triviales, vamos a centrarnos en una familia de códigos llamados de bloques con diseños balanceados.
+
+\subsection{Códigos de bloques con diseños balanceados}
+\begin{definition}
+Un \define{bloque con diseño balanceado}{bloque-diseño-balanceado} es un conjunto $S$ de $v$ elementos, llamados puntos, una colección de $b$ subconjuntos de $S$ llamados bloques y 3 valores $k, r$ y $\lambda$ tal que
+	\begin{enumerate}
+		\item Cada bloque contiene exactamente $k$ puntos.
+		\item Cada punto pertenece a $r$ bloques.
+		\item Cada par de puntos están juntos en $r$ bloques.
+	\end{enumerate}
+	Un código de estas características de denota un $(b, v, r, k, \lambda)$-diseño.
+\end{definition}
+
+\begin{example}
+	Toma $S=\set{1, 2, 3, 4, 5, 6, 7}$ y los siguientes subconjuntos $S_1=\set{1, 2, 4}, S_2=\set{2, 3, 5}, S_3=\set{3, 4, 6}, S_4=\set{4, 5, 7}, S_5=\set{5, 6, 1}, S_6=\set{6, 7, 2}$ y $S_7=\set{7, 1, 3}$.
+	\[
+		\begin{tabular}{c|ccccccc}
+			& 1 & 2 & 3 & 4 & 5 & 6 & 7\\
+			\hline
+			1& 3 & 1 & 1 & 1 & 1 & 1 & 1\\
+			2& 1 & 3 & 1 & 1 & 1 & 1 & 1\\
+			3& 1 & 1 & 3 & 1 & 1 & 1 & 1\\
+			4& 1 & 1 & 1 & 3 & 1 & 1 & 1\\
+			5& 1 & 1 & 1 & 1 & 3 & 1 & 1\\
+			6& 1 & 1 & 1 & 1 & 1 & 3 & 1\\
+			7& 1 & 1 & 1 & 1 & 1 & 1 & 3
+		\end{tabular}
+		\qquad
+		\begin{tabular}{c|ccccccc}
+			& $S_1$ & $S_2$ & $S_3$ & $S_4$ & $S_5$ & $S_6$ & $S_7$\\
+			\hline
+			1& 1 & 0 & 0 & 0 & 1 & 0 & 1\\
+			2& 1 & 1 & 0 & 0 & 0 & 1 & 0\\
+			3& 0 & 1 & 1 & 0 & 0 & 0 & 1\\
+			4& 1 & 0 & 1 & 1 & 0 & 0 & 0\\
+			5& 0 & 1 & 0 & 1 & 1 & 0 & 0\\
+			6& 0 & 0 & 1 & 0 & 1 & 1 & 0\\
+			7& 0 & 0 & 0 & 1 & 0 & 1 & 1
+		\end{tabular}
+	\]
+	La primera tabla muestra en cuantos subconjuntos está incluido el conjunto $\set{i,j}$ y la segunda tabla muestra a qué conjunto pertenece $i$, visto como matrices tendríamos dos matrices $A=(a_{ij})$ y $B=(b_{ij})$ definidas por
+	\begin{align*}
+		a_{ij} & =|\set{k\tq \set{i,j}\subseteq S_k}|\\
+		b_{ij} & =|\set{i}\cap S_j|
+	\end{align*}
+	La matriz $A$ nos permite comprobar los puntos 2 y 3 de la definición anterior y la matriz $B$ nos permite comprobar los puntos 1 y 2, con lo cual podemos ver que tenemos un $(7, 7, 3, 3, 1)$-diseño.
+\end{example}
+
+\begin{definition}
+	Sea un $(b, v, r, k, \lambda)$-diseño, con bloques $B_1,\dots, B_v$.
+	Definimos la \define{matriz de incidencia}{matriz-incidencia} de $C$ a la matriz $A=(a_{ij})\in M_{v\times b}(\Z_2)$ definida por $a_{ij} = |\set{i}\cap B_j|$.
+\end{definition}
+
+\begin{example}
+	Volviendo al ejemplo anterior, consideremos el conjunto $C=\set{\logical{0}{7}, \logical{1}{7}}\cup \set{a_i}_{i=1}^7\cup \set{b_i}_{i=1}^7$ donde $a_i$ son las filas de la matriz incidencia $B$ y $b_i = -a_i$.
+	Esta construcción nos permite tener un $(7, 16 ,3)$-código perfecto
+\end{example}
+
+\begin{lemma}
+	Sea un $(b, v, r, k, \lambda)$-diseño.\ Se cumple:
+	\begin{itemize}
+		\item $bk=vr$.
+		\item $r(k-1)=\lambda(v-1)$.
+		\item $v\leq b$.
+	\end{itemize}
+\end{lemma}
+
+\begin{definition}
+	Un $(b, v, r, k, \lambda)$-diseño es un \define{diseño simétrico}{diseño-simetrico} si $b=v$.
+	Por el resultado anterior, se tendrá también que $k=r$ y por tanto podemos denotar a estos diseños como un $(v, k, \lambda)$-diseño.
+\end{definition}

@@ -1,0 +1,23 @@
+\section{Ruido en el canal}
+Ahora vamos a tratar estudiar el caso de comunicación con ruido, desde un punto de vista probabilístico.\ Vamos a considerar códigos binarios ($q=2$) y que la probabilidad de que se genere un error es $p$ con independencia del símbolo transmitido, que llamaremos un canal binario y simétrico de error $p$.
+
+La probabilidad de recibir una palabra de $n$ símbolos tenga exactamente $k$ errores es $\binom{n}{k}p^k(1-p)^{n-k}$ y si $C$ es un código de radio interior $d$, la probabilidad de que la palabra recibida sea correctamente corregida es que haya sufrido menos o igual a $s$ errores es $\sum_{k=0}^s \binom{n}{k} p^k(1-p)^{n-k}$ donde $s$ es el grado de corrección de $C$.
+
+Denotaremos por $P_{corr}(C)$ la probabilidad de la correcta corrección de palabras de un código y por $P_{err}(C)$ a la probabilidad de error en la corrección.
+\[
+	P_{corr}(C) = \sum_{k=0}^s \binom{n}{k} p^k(1-p)^{n-k}=(1-p)^{n-s}\sum_{k=0}^s \binom{n}{k} p^k(1-p)^{s-k}
+\]
+
+Esta expresión nos permite ver que para cualquier canal con ruido, podemos usar códigos con longitudes de palabras $n$ tan grandes como queramos para que la probabilidad de corrección sea tan grade como queramos.\ Sin embargo, no podemos saturar el canal con cualquier longitud, pues el canal tiene una capacidad de transmisión, tenemos que calcular y saber obtener el código cuya longitud y grado de corrección permita una correcta transmisión/corrección.
+
+Recordemos que para un canal de transmisión con ruido definido por una variable de probabilidad aleatoria $X$ con probabilidades $p_x=P(X=x)$, se define la \define{entropía de Shannon}{entropia-shannon} por $H(X)=\sum_{x\in X}p_x \log_2(p_x)$~\cite{shannon}.
+En este contexto, la entropía de Shannon es $H(X)=p \log_2(p) + (1-p) \log_2(1-p)$.
+
+\begin{definition}
+	Llamamos \define{capacidad}{capacidad} $C(p)$ de un canal binario y simétrico $F$ a $C(F)=1+H(F)$.
+\end{definition}
+
+Terminamos el capítulo recordando el teorema de Shannon
+\begin{lemma}
+	Sea $F$ un canal binario y simétrico de error $p$ y $R$ un valor menor que la capacidad de $F$.\ Para todo $\epsilon>0$ existe un valor de $n$ y un $[2, n, k]$-código tal que $k/n\geq R$ y $P_{err}(C)<\epsilon$.
+\end{lemma}

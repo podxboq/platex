@@ -1,0 +1,140 @@
+\section{Códigos lineales}
+A lo largo de este capítulo consideramos que el alfabeto $\Gamma$ es el cuerpo de Galois $GF(q)$ donde $q$ es una potencia de un primo y que $\Gamma^n$ es el espacio vectorial $V(n, q)$.
+\begin{definition}
+	Un código de $GF(q)$ se dice que es un \define{código lineal}{codigo-lineal} si es un subespacio vectorial de $V(n, q)$ para algún $n\in\N$.
+	Si $C$ es un código lineal de $V(n, q)$ de dimensión $k$ y radio interior $d$, diremos que $C$ es un $[q, n, k, d]$-código o un $[q, n, k]$-código.
+\end{definition}
+Observaremos que un $[q, n, k, d]$-código es un $(q, n, q^k, d)$-código y que dado dos palabras claves, su diferencia también es una palabra clave, obliga a que $\vec{0}$ sea también una palabra clave y junto con el resultado~\ref{res:distancia-peso}, obtenemos el siguiente resultado.
+\begin{lemma}
+	\label{res:distancia-peso-lineal}
+	Para todo código lineal $C$ existe $x\in C$ tal que $r(C)=w(x)=\min\set{d(\vec{0}, a)\ \forall a\in C}$.
+\end{lemma}
+
+\subsection{Matriz generador}
+Sea $C$ un código lineal, como subespacio vectorial finito, tenemos una base por el cual todo elemento de $C$ es combinación lineal, y asociada a esta base tenemos una matriz, que nos permite identificar códigos equivalentes con matrices equivalentes en el sentido que veremos más adelante.
+
+\begin{definition}
+	Sea $C$ un $[q, n, k]$-código lineal, dada una base $B=\set{\lista{x_1}{x_k}}$ llamaremos matriz generadora de $C$ asociada a $B$ a la matriz $X=(x_{ij})\in M_{k\times n}(GF(q))$.
+\end{definition}
+Como vemos por la definición, un código lineal tiene tantas matrices generadoras como bases distintas, por eso es conveniente establecer características que nos permitan saber cuando distintas matrices generan el mismo código o código equivalentes.
+\begin{example}
+	\label{ex:matriz-generador}
+	Consideremos el código $C$ formado por las siguientes palabras de $\Z_2^7$
+	\begin{align*}
+		\vec{0} & \ & \vec{1} & \ \\
+		x_1 &= 1000101 & y_1 &= 0111010\\
+		x_2 &= 1100010 & y_2 &= 0011101\\
+		x_3 &= 0110001 & y_3 &= 1001110\\
+		x_4 &= 1011000 & y_4 &= 0100111\\
+		x_5 &= 0101100 & y_5 &= 1010011\\
+		x_6 &= 0010110 & y_6 &= 1101001\\
+		x_7 &= 0001011 & y_7 &= 1110100
+	\end{align*}
+	Para calcular el radio interior de $C$ por el resultado~\eqref{res:distancia-peso-lineal} simplemente tenemos que calcular los pesos de cada elemento
+	\begin{align*}
+		w(0) &= 0 & w(1) &= 7 \\
+		w(x_1) &= 3 & w(y_1) &= 4 \\
+		w(x_2) &= 3 & w(y_2) &= 4 \\
+		w(x_3) &= 3 & w(y_3) &= 4 \\
+		w(x_4) &= 3 & w(y_4) &= 4 \\
+		w(x_5) &= 3 & w(y_5) &= 4 \\
+		w(x_6) &= 3 & w(y_6) &= 4 \\
+		w(x_7) &= 3 & w(y_7) &= 4 \\
+	\end{align*}
+	Así que $C$ es un $(2, 7, 16, 3)$-código que también es un $[2, 7, 4, 3]$-código lineal.
+	Para buscar una base de $C$ observemos que
+	\begin{align*}
+		y_i &= \vec{1}+x_i\ \forall i=1,\dots, 7\\
+		x_4 &= \vec{1}+x_1+x_2\\
+		x_5 &= \vec{1}+x_2+x_3\\
+		x_6 &= x_1+x_2+x_3\\
+		x_7 &= \vec{1}+x_1+x_3
+	\end{align*}
+	Por tanto $B=\set{\vec{1}, x_1, x_2, x_3}$ es una base de $C$ que tiene como matriz asociada a
+	\[
+		X=\begin{pmatrix*}
+			  1&1&1&1&1&1&1\\
+			  1&0&0&0&1&0&1\\
+			  1&1&0&0&0&1&0\\
+			  0&1&1&0&0&0&1
+		\end{pmatrix*}\in M_{4\times 7}(\Z_2)
+	\]
+\end{example}
+
+\subsection{Código lineales equivalentes}
+Para código lineales, vamos a modificar ligeramente la definición de códigos equivalentes que se dio en~\eqref{def:codigo-equivalente} pues tomando la misma relación de equivalencia, sólo vamos a restringir las transmutaciones válidas a las traslaciones no nulas sobre un índice, es decir, para las que exista $\lambda\neq 0\in GF(q)$ y $\maps{T_{i\lambda}}{V(n, q)}{V(n, q)}$ a la aplicación definida por
+\[
+	T_{i\lambda}(\palabraG)=y_1\cdots y_n \text{ donde } y_k = \begin{cases}
+		                                                            \lambda x_i \text{ si } k = i \\
+		                                                            x_k \text{ resto}
+	\end{cases}
+\]
+
+Lo que estamos buscando con esta definición es obtener transformaciones de códigos lineales que conlleven asociadas matrices que generen las mismas ecuaciones como generadores, y como recordaremos, cuando se resuelven ecuaciones lineales, al trabajar con la matriz asociada teníamos permitidos los siguientes operaciones
+\begin{itemize}
+	\item[R1] $\Rr{i}{j}$ Permutación de filas.
+	\item[R2] $\Rrr{i}{\lambda}$ Multiplicación de fila por escalar no nulo.
+	\item[R3] $\Rrrr{i}{j}{\lambda}$ Cambio de una fila por el resultado de suma por otra fila multiplicada por un escalar no nulo.
+	\item[C1] $\Cc{i}{j}$Permutación de columnas.
+	\item[C2] $\Ccc{i}{\lambda}$ Multiplicación de columna por escalar no nulo.
+\end{itemize}
+
+\begin{example}
+	En el ejemplo~\eqref{ex:matriz-generador} hemos cogido las palabras clave $\vec{1}, x_1, x_2, x_3$ como base de $C$ pero podríamos perfectamente haber considerado como base las palabras clave $\vec{1}, x_3, x_4, x_5$ con lo que hubiéramos obtenido la matriz generadora
+	\[
+		Y=\begin{pmatrix*}
+			  1&1&1&1&1&1&1\\
+			  0&1&1&0&0&0&1\\
+			  1&0&1&1&0&0&0\\
+			  0&1&0&1&1&0&0
+		\end{pmatrix*}
+	\]
+	Veamos como obtener la matriz $Y$ a partir de la $X$ con las operaciones R1, R2, R3, C1 y C2.
+	\begin{align*}
+		X&=\begin{pmatrix*}
+			   1&1&1&1&1&1&1\\
+			   1&0&0&0&1&0&1\\
+			   1&1&0&0&0&1&0\\
+			   0&1&1&0&0&0&1
+		\end{pmatrix*}\Rr{2}{4}
+		\begin{pmatrix*}
+			1&1&1&1&1&1&1\\
+			0&1&1&0&0&0&1\\
+			1&1&0&0&0&1&0\\
+			1&0&0&0&1&0&1
+		\end{pmatrix*}\Rrrr{4}{3}{1}
+		\begin{pmatrix*}
+			1&1&1&1&1&1&1\\
+			0&1&1&0&0&0&1\\
+			1&1&0&0&0&1&0\\
+			0&1&0&0&1&1&1
+		\end{pmatrix*}\Rrrr{4}{1}{1}\\
+		&\Rrrr{4}{1}{1}
+		\begin{pmatrix*}
+			1&1&1&1&1&1&1\\
+			0&1&1&0&0&0&1\\
+			1&1&0&0&0&1&0\\
+			1&0&1&1&0&0&0
+		\end{pmatrix*}\Rr{4}{3}
+		\begin{pmatrix*}
+			1&1&1&1&1&1&1\\
+			0&1&1&0&0&0&1\\
+			1&0&1&1&0&0&0\\
+			1&1&0&0&0&1&0
+		\end{pmatrix*}\Rrrr{4}{2}{1}
+		\begin{pmatrix*}
+			1&1&1&1&1&1&1\\
+			0&1&1&0&0&0&1\\
+			1&0&1&1&0&0&0\\
+			1&0&1&0&0&1&1
+		\end{pmatrix*}\Rrrr{4}{1}{1}\\
+		&\Rrrr{4}{1}{1}
+		\begin{pmatrix*}
+			  1&1&1&1&1&1&1\\
+			  1&0&1&1&0&0&0\\
+			  0&1&0&1&1&0&0\\
+			  0&1&0&1&1&0&0
+		\end{pmatrix*}=Y
+	\end{align*}
+
+\end{example}

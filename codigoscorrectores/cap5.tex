@@ -1,0 +1,87 @@
+\section{Codificando y decodificando con códigos lineales}
+Sea $C$ un $[q, n, k, d]$-código lineal con matriz generadora $G$, todo elemento $x=\palabraG\in C$ se puede poner de la forma $x=yG$ para algún $y\in\Z_q^k$, podemos identificar cada palabra clave de $C$ con un elemento de $\Z_q^k$ y obviamente al revés también, por la propia definición de generador, podemos considerar un isomorfismo entre $C$ y $\Z_q^k$.
+
+\begin{definition}
+	Sea $C$ un $[q, n, k, d]$-código lineal con matriz generadora $G$, llamaremos \define{codificación}{codificacion} de $C$ al isomorfismo $\maps{d}{Z_q^k}{C}$ definido por $d(y)=yG$.\ Al isomorfismo inverso lo llamaremos \define{decodificación}{decodificación} de $C$.
+\end{definition}
+
+\subsection{Codificación}
+Vamos a definir un tipo muy especial, mediante las operaciones R1, R2, R3, C1 y C2 podemos transformar al matriz generadora $G$ en otra equivalente de la forma $[I_k|G']$ donde $G'\in M_{k\times (n-k)}(\Z_q)$, y con esta matriz observamos que dado $y=\palabraN{y}$ la palabra clave en $C$ viene dado por $x=y[I_k|G']$ y por lo tanto
+\begin{align*}
+	x_i &= \sum_{j=1}^k y_j [I_k|G']_{ji}=\begin{cases}
+		                                     \sum\limits_{j=1}^k y_j (I_k)_{ji}=y_i \text{ si $1\leq i \leq k$} \\
+		                                     \sum\limits_{j=1}^k y_j G'_{jk} \text{ si $i > k$}
+	\end{cases}
+\end{align*}
+Obtenemos así que las palabras $y$ en $\Z_q^k$ se convierten en palabras clave de la forma $yy'$ en $\Z_q^n$ donde $y'\in\Z_q^{n-k}$.
+
+\begin{definition}
+	Sea $C$ un $[q, n, k]$-código lineal con matriz generadora $G$.\ Diremos que la matriz está en su \define{forma estándar}{matriz-forma-estandar} si $G=[I_k|G']$ con $G'\in M_{k\times (n-k)}(\Z_q)$.
+\end{definition}
+
+\begin{definition}
+	Sea $C$ un $[q, n, k]$-código lineal con matriz generadora $G=[I_k|G']$ en su forma estándar, a la palabra $yG'$ donde $y\in \Z_q^{n-k}$ se la llamamos \define{palabra de control}{palabra-control}.
+	A la matriz $G'$ la llamamos \define{matriz de control}{matriz-control}.
+\end{definition}
+
+Esta manera de codificar nos permite acceder a la información que hemos codificados y además, las palabras de control nos añade una protección adicional ante fallos en la codificación.
+
+\begin{example}
+	Siguiendo con el ejemplo~\ref{ex:matriz-generador}, es sencillo encontrar que una matriz generadora de $C$ en su forma estándar es
+	\[
+		G=\begin{pmatrix*}
+				1&0&0&0&1&0&1\\
+				0&1&0&0&1&1&1\\
+				0&0&1&0&1&1&0\\
+				0&0&0&1&0&1&1
+		\end{pmatrix*}
+	\]
+	La matriz de control es
+	\[
+		G'=\begin{pmatrix*}
+			  1&0&1\\
+			  1&1&1\\
+			  1&1&0\\
+			  0&1&1
+		\end{pmatrix*}
+	\]
+	Y la codificación de la palabra $y=1110$ nos genera la palabra de control $y'=100$ y por tanto obteniendo la palabra clave $x=1110100$.
+\end{example}
+
+\subsection{Decodificación}
+Recordemos del primer capítulo que al recibir una palabra que no estuviera en el código $C$, hay que averiguar si el error producido era recuperable, y que esta situación se daba cuando la distancia de la palabra recibida a $C$ era menor o igual al grado de corrección de $C$.
+
+Cuando trabajamos con código lineales, si $x\in C$ es la palabra clave enviada y $\push{x}$ la palabra recibida, tenemos que
+
+\begin{equation}
+	\label{eq:distancia-recibida-codigo-lineal}
+	d(\push{x}, C) = \min_{y\in C}\set{d(\push{x}, y)}= \min_{y\in C}\set{w(\push{x}\menos y)}=w(\push{x}\menos C)
+\end{equation}
+
+Veamos con un poco más de detalle los conjuntos $y\menos C$ o lo que es lo mismo $y\mas C$.
+\begin{definition}
+	Sea $C$ un código lineal y $a\in V(q, n)$.\ Definimos el \define{coset}{coset} de $C$ en $a$ a
+	\[
+		a+C=\set{a\mas x\ \forall x\in C}
+	\]
+\end{definition}
+\begin{lemma}
+	Sea $C$ un código lineal y $a, b\in V(q, n)$.\ Se cumple que
+	\begin{itemize}
+		\item $a+C = b+C\iff a\menos b\in C$.
+		\item $(a+C) \cap (b+C) = \emptyset \iff a\menos b\notin C$.
+	\end{itemize}
+\end{lemma}
+
+\begin{lemma}
+Sea $C$ un $[q, n, k, d]$-código lineal.\ Existen $a_1, \dots, a_s$ elementos de $V(q, n)$ donde $s=q^{n-k}$ tal que $V(q,n)$ es unión disjunta de la forma
+	\[
+		V(n, q) = (a_1+C)\cup\dots\cup (a_s+C)
+	\]
+\end{lemma}
+
+Todos los conjuntos de la forma $x+C$ tienen exactamente $q^k$ elementos, uno de ellos es el propio $C$, con lo que podemos considerar $a_1=\vec{0}$.\ Pero no nos interesa cualquier partición en cosets de $V(q, n)$, sino aquellos que nos digan rápidamente a que palabra clave están más próximos, y por~\eqref{eq:distancia-recibida-codigo-lineal} de cada coset nos quedamos como representante aquel que tenga el peso más bajo.
+
+\begin{definition}
+	Sea $C$ un código lineal y $a\in V(q, n)$.\ Definimos el \define{coset}{coset} de $C$ en $a$ a
+\end{definition}

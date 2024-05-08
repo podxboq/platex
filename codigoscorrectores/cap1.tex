@@ -1,0 +1,168 @@
+\section{Introducción a los códigos de corrección de errores}
+
+Cuando un mensaje es enviado, aún cuando se pueda garantizar su recepción, se debe también asegurar que el mensaje no ha sido alterado o que si ha sido modificado, se tiene que poder recuperar la información original.
+
+Para usar un canal de transmisión digital, el mensaje a de ser codificado y enviado a través de un canal, y en el mejor de los casos llega al receptor sin alteración del contenido.
+Sin embargo la situación real es que no podemos garantizar la no modificación del mensaje, a esta situación se conoce como un \define{canal con ruido}{canal-ruido}.
+
+Así se hace invitable que el emisor y receptor acuerden mecanismos que permitan garantizar una perfecta comunicación entre ellos.
+El emisor tiene que codificar el mensaje fácil de transmitir y que permite analizar para buscar y corregir errores en la transmisión.
+El receptor tiene que decodificar el mensaje y realizar el proceso acordado para recuperar el mensaje original, estas técnicas varían en función del ruido que tenga el canal a usar.
+
+\subsection{Notación}
+La codificación se realiza usando un conjunto finito de símbolos que recibe el nombre de \define{alfabeto}{alfabeto}, a lo largo de este trabajo, se denota a este conjunto con la letra $\Gamma$ y por $q$ a su longitud o cardinal, $q=|\Gamma|$, cuando se quiera hacer referencia a la longitud del alfabeto, se dirá que $\Gamma$ es un $q$-alfabeto.
+Se prestará especial atención al alfabeto digital por excelencia, $\Gamma = \Z_2 = \set{0, 1}$ también llamado \define{alfabeto binario}{alfabeto-binario}.
+
+Hay que recordar, que en general sobre $\Z_q$ se tiene definido una suma interna, muchas veces llamada suma directa y que se denota como $\mas$ y que está definido como $x\mas y = (x+y)\bmod q$.
+
+\begin{definition}
+	Sea $\Gamma$ un $q$-alfabeto y $n\in\N$.
+	Un \define{$(q, n)$-código}{q-codigo} es cualquier subconjunto de $\Gamma^n$.
+	Los $(2, n)$-códigos también se llaman \define{códigos binarios}{codigo-binario}.
+\end{definition}
+
+\begin{definition}
+	Sea $\Gamma$ un $q$-alfabeto y $C$ un $(q, n)$-código.
+	Una \define{palabra}{palabra} de longitud $n$ o simplemente palabra, es un elemento de $\Gamma^n$, que se llama \define{palabra clave}{palabra-clave} si es un elemento de $C$.
+\end{definition}
+
+Para simplificar notación, cuando se diga que $x\in\Gamma^n$ es una palabra, se entenderá que $x_i\in\Gamma$ es la $i$-ésima coordenada de $x$ y cuando se diga que $x_i\in\Gamma^n$ es una palabra, se entenderá que $x_{ij}\in\Gamma$ es la $j$-ésima coordenada de $x_i$.
+Cuando se especifique una palabra en sus coordenadas, en vez de escribir $(x_1,\dots,x_n)\in\Gamma^n$ se escribirá como $x_1\cdots x_n$.
+Cuando todos las coordenadas $x_i$ sean iguales se escribirá $\vec{x}_i$.
+
+\begin{example}
+	Sea el $6$-alfabeto $\Gamma=\set{1, 2, 3, 4, 5, 6}$, los valores de lanzar un dado
+	y el $(6, 5)$-código $C=\set{\vec{1}, \vec{2}, \vec{3}, \vec{4}, \vec{5}, \vec{6}}$.
+	Tras lanzar el dado 3 veces y obtener el resultado 1, 2, 5 se codifica como $\vec{1}\vec{2}\vec{5}$ y es enviado por un canal con ruido que modifica el mensaje y es recibido como 114142235255455.
+
+	Con esta técnica podemos recuperar el mensaje original pues es fácil ver como era el mensaje original
+	\begin{align*}
+		11414 & \so 11111 \\
+		22352 & \so 22222 \\
+		55455 & \so 55555
+	\end{align*}
+\end{example}
+
+Se denota por $\push{x}$ a una palabra recibida a través de un canal con ruido cuando se ha enviado una palabra clave $x\in C$.
+Análogamente se denota por $\pull{x}$ a la palabra clave usada en el envío de una palabra recibida $x$.
+
+Así que podemos resumir que el objetivo de los códigos de corrección de errores es identificar bajo que condiciones dado $\Gamma$ un $q$-alfabeto se puede construir $C$ un $(q, n)$-código para el cual
+\[
+	\forall y\in\Gamma^n\ \exists!\ x\in C \tq y = \push{x}
+\]
+
+\subsection{Distancia de Hamming}
+
+Para cualquier conjunto finito $\Gamma$ de $q$ elementos, se puede identificar $\Gamma$ unívocamente con $\Z_q$, así que a partir de este usaremos indistintamente $\Gamma$ o $\Z_q$ como $q$-alfabeto.
+
+Una manera muy sencilla de proteger y recuperar la información que se quiere transmitir, es enviando varias copias del elemento inicial, y comparar todas las copias entre sí, la cantidad suficiente de veces que nos permita recuperar el valor modificado en caso de error.
+
+Para cualquier elemento $x\in\Z_q$ del alfabeto, se codifica mediante repetición en un bloque de longitud $n$, nuestro $(q, n)$-código $C$ será el conjunto $\set{\vec{x}\tq x\in\Z_q}\subset \Z_q^n$, este tipo de código recibe el nombre de \define{$(q, n)$-código de repetición}{codigo-repetion}, de esta manera, si la recepción de la palabra $x$ es tal que no pertenece a $C$, se sabe que ha ocurrido un error, y en algunos casos, se sabrá corregir el error y obtener el elemento originalmente enviado.
+
+\begin{definition}
+	Sean $x=\palabraG$ y $y=\palabraN{y}$ dos palabras de $\Z_q^n$, se llama \define{distancia de Hamming}{distancia_hamming} a
+	\[
+		d(x, y) = n-\sum_{k=1}^n \delta_{x_k y_k}
+	\]
+\end{definition}
+
+Como se comprueba en Hill~\cite{hill_first_1980} la distancia de Hamming es una métrica, y como es la única que se va a considerar se llamará simplemente distancia.
+
+Cuando una palabra $x\in\Z_q^n$ es enviada y el canal lo modifica, lo importante no es cuantos cambios se realizan en $x$, pues a veces un cambio corrige un cambio anterior, así que simplemente hay que saber como se ha recibido, y la mejor forma de medir estos cambios es sabiendo la distancia con respecto a la palabra enviada.
+
+\begin{definition}
+	Sean $C$ un código de $\Z_q^n$ y $x\in C$, se dice que $\push{x}$ es un \define{n-error}{n_error} si $d(x, \push{x})= n$.
+\end{definition}
+
+Se puede definir también la distancia de una palabra a un conjunto y dos valores asociado a un conjunto que se llama el radio interior y el radio exterior.
+
+\begin{definition}
+	Sean $x$ una palabra y $C$ un código de $\Z_q^n$, se llama \define{distancia de x a C}{distancia_conjunto} a
+	\[
+		d(x, C) = \min\set{d(x,y)\ \forall y\in C}
+	\]
+\end{definition}
+
+\begin{definition}
+	Sean $C$ un código de $\Z_q^n$ con al menos dos elementos, se llama \define{radio interior de C}{radio_interior_conjunto} a
+	\[
+		r(C) = \min\set{d(x,y)\ \forall x,y\in C\tq x\neq y}
+	\]
+\end{definition}
+
+\begin{definition}
+	Sean $x\in\Z_q^n$, se llama \define{bola de centro x y radio d}{bola} a
+	\[
+		B(x, d) = \set{y\in\Z_q^n \tq d(x,y)\leq d}
+	\]
+\end{definition}
+
+Utilizando el concepto topológico de frontera, será $\overline{B}(x, d) = \set{y\in\Z_q^n \tq d(x,y)= d}$.
+Con la nomenclatura de las definiciones anteriores, se puede comprobar fácilmente los siguientes resultados:
+\begin{enumerate}
+	\item $x\in C \iff d(x, C) = 0$.
+	\item $r(C) \leq n$.
+	\item $|\overline{B}(x, d)| = \binom{n}{d}(q-1)^d$.
+\end{enumerate}
+
+Una técnica muy habitual de corregir errores es considerar que el elemento recibido hay que decodificarlo a la palabra clave más cercana, es decir, si $C$ es un código y $x\in C$ es enviado, entonces tomamos $n=d(\push{x}, C)$ y un elemento $x'\in C\tq d(\push{x}, x')=n$, hay que considerar códigos para los cuales sin opción se tenga que $x'=x$.
+
+\begin{lemma}
+	Sea $C$ un $(2, n)$-código con radio interno $d$, si $d$ es impar, entonces se puede corregir correctamente a lo más los $\lowerInt{d/2}$-errores.
+\end{lemma}
+\begin{proof}
+	Sea $x\in C$ para el cual $\pull{x}$ es a lo más un $\lowerInt{d/2}$-error, entonces $d(x, \push{x})\leq\lowerInt{d/2}$.
+	Supongamos que existe otra palabra clave $y$ que es igual o más cercano a $\push{x}$, entonces
+	\[
+		d = r(C) \leq d(x, y) \leq d(x, \push{x}) + d(\push{x}, y) \leq \lowerInt{d/2} + d(\push{x}, y) \leq \lowerInt{d/2} + \lowerInt{d/2} < d
+	\]
+	Donde la desigualdad es estricta al ser $d$ impar, por tanto se llega a una contradicción, así que
+	\[
+		C\cap B(\push{x}, \lowerInt{n/2}) = \set{x}\qedhere
+	\]
+\end{proof}
+
+Con el mismo razonamiento, se puede observar que cuando el radio interno de un código es $d$ par, entonces se puede corregir a lo más $\lowerInt{(d-1)/2}$-errores.
+
+\begin{definition}
+	Sea $C$ un código con radio interior $d$.\ Definimos el \define{grado de corrección}{grado-correccion} a $g=\lowerInt{\frac{d+1}{2}}-1$.
+\end{definition}
+
+
+\begin{example}
+	\label{ex:1}
+	Consideremos el siguiente código de $\Z_2^4$, $C=\set{0000, 0101, 1010, 1111}$.
+	\begin{align*}
+		d(0000, 0101) &= 2 & d(0000, 1010) &= 2 & d(0000, 1111) = 4 \\
+		& & d(0101, 1010) &= 2 & d(0101, 1111) = 2 \\
+		& & & & d(1010, 1111) = 2
+	\end{align*}
+	Tenemos que el radio interno de $C$ es $2$, como $\lowerInt{(2-1)/2}=0$ no es un buen código pues ningún error se pueden corregir correctamente.
+
+	Efectivamente, si por ejemplo recibimos la palabra $1011$, no se puede saber si la palabra clave enviada es $1010$ o $1111$, es decir, puede haber ocurrido un sólo error en la cuarta posición o un sólo error en la segunda posición.
+\end{example}
+
+\begin{example}
+	\label{ex:2}
+	Consideremos el siguiente código de $\Z_2^5$, $C=\set{00000, 10101, 11010, 01111}$.
+	\begin{align*}
+		d(00000, 10101) &= 3 & d(00000, 11010) &= 3 & d(00000, 01111) = 4 \\
+		& & d(10101, 11010) &= 3 & d(10101, 01111) = 3 \\
+		& & & & d(11010, 01111) = 3
+	\end{align*}
+	Tenemos que el radio interno de $C$ es $3$, como $\lowerInt{3/2}=1$ pues se pueden corregir correctamente cualquier 1-error.
+
+	Por ejemplo, si recibimos la palabra $10111$, calculando la distancia a $C$ que es
+	\begin{align*}
+		d(10111, 00000) &= 4 & d(10111, 10101) &= 1 & d(10111, 11010) &= 3 & d(10111, 01111) = 2
+	\end{align*}
+	Así que el menor de las distancias es únicamente $10101$ y por tanto podemos corregir el error.
+\end{example}
+
+\begin{definition}
+	Diremos que $C$ es un \define{$(q, n, m, d)$-código}{codigo} si $C\subset\Z_q^n$, $|C| = m$ y $r(C)=d$.
+	Cuando $q=2$ diremos que $C$ es un $(n, m, d)$-código binario.
+\end{definition}
+
+Así el ejemplo~\ref{ex:1} es un $(4, 4, 2)$-código binario, mientras el ejemplo~\ref{ex:2} es un $(5, 4, 3)$-código binario.
+Los $(q, n)$-códigos de repetición son $(q, n, q, n)$-códigos.

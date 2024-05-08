@@ -1,0 +1,88 @@
+\newtheorem{definition}{Definition}[section]
+\newtheorem{lemma}{Definition}[section]
+\newtheorem{example}{Definition}[section]
+\newtheorem{theorem}{Definition}[section]
+\DeclareMathOperator{\tr}{Tr}
+\DeclareMathOperator{\diag}{Diag}
+\newcommand{\matr}[1]{\mathbf{#1}}
+\providecommand{\tq}{\mid}
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Z}{\mathbb{Z}}
+\providecommand{\Q}{\mathbb{Q}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\C}{\mathbb{C}}
+\providecommand{\H}{\mathcal{H}}
+\providecommand{\Im}[1]{Im(#1)}
+\providecommand{\Re}[1]{Re(#1)}
+\let\oldforall\forall
+\renewcommand{\forall}{\oldforall\,}
+\let\oldexists\exists
+\renewcommand{\exists}{\oldexists\,}
+\newcommand{\existsUnique}{\oldexists!\,}
+\providecommand{\conjugate}[1]{\bar{#1}}
+\providecommand{\pescalar}[2]{\langle #1,#2 \rangle}
+\providecommand{\braket}[2]{\left\langle#1\mid#2\right\rangle}
+\providecommand{\bra}[1]{\left\langle#1\right\rvert}
+\providecommand{\ket}[1]{\left\lvert#1\right\rangle}
+\providecommand{\ketbra}[2]{\left\lvert#1\right\rangle\!\left\langle#2\right\rvert}
+\providecommand{\so}{\Rightarrow}
+\renewcommand{\iff}{\Leftrightarrow}
+\providecommand{\by}[1]{\overset{\fbox{\tiny #1}}{=}}
+\providecommand{\byref}[1]{\overset{\fbox{\tiny\ref{#1}}}{=}}
+\providecommand{\maps}[3]{#1:#2\longrightarrow #3}
+\providecommand{\coma}{,\thinspace}
+\providecommand{\pari}[2]{(#1,\thinspace #2)}
+\providecommand{\indexdots}[3]{#1=#2,\ldots,#3}
+\providecommand{\define}[2]{\textbf{#1}\label{def:#2}}
+\providecommand{\avg}[1]{\left\langle#1\right\rangle}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\nor}[1]{\lVert#1\rVert}
+\providecommand{\operatoravg}[3]{\left\langle#1|#2|#3\right\rangle}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\where}{\mathrel{}\middle|\mathrel{}}
+\newcommand{\lista}[2]{#1\coma \dots \coma #2}
+\newcommand{\ndots}[3]{#1 = #2\coma \dots \coma #3}
+%Kets notables
+\newcommand{\ketMas}{\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})}
+\newcommand{\ketMenos}{\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})}
+\newcommand{\ketIMas}{\frac{1}{\sqrt{2}}(\ket{0}+i\ket{1})}
+\newcommand{\ketIMenos}{\frac{1}{\sqrt{2}}(\ket{0}-i\ket{1})}
+\newcommand{\ketBellUno}{\frac{1}{\sqrt{2}}(\ket{00}+\ket{11})}
+\newcommand{\ketBellDos}{\frac{1}{\sqrt{2}}(\ket{00}-\ket{11})}
+\newcommand{\ketBellTres}{\frac{1}{\sqrt{2}}(\ket{10}+\ket{01})}
+\newcommand{\ketBellCuatro}{\frac{1}{\sqrt{2}}(\ket{10}-\ket{01})}
+
+%OPERADORES 2x2
+\newcommand{\matrixX}{\begin{pmatrix}
+	                      0 & 1 \\ 1 & 0
+\end{pmatrix}}
+\newcommand{\matrixY}{\begin{pmatrix}
+	                      0 & -i \\ i & 0
+\end{pmatrix}}
+\newcommand{\matrixZ}{\begin{pmatrix}
+	                      1 & 0 \\ 0 & -1
+\end{pmatrix}}
+\newcommand{\matrixH}{\frac{1}{\sqrt {2}}  \begin{pmatrix}
+	                                           1 & 1 \\ 1 & -1
+\end{pmatrix}}
+%OPERADORES $4x4
+\newcommand{\matrixCNOT}{\begin{pmatrix}
+	                         1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 0
+\end{pmatrix}}
+\providecommand{\logical}[2]{#1_{\shortrightarrow #2}}
+\providecommand{\logicalGeneric}[1]{\logical{#1}{n}}
+\providecommand{\palabra}[2]{#1_1\cdots #1_{#2}}
+\providecommand{\palabraN}[1]{\palabra{#1}{n}}
+\providecommand{\palabraG}{\palabra{x}{n}}
+\providecommand{\push}[1]{\stackrel{\hookrightarrow}{#1}}
+\providecommand{\pull}[1]{\stackrel{\hookleftarrow}{#1}}
+\providecommand{\lowerInt}[1]{\lfloor #1 \rfloor}
+\providecommand{\upperInt}[1]{\lceil #1 \rceil}
+\providecommand{\mas}{\oplus}
+\providecommand{\menos}{\circleddash}
+\providecommand{\por}{\otimes}
+\providecommand{\Rr}[2]{\updownarrow_{#1, #2}}
+\providecommand{\Rrr}[2]{\circlearrowleft_{#1, #2}}
+\providecommand{\Rrrr}[3]{\updownarrow_{#1, #2, #3}}
+\providecommand{\Cc}[2]{\leftrightarrow^{#1, #2}}
+\providecommand{\Ccc}[2]{\circlearrowleft^{#1, #2}}

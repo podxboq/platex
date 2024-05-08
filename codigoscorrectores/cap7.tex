@@ -1,0 +1,60 @@
+\section{Códigos ortogonales}
+Recordemos que el producto interno sobre $\Z_q^n$ se define por
+\[
+	x\cdot y=\sum_{i=1}^n x_i y_i\mod q
+\]
+y que dado un conjunto $X\subset \Z_q^n$ definimos el conjunto ortogonal $X^\perp$ por
+\[
+	X^{\perp}=\set{y\in\Z_q^n\tq y\cdot x = 0\ \forall x\in X}
+\]
+que por las propiedades del producto interno hacen del conjunto ortogonal un subespacio vectorial.
+
+Para códigos lineales $C$, tomando una matriz generadora $G=(g_{ij})$ los elementos $y=\palabraN{y}$ de $C^\perp$ tienen que satisfacer las ecuaciones
+\[
+	\sum_{j=1}^n g_{ij}y_j=0\ \forall i=1,\dots, k
+\]
+que nos permite obtener $n-k$ soluciones linealmente independientes, por lo tanto $\dim(C^\perp)= n-\dim(C)$.
+
+Decir que $C\cdot C^\perp=0\so C\subseteq (C^\perp)^\perp$ y por tanto
+\[
+	\dim(C)\leq \dim((C^\perp)^\perp)= n-dim(C^\perp)= n-(n-dim(C))=\dim(C)\so C=(C^\perp)^\perp
+\]
+Juntando todos estos resultados obtenemos el siguiente resultado
+\begin{lemma}
+	Sea $C$ un $[q, n, k]$-código.\ Se tiene que $C^\perp$ es un $[q, n, n-k]$-código.
+\end{lemma}
+
+\subsection{Matriz de paridad}
+Dado un código lineal $C$ con matriz generadora $G$, tenemos que $C^\perp$ es también un código lineal y por tanto también podemos obtener una matriz generadora $H$ que por definición cumple $GH^T=0$.
+Ya que decir que $C^\perp$ es ortogonal a $C$ es lo mismo que decir que $C$ es ortogonal a $C^\perp$, lo mismo da tener $G$ que $H$ para tener definidos ambos códigos.
+
+\begin{definition}
+	Sea $C$ código lineal.\ Llamamos \define{matriz de paridad}{matriz-paridad} de $C$ a la matriz generadora de $C^\perp$.
+\end{definition}
+
+Podemos obtener la siguiente relación entre ambas matrices
+\[
+	G=[I_k|A]\so H=[-A^T|I_{n-k}]
+\]
+
+\begin{definition}
+	Sea $C$ código lineal.\ Diremos que $H$ la matriz de paridad está en su \define{forma estándar}{matriz-paridad-forma-estandar} si está en la forma $H=[B|I_{n-k}]$.
+\end{definition}
+
+Siguiendo con el ejemplo~\ref{ex:matriz-generador}, cuya matriz generadora en su forma estándar es
+\[
+	G=\begin{pmatrix*}
+		  1&0&0&0&1&0&1\\
+		  0&1&0&0&1&1&1\\
+		  0&0&1&0&1&1&0\\
+		  0&0&0&1&0&1&1
+	\end{pmatrix*}
+\]
+Tiene por tanto la matriz de paridad
+\[
+	H=\begin{pmatrix*}
+		  1&1&1&0&1&0&0\\
+		  0&1&1&1&0&1&0\\
+		  1&1&0&1&0&0&1\\
+	\end{pmatrix*}
+\]

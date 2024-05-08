@@ -1,0 +1,172 @@
+\section{Códigos equivalentes}
+
+Un buen $(q, n, m, d)$-código debe tener las siguientes características:
+\begin{itemize}
+	\item Un valor pequeño de $n$, pues así se transmitirá más rápido.
+	\item Un valor alto de $m$, pues así se enviará más información.
+	\item Un valor alto de $d$, para corregir la mayor cantidad de errores.
+\end{itemize}
+
+Como todas estas características no son posibles, se tiene que valorar que valor se quiere optimizar.
+¿Que relación hay entre estos valores?
+
+En una primera estimación, se tiene que $1\leq m\leq q^n$ y $1\leq d\leq n$.
+Para empezar, vamos a ver como se puede optimizar $m$ cuando fijamos el resto de valores.
+
+\begin{definition}
+	Se denota por $M_q(n, d)$ o cuando sea suficiente por $M$ al mayor valor para el cual existe un $(q, n, M, d)$-código.
+\end{definition}
+
+Es fácil comprobar que $M_q(n, 1)=q^n$, pues es el número máximo de palabras.
+Y por otro lado $M_q(n, n)=q$ ya que por ejemplo, en la posición 1 no puede haber $q+1$ elementos distintos, teniendo así una cota superior, pero como ya se ha visto en el capítulo anterior, tenemos los $(q, n)$-códigos de repetición, lo que nos da la igualdad.
+
+Para estudiar la existencia de códigos y sus propiedades, no tenemos que conocer todos los códigos existentes, sino caracterizar sus propiedades y estudiar el representante de cada tipo de código, para ello vamos a definir el concepto de equivalencia entre código.
+
+\subsection{Permutación de palabras}
+Recordemos que dado un alfabeto $\Gamma$, se denota por $S_\Gamma$ al grupo de las permutaciones de $\Gamma$ y que cuando $\Gamma = \Z_q$ entonces se denota por $S_q$.
+
+\begin{definition}
+	Sea $\Gamma$ un $q$-alfabeto y $\sigma\in S_n$, se define la \define{$\sigma$-permutación de palabras}{permutacion-palabra} como $\maps{P_{\sigma}}{\Gamma^n}{\Gamma^n}$ a la aplicación definida por
+	\[
+		P_{\sigma}(\palabraG)=x_{\sigma(1)}\cdots x_{\sigma(n)}
+	\]
+\end{definition}
+
+Este tipo de aplicación, realiza un cambio en las posiciones de los elementos de la palabra.
+
+\begin{lemma}
+	\label{res:permutacion-igualdad-distancia}
+	Sea $\Gamma$ un $q$-alfabeto y $\sigma\in S_n$, $\forall x,y\in\Gamma^n\so d(x, y) = d(P_\sigma(x), P_\sigma(y))$.
+\end{lemma}
+\begin{proof}
+	Recordemos que $d(x, y) = n-\sum_{i=1}^n \delta_{x_i y_i}$ y que como $\sigma$ es biyectiva se tiene que $\existsUnique j\in\Z_n\tq j = \sigma^{-1}(i)\so x_i=x_{\sigma(j)}\so \delta_{x_i y_i}=\delta_{x_{\sigma(j)} y_{\sigma(j)}}$ y por tanto
+	\[
+		d(x, y) = n-\sum_{i=1}^n \delta_{x_i y_i}=n-\sum_{j=1}^n \delta_{x_{\sigma(j)} y_{\sigma(j)}}=d(P_\sigma(x), P_\sigma(y))
+	\]
+\end{proof}
+
+\begin{lemma}
+	Sea $\Gamma$ un $q$-alfabeto y $\sigma\in S_n$, $\forall x\in\Gamma^n\so d(x, P_\sigma(x))\leq\epsilon(\sigma)$.
+\end{lemma}
+\begin{proof}
+	Sea $A\subset\Z_n$ el conjunto de los elementos que quedan invariantes por $\sigma$ y $B$ el conjunto complementario, por lo tanto, $n = |A|+|B|$, se tiene
+	\begin{itemize}
+		\item $\forall i\in A\ i = \sigma(i)\so x_i =x_{\sigma(i)}\so \delta_{x_i x_{\sigma(i)}}=1\so \sum_{i\in A} \delta_{x_i x_{\sigma(i)}}=|A|$.
+		\item Si $i\in B\ i \neq \sigma(i)$ pero no podemos garantizar que $x_i \neq x_{\sigma(i)}$ así que sólo podemos decir que se puede llamar $x = \sum_{i\in B} \delta_{x_i x_{\sigma(i)}}\geq 0$.
+	\end{itemize}
+	Como $|B|=\epsilon(\sigma)$ se tiene que
+	\[
+		d(x, P_\sigma(x)) = n-\sum_{i=1}^n \delta_{x_i x_{\sigma(i)}}=n-\sum_{i\in A} \delta_{x_i x_{\sigma(i)}}-\sum_{i\in B} \delta_{x_i x_{\sigma(i)}}=n-|A|-x=|B|-x\leq |B|=\epsilon(\sigma)
+	\]
+\end{proof}
+
+\subsection{Transmutación de palabras}
+
+\begin{definition}
+	Sea $\Gamma$ un $q$-alfabeto y $\sigma\in S_\Gamma$, se define la \define{transmutación de palabras sobre el índice $i$}{transmutacion} como $\maps{T_{i\sigma}}{\Gamma^n}{\Gamma^n}$ a la aplicación definida por
+	\[
+		T_{i\sigma}(\palabraG)=y_1\cdots y_n \text{ donde } y_k = \begin{cases}
+			                                                           \sigma(x_i) \text{ si } k = i \\
+			                                                           x_k \text{ resto}
+		\end{cases}
+	\]
+\end{definition}
+
+Al igual que para las permutaciones de palabra, se tienen las siguientes propiedades
+
+\begin{lemma}
+	\label{res:transmutacion-igualdad-distancia}
+	Sea $\Gamma$ un $q$-alfabeto y $\sigma\in S_\Gamma$, $\forall i\leq n, \forall x,y\in\Gamma^n\so d(x, y) = d(T_{i\sigma}(x), T_{i\sigma}(y))$.
+\end{lemma}
+\begin{proof}
+	Recordemos que $d(x, y) = n-\sum_{i=1}^n \delta_{x_i y_i}$ y que como $\sigma$ es biyectiva se tiene que $x_i=y_i\iff \sigma(x_i) = \sigma(y_i)\so \delta_{x_i y_i}=\delta_{\sigma(x_i) \sigma(y_i)}$ y por tanto
+	\[
+		d(x, y) = n-\sum_{k=1}^n \delta_{x_k y_k}=n-\sum_{\substack{k=1\\k\neq i}}^n \delta_{x_k y_k}-\delta_{x_i y_i}=n-\sum_{\substack{k=1\\k\neq i}}^n \delta_{x_k y_k}-\delta_{\sigma(x_i) \sigma(y_i)}=d(T_{i\sigma}(x), T_{i\sigma}(y))
+	\]
+\end{proof}
+
+\begin{lemma}
+	Sea $\Gamma$ un $q$-alfabeto y $\sigma\in S_\Gamma$, $\forall i=1,\dots,n\ \forall x\in\Gamma^n\so d(x, T_{i\sigma}(x))\leq 1$.
+\end{lemma}
+\begin{proof}
+	\[
+		d(x, T_{i\sigma}(x)) = n-\sum_{\substack{k=1\\k\neq i}}^n\delta_{x_k x_k}- \delta_{x_i \sigma(x_i)}=n-(n-1)-\delta_{x_i \sigma(x_i)}\leq 1
+	\]
+\end{proof}
+
+Para hacer referencia a alguna de las dos aplicaciones definidas anteriormente, las nombraremos por \textbf{transformaciones de palabras}, y al conjunto de ellas por $PT(\Gamma)$.
+
+\begin{lemma}
+	\label{res:palabra-transforma-cero}
+	Sea $\Gamma$ un $q$-alfabeto, $\gamma\in\Gamma$ y $x\in\Gamma^n$.
+	Existen $T_1,\cdots,T_n\in PT(\Gamma)$ tal que
+	\[
+		T_n\circ\cdots\circ T_1(x)=\vec{\gamma}
+	\]
+\end{lemma}
+\begin{proof}
+	Sean $x=\palabraG$ una palabras de $\Gamma^n$.
+	Se define $\maps{\sigma_k}{\Gamma}{\Gamma}$ por
+	\[\sigma_k(\alpha)=\begin{cases}
+		              \gamma \text{ si } \alpha = x_k\\
+		              x_k \text{ si } \alpha = \gamma\\
+		              \alpha \text{ resto }
+	\end{cases}
+	\]
+	Definimos las trasmutaciones $T_k=T_{k\sigma_k}$, así aplicando secuencialmente
+	\begin{align*}
+		T_1(x)&=T_{1\sigma_1}(x_1 x_2\cdots x_n)=\sigma_1(x_1)x_2\cdots x_n=\gamma x_2\cdots x_n\so\\
+		T_2T_1(x)&=T_{2\sigma_2}(\gamma x_2\cdots x_n)=\gamma\sigma_2(x_2)\cdots x_n=\gamma \gamma\cdots x_n\so\\
+		&\vdots \\
+		T_n\cdots T_1(x)&=T_{n\sigma_n}(\gamma\cdots x_n)=\gamma\cdots\sigma_n(x_n)=\gamma\cdots \gamma
+	\end{align*}
+\end{proof}
+
+\subsection{Códigos equivalentes}
+Cuando se tiene un código $C$, y $\sigma$ una transformación de palabra, aplicar la transformación a todos los elementos del código, se obtiene el conjunto, $\sigma(C)=\set{\sigma(x) \forall x\in C}$.
+Ya se tiene todos los elementos necesarios para definir la equivalencia de códigos.
+\begin{definition}
+	\label{def:codigo-equivalente}
+	Sea $\Gamma$ un $q$-alfabeto, y $C,C'$ dos $(q, n)$-códigos, diremos que $C$ está en relación con $C'$ si existen $\sigma_1,\cdots,\sigma_m$ transformaciones de palabras tal que $\sigma_m\circ\cdots\circ \sigma_1(C)= C'$.
+\end{definition}
+
+Veamos que la propiedad de estar en relación es una relación de equivalencia.
+\begin{enumerate}
+	\item \textbf{Reflexiva}.\ Ya que la identidad $I$ es una permutación de $\Z_n$, la permutación $P_I$ es una transformación de palabras que es el elemento identidad, por lo tanto $C$ esta en relación consigo mismo.
+	\item \textbf{Simétrica}.\ Todas la permutaciones $\sigma$ de $\Z_n$ y $\theta$ de $\Gamma$ son invertibles cumpliendo que $P_\sigma^{-1}=P_{\sigma^{-1}}$ y $T_{i\theta}^{-1}=T_{i\theta^{-1}}$ se tiene que todas las transformaciones de palabras son invertibles, si $\sigma_m\circ\cdots\circ \sigma_1(C)= C'$ entonces $\sigma_1^{-1}\circ\cdots\circ \sigma_m^{-1}(C')= C$.
+	\item \textbf{Transitiva}.\ Se tienen $C, C'$ y $C''$ $(q, n)$-códigos tales que $\sigma_m\circ\cdots\circ \sigma_1(C)= C'$ y $\theta_l\circ\cdots\circ \theta_1(C')= C''$ entonces $\theta_m\circ\cdots\circ \theta_1\circ\sigma_m\circ\cdots\circ \sigma_1(C)= C''$
+\end{enumerate}
+
+Ahora que tenemos una relación de equivalencia entre código, y estudiar aquellas propiedades que se conserva por equivalencia sólo en un representante del codigo vía conjunto cociente.
+
+Como consecuencia de los resultados~\eqref{res:permutacion-igualdad-distancia} y~\eqref{res:transmutacion-igualdad-distancia} se tiene que
+\begin{lemma}
+	Si $C$ y $C'$ son dos códigos equivalentes entonces $r(C)=r(C')$.
+\end{lemma}
+Al aplicar el resultado~\eqref{res:palabra-transforma-cero} se tiene que
+\begin{lemma}
+	Todo código es equivalente a un código que contenga la palabra $\vec{0}$.
+\end{lemma}
+
+\begin{example}
+	El código binario $C=\set{00100, 00011, 11111, 11000}$ se puede transformar en el código equivalente  $C'=\set{00000, 01101, 10110, 11011}$.
+
+	Las transformaciones de palabras que permiten llegar a $C'$ no son únicas, en este caso se puede hace con dos transformaciones, por ejemplo con $\maps{\sigma}{\Z_5}{\Z_5}$ definido por
+	\[
+		\sigma(x)=\begin{cases}
+			          4 \text{ si } x=2\\
+			          2 \text{ si } x=4\\
+			          x \text{ resto}
+		\end{cases}
+	\]
+	Y la transformación binaria $\maps{\theta}{\set{0, 1}}{\set{0, 1}}$ definida por $\theta(x)=\neg x$.
+	\begin{center}
+		\begin{tabular}{ccc}
+			C     & $T_{3\theta}(C)$ & $P_\sigma(T_{3\theta}(C))$ \\
+			00100 & 00000             & 00000                       \\
+			00011 & 00111             & 01101                       \\
+			11111 & 11011             & 11011                       \\
+			11000 & 11100             & 10110
+		\end{tabular}
+	\end{center}
+\end{example}
