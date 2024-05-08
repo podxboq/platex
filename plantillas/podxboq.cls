@@ -254,7 +254,10 @@
 \newtheorem{notation}{Notation}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{problem}{Problem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{solution}{Solution}[section]
+\newtheorem{example}{Example}[section]
 
 %personal commands
 \input{plantillas/mycommands}

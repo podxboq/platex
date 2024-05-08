@@ -8,11 +8,11 @@ Sobre $\Z_q^n$, como extensión de las operaciones sobre $Z_q$ podemos definir l
 \end{align*}
 
 \begin{definition}
-	Sea $x$ una palabra de longitud $n$, definimos el \define{soporte}{soporte} de $x$ como $sop(x)=\set{i\tq x_i\neq 0, i=1,\dots, n}$.
+	Sea $x$ una palabra de longitud $n$, definimos el \define{soporte} de $x$ como $sop(x)=\set{i\tq x_i\neq 0, i=1,\dots, n}$.
 \end{definition}
 
 \begin{definition}
-	Sea $x$ una palabra de longitud $n$, se define el \define{peso}{peso} de $x$ a $w(x)=|sop(x)|$.
+	Sea $x$ una palabra de longitud $n$, se define el \define{peso} de $x$ a $w(x)=|sop(x)|$.
 \end{definition}
 \begin{lemma}
 	\label{res:distancia-peso}
@@ -60,14 +60,14 @@ Sobre $\Z_q^n$, como extensión de las operaciones sobre $Z_q$ podemos definir l
 \end{theorem}
 
 \begin{definition}
-	Diremos que un $(q, n, M, 2t+1)$-código es un \define{código perfecto}{codigo_perfecto} si $M|B(0, t)|= 2^n$.
+	Diremos que un $(q, n, M, 2t+1)$-código es un \define{código perfecto} si $M|B(0, t)|= 2^n$.
 \end{definition}
 
 Para buscar códigos perfectos no triviales, vamos a centrarnos en una familia de códigos llamados de bloques con diseños balanceados.
 
 \subsection{Códigos de bloques con diseños balanceados}
 \begin{definition}
-Un \define{bloque con diseño balanceado}{bloque-diseño-balanceado} es un conjunto $S$ de $v$ elementos, llamados puntos, una colección de $b$ subconjuntos de $S$ llamados bloques y 3 valores $k, r$ y $\lambda$ tal que
+Un \define{bloque con diseño balanceado} es un conjunto $S$ de $v$ elementos, llamados puntos, una colección de $b$ subconjuntos de $S$ llamados bloques y 3 valores $k, r$ y $\lambda$ tal que
 	\begin{enumerate}
 		\item Cada bloque contiene exactamente $k$ puntos.
 		\item Cada punto pertenece a $r$ bloques.
@@ -113,7 +113,7 @@ Un \define{bloque con diseño balanceado}{bloque-diseño-balanceado} es un conju
 
 \begin{definition}
 	Sea un $(b, v, r, k, \lambda)$-diseño, con bloques $B_1,\dots, B_v$.
-	Definimos la \define{matriz de incidencia}{matriz-incidencia} de $C$ a la matriz $A=(a_{ij})\in M_{v\times b}(\Z_2)$ definida por $a_{ij} = |\set{i}\cap B_j|$.
+	Definimos la \define{matriz de incidencia} de $C$ a la matriz $A=(a_{ij})\in M_{v\times b}(\Z_2)$ definida por $a_{ij} = |\set{i}\cap B_j|$.
 \end{definition}
 
 \begin{example}
@@ -131,6 +131,6 @@ Un \define{bloque con diseño balanceado}{bloque-diseño-balanceado} es un conju
 \end{lemma}
 
 \begin{definition}
-	Un $(b, v, r, k, \lambda)$-diseño es un \define{diseño simétrico}{diseño-simetrico} si $b=v$.
+	Un $(b, v, r, k, \lambda)$-diseño es un \define{diseño simétrico} si $b=v$.
 	Por el resultado anterior, se tendrá también que $k=r$ y por tanto podemos denotar a estos diseños como un $(v, k, \lambda)$-diseño.
 \end{definition}

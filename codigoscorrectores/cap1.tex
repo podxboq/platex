@@ -3,27 +3,28 @@
 Cuando un mensaje es enviado, aún cuando se pueda garantizar su recepción, se debe también asegurar que el mensaje no ha sido alterado o que si ha sido modificado, se tiene que poder recuperar la información original.
 
 Para usar un canal de transmisión digital, el mensaje a de ser codificado y enviado a través de un canal, y en el mejor de los casos llega al receptor sin alteración del contenido.
-Sin embargo la situación real es que no podemos garantizar la no modificación del mensaje, a esta situación se conoce como un \define{canal con ruido}{canal-ruido}.
+Sin embargo la situación real es que no podemos garantizar la no modificación del mensaje, a esta situación se
+conoce como un \define{canal con ruido}.
 
 Así se hace invitable que el emisor y receptor acuerden mecanismos que permitan garantizar una perfecta comunicación entre ellos.
 El emisor tiene que codificar el mensaje fácil de transmitir y que permite analizar para buscar y corregir errores en la transmisión.
 El receptor tiene que decodificar el mensaje y realizar el proceso acordado para recuperar el mensaje original, estas técnicas varían en función del ruido que tenga el canal a usar.
 
 \subsection{Notación}
-La codificación se realiza usando un conjunto finito de símbolos que recibe el nombre de \define{alfabeto}{alfabeto}, a lo largo de este trabajo, se denota a este conjunto con la letra $\Gamma$ y por $q$ a su longitud o cardinal, $q=|\Gamma|$, cuando se quiera hacer referencia a la longitud del alfabeto, se dirá que $\Gamma$ es un $q$-alfabeto.
-Se prestará especial atención al alfabeto digital por excelencia, $\Gamma = \Z_2 = \set{0, 1}$ también llamado \define{alfabeto binario}{alfabeto-binario}.
+La codificación se realiza usando un conjunto finito de símbolos que recibe el nombre de \define{alfabeto}, a lo largo de este trabajo, se denota a este conjunto con la letra $\Gamma$ y por $q$ a su longitud o cardinal, $q=|\Gamma|$, cuando se quiera hacer referencia a la longitud del alfabeto, se dirá que $\Gamma$ es un $q$-alfabeto.
+Se prestará especial atención al alfabeto digital por excelencia, $\Gamma = \Z_2 = \set{0, 1}$ también llamado \define{alfabeto binario}.
 
 Hay que recordar, que en general sobre $\Z_q$ se tiene definido una suma interna, muchas veces llamada suma directa y que se denota como $\mas$ y que está definido como $x\mas y = (x+y)\bmod q$.
 
 \begin{definition}
 	Sea $\Gamma$ un $q$-alfabeto y $n\in\N$.
-	Un \define{$(q, n)$-código}{q-codigo} es cualquier subconjunto de $\Gamma^n$.
-	Los $(2, n)$-códigos también se llaman \define{códigos binarios}{codigo-binario}.
+	Un \define{$(q, n)$-código} es cualquier subconjunto de $\Gamma^n$.
+	Los $(2, n)$-códigos también se llaman \define{códigos binarios}.
 \end{definition}
 
 \begin{definition}
 	Sea $\Gamma$ un $q$-alfabeto y $C$ un $(q, n)$-código.
-	Una \define{palabra}{palabra} de longitud $n$ o simplemente palabra, es un elemento de $\Gamma^n$, que se llama \define{palabra clave}{palabra-clave} si es un elemento de $C$.
+	Una \define{palabra} de longitud $n$ o simplemente palabra, es un elemento de $\Gamma^n$, que se llama \define{palabra clave} si es un elemento de $C$.
 \end{definition}
 
 Para simplificar notación, cuando se diga que $x\in\Gamma^n$ es una palabra, se entenderá que $x_i\in\Gamma$ es la $i$-ésima coordenada de $x$ y cuando se diga que $x_i\in\Gamma^n$ es una palabra, se entenderá que $x_{ij}\in\Gamma$ es la $j$-ésima coordenada de $x_i$.
@@ -57,10 +58,10 @@ Para cualquier conjunto finito $\Gamma$ de $q$ elementos, se puede identificar $
 
 Una manera muy sencilla de proteger y recuperar la información que se quiere transmitir, es enviando varias copias del elemento inicial, y comparar todas las copias entre sí, la cantidad suficiente de veces que nos permita recuperar el valor modificado en caso de error.
 
-Para cualquier elemento $x\in\Z_q$ del alfabeto, se codifica mediante repetición en un bloque de longitud $n$, nuestro $(q, n)$-código $C$ será el conjunto $\set{\vec{x}\tq x\in\Z_q}\subset \Z_q^n$, este tipo de código recibe el nombre de \define{$(q, n)$-código de repetición}{codigo-repetion}, de esta manera, si la recepción de la palabra $x$ es tal que no pertenece a $C$, se sabe que ha ocurrido un error, y en algunos casos, se sabrá corregir el error y obtener el elemento originalmente enviado.
+Para cualquier elemento $x\in\Z_q$ del alfabeto, se codifica mediante repetición en un bloque de longitud $n$, nuestro $(q, n)$-código $C$ será el conjunto $\set{\vec{x}\tq x\in\Z_q}\subset \Z_q^n$, este tipo de código recibe el nombre de \define{$(q, n)$-código de repetición}, de esta manera, si la recepción de la palabra $x$ es tal que no pertenece a $C$, se sabe que ha ocurrido un error, y en algunos casos, se sabrá corregir el error y obtener el elemento originalmente enviado.
 
 \begin{definition}
-	Sean $x=\palabraG$ y $y=\palabraN{y}$ dos palabras de $\Z_q^n$, se llama \define{distancia de Hamming}{distancia_hamming} a
+	Sean $x=\palabraG$ y $y=\palabraN{y}$ dos palabras de $\Z_q^n$, se llama \define{distancia de Hamming} a
 	\[
 		d(x, y) = n-\sum_{k=1}^n \delta_{x_k y_k}
 	\]
@@ -71,27 +72,27 @@ Como se comprueba en Hill~\cite{hill_first_1980} la distancia de Hamming es una 
 Cuando una palabra $x\in\Z_q^n$ es enviada y el canal lo modifica, lo importante no es cuantos cambios se realizan en $x$, pues a veces un cambio corrige un cambio anterior, así que simplemente hay que saber como se ha recibido, y la mejor forma de medir estos cambios es sabiendo la distancia con respecto a la palabra enviada.
 
 \begin{definition}
-	Sean $C$ un código de $\Z_q^n$ y $x\in C$, se dice que $\push{x}$ es un \define{n-error}{n_error} si $d(x, \push{x})= n$.
+	Sean $C$ un código de $\Z_q^n$ y $x\in C$, se dice que $\push{x}$ es un \define{n-error} si $d(x, \push{x})= n$.
 \end{definition}
 
 Se puede definir también la distancia de una palabra a un conjunto y dos valores asociado a un conjunto que se llama el radio interior y el radio exterior.
 
 \begin{definition}
-	Sean $x$ una palabra y $C$ un código de $\Z_q^n$, se llama \define{distancia de x a C}{distancia_conjunto} a
+	Sean $x$ una palabra y $C$ un código de $\Z_q^n$, se llama \define{distancia de x a C} a
 	\[
 		d(x, C) = \min\set{d(x,y)\ \forall y\in C}
 	\]
 \end{definition}
 
 \begin{definition}
-	Sean $C$ un código de $\Z_q^n$ con al menos dos elementos, se llama \define{radio interior de C}{radio_interior_conjunto} a
+	Sean $C$ un código de $\Z_q^n$ con al menos dos elementos, se llama \define{radio interior de C} a
 	\[
 		r(C) = \min\set{d(x,y)\ \forall x,y\in C\tq x\neq y}
 	\]
 \end{definition}
 
 \begin{definition}
-	Sean $x\in\Z_q^n$, se llama \define{bola de centro x y radio d}{bola} a
+	Sean $x\in\Z_q^n$, se llama \define{bola de centro x y radio d} a
 	\[
 		B(x, d) = \set{y\in\Z_q^n \tq d(x,y)\leq d}
 	\]
@@ -125,7 +126,7 @@ Una técnica muy habitual de corregir errores es considerar que el elemento reci
 Con el mismo razonamiento, se puede observar que cuando el radio interno de un código es $d$ par, entonces se puede corregir a lo más $\lowerInt{(d-1)/2}$-errores.
 
 \begin{definition}
-	Sea $C$ un código con radio interior $d$.\ Definimos el \define{grado de corrección}{grado-correccion} a $g=\lowerInt{\frac{d+1}{2}}-1$.
+	Sea $C$ un código con radio interior $d$.\ Definimos el \define{grado de corrección} a $g=\lowerInt{\frac{d+1}{2}}-1$.
 \end{definition}
 
 
@@ -160,7 +161,7 @@ Con el mismo razonamiento, se puede observar que cuando el radio interno de un c
 \end{example}
 
 \begin{definition}
-	Diremos que $C$ es un \define{$(q, n, m, d)$-código}{codigo} si $C\subset\Z_q^n$, $|C| = m$ y $r(C)=d$.
+	Diremos que $C$ es un \define{$(q, n, m, d)$-código} si $C\subset\Z_q^n$, $|C| = m$ y $r(C)=d$.
 	Cuando $q=2$ diremos que $C$ es un $(n, m, d)$-código binario.
 \end{definition}
 

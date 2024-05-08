@@ -1,13 +1,20 @@
 \newcommand{\B}{\Theta}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
 \renewcommand{\H}{\mathcal{H}}
 \newcommand{\Q}{\mathcal{Q}}
+\let\oldforall\forall
+\renewcommand{\forall}{\oldforall\,}
+\let\oldexists\exists
+\renewcommand{\exists}{\oldexists\,}
+\newcommand{\existsUnique}{\oldexists!\,}
 \newcommand{\so}{\Rightarrow}
 \newcommand{\define}[1]{\textbf{#1}}
 \newcommand{\pendiente}{\rule{0.5cm}{0.5cm}}
 \newcommand{\set}[1]{\left\{#1\right\}}
 \newcommand{\by}[1]{\stackrel{#1}{\mathstrut{=}}}
+\providecommand{\byref}[1]{\overset{\fbox{\tiny\ref{#1}}}{=}}
 \renewcommand{\boxed}[2]{\textcolor{#1}{%
 	\tikz[baseline={([yshift=-1ex]current bounding box.center)}] \node [rectangle, minimum width=1ex,rounded corners,draw] {\normalcolor$\displaystyle#2$};}}
