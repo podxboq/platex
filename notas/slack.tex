@@ -1,0 +1,50 @@
+%\title{¿$\gate{H}\equiv \gate{RY}\ \gate{RZ}$?}
+Primero veamos como son nuestras puertas implicadas
+\begin{equation*}
+	\begin{split}
+	\gate{H}&=\frac{1}{\sqrt{2}}\pmqty{1 & 1 \\ 1 & -1}\\
+	\gate{RY}(\pi/2)&=\frac{1}{\sqrt{2}}\pmqty{1 & -1\\1 & 1}\\
+	\gate{RZ}(\pi)&=i\pmqty{-1 & 0\\0 & 1}
+	\end{split}
+\end{equation*}
+
+Si multiplicamos las matrices
+\begin{equation*}
+	\begin{split}
+		\gate{RZ}(\pi)\gate{RY}(\pi/2)&=\frac{i}{\sqrt{2}}\pmqty{-1 & 1\\1 & 1}
+	\end{split}
+\end{equation*}
+
+%Si consideramos el circuito con el orden $\gate{RY}\ \gate{RZ}$, para un inocente qubit %$\ket{a}=a_0\ket{0}+a_1\ket{1}$ que pasa por nuestro circuito, se transforma en:
+
+%\begin{equation*}
+%\begin{split}
+%	\ket{a}\gate{H} &= \frac{1}{\sqrt{2}}(a_0\ket{0}+a_0\ket{1}+a_1\ket{0}-a_1\ket{1})=\\
+%	&=\frac{a_0+a_1}{\sqrt{2}}\ket{0}+\frac{a_0-a_1}{\sqrt{2}}\ket{1}=\\
+%\end{split}
+%\end{equation*}
+%
+%\begin{equation*}
+%\begin{split}
+%	\ket{a}\gate{RY}(\pi/2)\ \gate{RZ}(\pi) &= \frac{1}{\sqrt{2}}(a_0\ket{0}-a_0\ket{1}+a_1\ket{0}+a_1\ket{1})%\gate{RZ}(\pi)=\\
+	%&=\frac{1}{\sqrt{2}}((a_0+a_1)\ket{0}+(-a_0+a_1)\ket{1})\gate{RZ}(\pi)=\\
+%	&=\frac{-(a_0+a_1)i}{\sqrt{2}}\ket{0}+\frac{(-a_0+a_1)i}{\sqrt{2}}\ket{1}=\\
+%	&=\frac{-(a_0+a_1)i}{\sqrt{2}}\ket{0}+\frac{(-a_0+a_1)i}{\sqrt{2}}\ket{1}=\\
+%	&=-i\left(\frac{a_0+a_1}{\sqrt{2}}\ket{0}+\frac{a_0-a_1}{\sqrt{2}}\ket{1}\right)=\\
+%	&=-i\ket{a}\gate{H}\\
+%\end{split}
+%\end{equation*}
+%
+%\begin{equation*}
+%\begin{split}
+%	\ket{a}\gate{RZ}(\pi)\ \gate{RY}(\pi/2) &= i(-a_0\ket{0}+a_1\ket{1})\gate{RY}(\pi/2)=\\
+%	&=\frac{i}{\sqrt{2}}(-a_0\ket{0}+a_0\ket{1}+a_1\ket{0}+a_1\ket{1})=\\
+%	&=\frac{i(-a_0+a_1)}{\sqrt{2}}\ket{0}+\frac{i(a_0+a_1)}{\sqrt{2}}\ket{1}=\\
+%	&=\left(\frac{i(a_0+a_1)}{\sqrt{2}}\ket{0}+\frac{i(-a_0+a_1)}{\sqrt{2}}\ket{1}\right)\gate{X}=\\
+%	&=\left(\frac{i(a_0+a_1)}{\sqrt{2}}\ket{0}+\frac{i(a_0-a_1)}{\sqrt{2}}\ket{1}\right)\gate{ZX}=\\
+%	&=i\ket{a}\gate{HZX}\\
+%\end{split}
+%\end{equation*}
+%
+%
+%Así que salvo%

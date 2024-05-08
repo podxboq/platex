@@ -1,0 +1,162 @@
+%\title{Mixed states and density matrices}
+
+\section{Mixed states}
+It might happen in some cases that a quantum system has $N$ different possibility states $\ket{a_i}$, and if we pick up one of them we get the state $\ket{a_i}$ with $p_i$ of probability.
+Such a system is said to be in a \define{mixed state}, and the \define{density state} $\ket{a}$ is in this case the mix of those $N$ possibility states:
+\begin{equation}
+    \label{eq:density-state}
+    \ket{a} = \sum_{k=1}^N p_k\ket{a_k} \text{ and } \sum_{k=1}^N p_k=1.
+\end{equation}
+
+When $N=1$ and so $p_1=1$, the system is said to be in a \define{pure state} and the density state we called also the pure state.
+
+Let $\set{\ket{e_1},\dots,\ket{e_n}}$ be a basis of orthogonal states of the system. Then all $N$ possible states can be write like lineal combination of the base elements:
+\begin{equation}
+    \label{eq:normal-state-base}
+    \ket{a_k}=\sum_{l=1}^n a_{kl}\ket{e_l} \text{ and } \sum_{l=1}^n a^{*}_{kl}a_{kl} = 1.
+\end{equation}
+
+Let $A$ be an observable, the expectation value of each possible state is $v_k=\expval{A}{a_k}$.
+The mean value of the system is
+\begin{equation}
+    \begin{split}
+    \label{eq:density-expectation-value}
+    \expval{A} & = \sum_{k=1}^N p_k\expval{A}{a_k} = \sum_{k=1}^N\sum_{l=1}^n\sum_{m=1}^n p_k a_{kl}^* a_{km}\matrixel{e_l}{A}{e_m}.
+    \end{split}
+\end{equation}
+
+\section{Density matrix}
+Let us introduce the \define{density matrix} by
+\begin{equation}
+    \label{eq:density-matrix}
+    \rho = \sum_{k=1}^N p_k\ketbra{a_k}{a_k}.
+\end{equation}
+In terms of the orthogonal base the density matrix can be write as
+\begin{equation}
+    \label{eq:density-matrix-basis}
+    \rho = \sum_{k=1}^N p_k\ketbra{a_k}{a_k}=\sum_{k=1}^N\sum_{l=1}^n\sum_{m=1}^n p_{k} a_{kl}^* a_{km}\ketbra{e_l}{e_m}
+\end{equation}
+so the elements of the matrix $\rho$ are
+\begin{equation}
+\begin{split}
+    \label{eq:density-matrix-elements}
+    \rho_{\alpha\beta} &= \sum_{k=1}^N\sum_{l=1}^n\sum_{m=1}^n p_{k} a_{kl}^* a_{km}(\ketbra{e_l}{e_m})_{\alpha\beta} =\\
+     &= \sum_{k=1}^N\sum_{l=1}^n\sum_{m=1}^n p_{k} a_{kl}^* a_{km}\delta_{m\alpha}\delta_{l\beta}= \sum_{k=1}^N p_{k} a_{k\beta}^* a_{k\alpha}.
+\end{split}
+\end{equation}
+When the quantum system is a pure state, then the density matrix is
+\begin{equation}
+    \label{eq:pure-matrix}
+    \rho = \ketbra{a_1}{a_1}=\sum_{l=1}^n\sum_{m=1}^n a_{1l}^* a_{1m}\ketbra{e_l}{e_m}\so \rho_{\alpha\beta}= a_{1\beta}^* a_{1\alpha}.
+\end{equation}
+
+\section{Matrix density properties}
+\subsection{For mixed states}
+\subsubsection{The trace}
+A basic property that complies the density matrix is the unitary of it trace
+\begin{equation*}
+\begin{split}
+    \label{eq:trace-density-matrix}
+    \Tr(\rho) &= \sum_{\alpha=1}^n \rho_{\alpha\alpha} \by{\ref{eq:density-matrix-elements}} \sum_{\alpha=1}^n\sum_{k=1}^N p_{k} a_{k\alpha}^* a_{k\alpha}= \sum_{k=1}^N p_{k} \left(\sum_{\alpha=1}^n a_{k\alpha}^* a_{k\alpha}\right) =\\
+    &\by{\ref{eq:normal-state-base}}\sum_{k=1}^N p_{k} \by{\ref{eq:density-state}} 1.
+\end{split}
+\end{equation*}
+
+\subsubsection{Positive semi-definite}
+The density matrix is positive semi-definite because for any state $\ket{a}$ is 
+\begin{equation*}
+\begin{split}
+\expval{\rho}{a} &= \sum_{k=1}^N p_k \expval{\ketbra{a_k}}{a}=\sum_{k=1}^N p_k \braket{a}{a_k}\braket{a_k}{a}=\\
+&= \sum_{k=1}^N p_k \|\braket{a_k}{a}\|^2\geq 0.
+\end{split}
+\end{equation*}
+
+\subsubsection{Characterization}\label{subsubsec:characterization-density-matrix}
+A positive matrix with trace equals to $1$ is a density matrix.
+This is true because if $A$ is a positive matrix, then have a spectral decomposition with $\set{\lambda_k}$ real a non-negative eigenvalues, and $\set{\ket{\psi_k}}$ the eigenvectors such that $A=\sum_{k=1}^n \lambda_k \ketbra{\psi_k}{\psi_k}$.
+So $A$ is the density matrix of the system $\set{(\lambda_k, \ket{\psi_k})}_k$.
+
+\subsection{For pure states}
+\subsubsection{Projector}
+When we have a pure state, then the density matrix is a projector, because
+\begin{equation}
+        \label{eq:pure-matrix-projector}
+    \begin{split}
+        \rho^2_{\alpha\beta}&=\sum_{k=1}^{n}\rho_{\alpha k}\rho_{k \beta}\by{\ref{eq:pure-matrix}}\sum_{k=1}^n a_{1k}^* a_{1 \alpha}a_{1\beta}^* a_{1 k}=a_{1 \alpha}a_{1\beta}^*\sum_{k=1}^n a_{1k}^* a_{1 k}=\\
+        &\by{\ref{eq:normal-state-base}}a_{1 \alpha}a_{1\beta}^*\by{\ref{eq:pure-matrix}}\rho_{\alpha\beta}\so \rho^2=\rho.
+    \end{split}
+\end{equation}
+
+Furthermore, this condition characterize a pure state.
+If the density matrix is a projector, then it is from a pure state.
+
+\subsubsection{The trace}
+It is also true that a density matrix is from a pure state if and only if $\Tr(\rho^2)=1$.
+
+\section{Mean value}
+If we want get the mean value of the observable $A$ in a mixed system in terms of the density matrix, we can
+substituting the result~(\ref{eq:density-matrix-elements}) in~(\ref{eq:density-expectation-value})
+\begin{equation}
+    \begin{split}
+    \label{eq:density-expectation-value-trace}
+    \expval{A} & =\sum_{l=1}^n\sum_{m=1}^n \left(\sum_{k=1}^N p_k a_{kl}^* a_{km}\right)\matrixel{e_l}{A}{e_m}=\\
+    &=\sum_{l=1}^n\sum_{m=1}^n \rho_{ml}\matrixel{e_l}{A}{e_m}=\sum_{m=1}^n(\rho A)_{mm}=\Tr(\rho A).
+    \end{split}
+\end{equation}
+
+\section{Reformulating quantum postulates}
+By the result~(\ref{subsubsec:characterization-density-matrix}) we can define a density matrix to be a positive matrix $\rho$ which has trace equal to one.
+With this definition, we can reformulate the postulates of quantum mechanics.
+
+\begin{enumerate}
+    \item Any isolated physical system is completely described by $\rho$ a positive matrix with trace one, acting on the state space of the system and that we call density matrix.
+    \item The evolution of a closed quantum system between two times $t_1$ and $t_2$, is described by $U$ a unitary matrix which depends only on the times $t_1$ and $t_2$.\ That is, the density matrix $\rho_1$ of the system at time $t_1$ is related to the density matrix $\rho_2$ of the system at time $t_2$ by
+    \begin{equation}
+        \label{eq:density-matrix-evolution}
+        \rho_2 = U\rho_1 U^\dagger.
+    \end{equation}
+    \item Quantum measurements are described by a collection $\set{M_k}$ of measurement operators satisfy the completeness equation $\sum_{k}M_k^\dagger M_k = I$.\ The probability that result of $M_k$ occurs is given by
+    \begin{equation}
+        \label{eq:density-matrix-measure}
+        P(M_k)=\Tr(M_k^\dagger M_k\rho)
+    \end{equation}
+    and the state of the system after the measurement is
+    \begin{equation}
+        \label{eq:density-matrix-measurent}
+        \frac{M_k\rho M_k^\dagger}{\Tr(M_k^\dagger M_k\rho)}
+    \end{equation}
+    \item The state space of a composite physical system is the tensor product.
+\end{enumerate}
+
+\section{Fidelity}
+The \define{fidelity} of two quantum states measure how close are to be equals.
+The fidelity is defined to be a number positive and less than 1 being one only when the two states are equals.
+
+\subsection{Pure states}
+When we have two pure states $\ket{a}$ and $\ket{b}$, the fidelity is defined by
+\begin{equation}
+    \label{eq:fidelity-pure}
+    F(a, b)=\abs{\braket{a}{b}}^2
+\end{equation}
+
+\section{Uncorrelated and separable states}
+This section is about the definitions which appears in~[1].
+\subsection{Uncorrelated} A state $\rho$ is called \define{uncorrelated} if it is written as
+\begin{equation}
+    \label{eq:uncorrelated}
+    \rho = \rho_1\otimes\rho_2.
+\end{equation}
+
+\subsubsection{Separable} A state $\rho$ is called \define{separable} if it is written as
+\begin{equation}
+    \label{eq:separable}
+    \rho = \sum_{k=1}^N p_k \rho_{1k}\otimes\rho_{2k}.
+\end{equation}
+where $p_i\in\R^+$ and $\sum_{k=1}^N p_k =1$.
+
+\subsubsection{Inseparable} A state is called \define{inseparable} if it is not separable.
+
+\begin{thebibliography}{9}
+    \bibitem{1}
+    Nakahara, M., \& Ohmi, T. (2008). Quantum Computing: From Linear Algebra to Physical Realizations. CRC Press.\par https://doi.org/10.1201/9781420012293
+\end{thebibliography}

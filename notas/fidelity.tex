@@ -1,0 +1,37 @@
+%\title{Fidelity of quantum states}
+%\author{Wikipedia}
+%\authnote{\url{https://en.wikipedia.org/wiki/Fidelity_of_quantum_states}}
+
+In quantum mechanics, notably in quantum information theory, fidelity is a measure of the "closeness" of two quantum states. It expresses the probability that one state will pass a test to identify as the other. The fidelity is not a metric on the space of density matrices, but it can be used to define the Bures metric on this space.
+
+\begin{definition}
+
+The fidelity between two quantum states $\rho$ and $\sigma$, expressed as density matrices, is commonly defined as:[1][2]
+\begin{equation}
+F(\rho, \sigma) = \Tr(\sqrt{\sqrt{\rho}\sigma\sqrt{\rho}})^2.    
+\end{equation}
+\end{definition}
+
+The square roots in this expression are well-defined because both $\rho$ and $\sqrt{\rho}\sigma\sqrt{\rho}$ are positive semidefinite matrices, and the square root of a positive semidefinite matrix is defined via the spectral theorem. The Euclidean inner product from the classical definition is replaced by the Hilbert–Schmidt inner product.
+
+As will be discussed in the following sections, this expression can be simplified in various cases of interest. In particular, for pure states, $\rho = \ketbra{\psi_\rho}{\psi_\rho}$ and $\sigma = \ketbra{\psi_\sigma}{\psi_\sigma}$, it equals:
+\begin{equation}
+F(\rho, \sigma) = |\braket{\psi_\rho}{\psi_\sigma}|^{2}.
+\end{equation}
+This tells us that the fidelity between pure states has a straightforward interpretation in terms of probability of finding the state $\ket{\psi_\rho}$ when measuring $\ket{\psi_\sigma}$ in a basis containing $\ket{\psi_\rho}$.
+
+Given a classical measure of the distinguishability of two probability distributions, one can motivate a measure of distinguishability of two quantum states as follows: if an experimenter is attempting to determine whether a quantum state is either of two possibilities $\rho$ or $\sigma$, the most general possible measurement they can make on the state is a POVM, which is described by a set of Hermitian positive semidefinite operators $\set{F_i}$. 
+
+When measuring a state $\rho$ with this POVM, i-th outcome is found with probability $p_i=\Tr(\rho F_i)$, and likewise with probability $q_i=\Tr(\sigma F_i)$ for $\sigma$. 
+
+The ability to distinguish between $\rho$ and $\sigma$ is then equivalent to their ability to distinguish between the classical probability distributions $p$ and $q$. 
+
+A natural question is then to ask what is the POVM the makes the two distributions as distinguishable as possible, which in this context means to minimize the Bhattacharyya coefficient over the possible choices of POVM. Formally, we are thus led to define the fidelity between quantum states as:
+\begin{equation}
+F(\rho, \sigma) = \min_{F_i}F_i(X, Y)=\min_{F_i}\left(\sum_i \sqrt{\Tr(\rho F_i)\Tr(\sigma F_i)}\right)^2.
+\end{equation}
+
+It was shown by Fuchs and Caves [6] that the minimization in this expression can be computed explicitly, with solution the projective POVM corresponding to measuring in the eigenbasis of $\sigma^{-1/2}|\sqrt{\sigma}\sqrt{\rho}|\sigma^{-1/2}$, and results in the common explicit expression for the fidelity as
+\begin{equation}
+F(\rho, \sigma) = \Tr(\sqrt{\sqrt{\rho}\sigma\sqrt{\rho}})^{2}.
+\end{equation}

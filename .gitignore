@@ -279,6 +279,10 @@ TSWLatexianTemp*
 # TeXnicCenter
 *.tps
 
+# intellij
+/.idea/
+/out/
+
 # auto folder when using emacs and auctex
 ./auto/*
 *.el

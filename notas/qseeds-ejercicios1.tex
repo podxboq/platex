@@ -1,0 +1,87 @@
+%\title{Introducción a la información cuántica - Problemas}
+\section{Requisitos previos}
+
+\begin{problem}
+Sea $A$ un operador hermítico $(A = A^\dagger)$ de dimensión $n$.
+\begin{enumerate}
+	\item Demuestre que los autovalores de $A$ son reales.
+	\item Si $A$ puede expresarse como $\sum_{k=0}^{n-1} \lambda_k\ketbra{k}{k}$, entonces se cumple que $\set{\ket{k}}_{k=0}^{n-1}$ es un conjunto de autovectores de $A$ y $\lambda_k$ es el autovalor del autovector $\ket{k}$.
+	\item Demuestra que los autovectores de A relacionados con autovalores distintos son linealmente independientes.
+\end{enumerate}
+\end{problem}
+
+\begin{solution}
+	Sea $\set{\lambda_k}_{k=0}^{n-1}$ el conjunto de autovalores de $A$.
+	\begin{enumerate}
+		\item Sea $\ket{v_k}$ un autovector normalizado del autovalor $\lambda_k$, se tiene que:
+		\begin{equation*}
+			\begin{split}
+				\lambda_k &= \lambda_k\braket{v_k}{v_k}= \braket{v_k}{\lambda_k v_k}=\braket{v_k}{Av_k}=\braket{A^\dagger v_k}{v_k}=\braket{A v_k}{v_k}=\\
+				&=\braket{\lambda_k v_k}{v_k}=\lambda_k^* \braket{v_k}{v_k}=\lambda_k^* \so \lambda_k\in\R.
+			\end{split}
+		\end{equation*}
+		\item Si $A=\sum_{k=0}^{n-1} \lambda_k\ketbra{k}{k}$, se tiene que:\pendiente
+		\begin{equation*}
+			A\ket{l}=\sum_{k=0}^{n-1} \lambda_k\ketbra{k}{k}\ket{l}=\sum_{k=0}^{n-1}
+			\lambda_k\braket{k}{l}\ket{k}=\lambda_l\ket{l}
+		\end{equation*}
+		\item Sea $\lambda_1$ y $\lambda_2$ dos autovalores distintos y $v_{1}$ y $v_{2}$ autovectores de los autovalores $\lambda_1$ y $\lambda_2$ respectivamente, se tiene que:
+		\begin{equation*}
+			\begin{split}
+				\braket{v_1}{Av_2}=\braket{A v_1}{v_2}&\so\braket{v_1}{\lambda_2 v_2}=\braket{\lambda_1 v_1}{v_2}\so \\
+				\lambda_2\braket{v_1}{v_2}=\lambda_1^* \braket{v_1}{v_2}&\so\lambda_2\braket{v_1}{v_2}=\lambda_1 \braket{v_1}{v_2}
+			\end{split}
+		\end{equation*}
+
+		Como $\lambda_1\neq\lambda_2$ la última igualdad se cumple sí y solo sí $\braket{v_1}{v_2}=0$.
+	\end{enumerate}
+\end{solution}
+
+\begin{problem}
+	Demuestra que $(A + B)^\dagger = A^\dagger + B^\dagger$, $(AB)^\dagger = B^\dagger A^\dagger$ y $(A^\dagger)^\dagger = A$, con $A$ y $B$ operadores.
+	lineales.
+\end{problem}
+
+\begin{solution}
+	Sabiendo que si $(A_{kl})_{kl}$ es la matriz asociada de $A$ entonces $(A^*_{lk})_{kl}$ es la matriz asociada a $A^\dagger$, tenemos que:
+	\begin{enumerate}
+		\item $(A + B)^\dagger_{kl} = (A + B)^*_{lk} = A^*_{lk} + B^*_{lk} = A^\dagger_{kl} + B^\dagger_{kl} = (A^\dagger + B^\dagger)_{kl}$.
+		\item $(AB)^\dagger_{kl} = (AB)^*_{lk} = \sum_{m}A^*_{lm}B^*_{mk} = \sum_{m}A^\dagger_{ml}B^\dagger_{km} = \sum_{m}B^\dagger_{km}A^\dagger_{ml} = (B^\dagger A^\dagger)_{kl}$.
+		\item $(A^\dagger)^\dagger_{kl} = (A^\dagger)^*_{lk} = (A^*)^*_{kl} = A_{kl}$
+	\end{enumerate}
+\end{solution}
+
+\begin{problem}
+	Demuestra el teorema de la diagonalización simultánea: Dos operadores hermı́ticos $A$ y $B$ conmutan sí y solo sí existe una base ortonormal 	respecto a la cual $A$ y $B$ son diagonales.
+\end{problem}
+
+\begin{solution}
+	Veamos primero el recíproco.
+	\begin{enumerate}
+		\item[$\Leftarrow$] En general, cualquier par de matrices diagonales son conmutativas.
+		\item[$\so$] $AB=BA\so (AB)^\dagger = (BA)^\dagger\so B^\dagger A^\dagger = $. \pendiente{}.
+	\end{enumerate}
+\end{solution}
+
+\begin{problem}
+	Considere las matrices $A=\mqty(0 & 1 & 0 \\ 1 & 0 & 1 \\ 0 & 1 & 0)$ y $B=\mqty(1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & -1)$.
+	\begin{itemize}
+		\item Encuentre los autovalores y autovectores de $A$ y $B$.\ Denote los autovectores de $A$ como $\set{\ket{a_1}, \ket{a_2}, \ket{a_3}}$ y los autovectores de $B$ como $\set{\ket{b_1}, \ket{b_2}, \ket{b_3}}$.\ ¿Hay autovalores degenerados?
+		\item Muestre que cada uno de estos conjuntos forma una base completa, es decir, $\braket{a_j}{a_k}=\delta_{jk}$ y $\sum_{k=1}^3 \ketbra{a_j}{a_j}=I_3$.
+		\item Encuentre una matriz $U$ de tal manera que transforme la base $\set{\ket{a_1}, \ket{a_2}, \ket{a_3}}$ en la base $\set{\ket{b_1}, \ket{b_2}, \ket{b_3}}$, muestre que $U$ es unitaria, esto es, calcule $UU^\dagger = U^\dagger U = I_3$.
+		\item Ahora muestre cómo la matriz $A$ se transforma con esta unitaria: $A^\prime = U^\dagger AU$.
+	\end{itemize}
+\end{problem}
+
+\begin{solution}
+	Para calcular los valores propios usamos el polinomio característico $p(\lambda)=|A-\lambda I|$.
+	\begin{itemize}
+		\item Los autovalores de $A$ son $\set{0, -\sqrt{2}, \sqrt{2}}$ y los autovectores están generados por $\set{(-1, 0, 1), (1, -\sqrt{2}, 1), (1, \sqrt{2}, 1)}$ respectivamente.\ Los autovalores de $B$ son $\set{0, -1, 1}$ y los autovectores están generados por $\set{(0, 1, 0), (1, 0, 0), (0, 0, 1)}$ respectivamente.\ No hay valores degenerados.\ Expresados como kets, los autovectores son:
+		\begin{align*}
+				\ket{a_1} &= \frac{1}{\sqrt{2}}(-\ket{0}+\ket{2}) & \ket{b_1} &= \ket{1}\\
+				\ket{a_2} &= \frac{1}{2}(\ket{0}-\sqrt{2}\ket{1}+\ket{2}) & \ket{b_2} &= \ket{0}\\
+				\ket{a_3} &= \frac{1}{2}(\ket{0}+\sqrt{2}\ket{1}+\ket{2}) & \ket{b_3} &= \ket{2}
+		\end{align*}
+	\end{itemize}
+	El resto de puntos son triviales.
+\end{solution}
