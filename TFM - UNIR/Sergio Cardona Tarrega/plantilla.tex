@@ -1,5 +1,11 @@
 \documentclass[11pt,a4paper,spanish]{book}
 \usepackage{unir}
+\usepackage[
+    backend=biber,
+    style=authoryear,
+    stylename=apa,
+]{biblatex}
+\addbibresource{biblio.bib} %Imports bibliography file
 
 %---------------------------
 % Rellenar con la información apropiada al trabajo.
@@ -12,6 +18,7 @@
 \nombreciudad{Valencia}
 
 \begin{document}
+
 
 \maketitle
 
@@ -33,6 +40,6 @@
 \include{referencias}
 \backmatter
 \appendix
-\include{anexos}
+%\include{anexos}
 
 \end{document}

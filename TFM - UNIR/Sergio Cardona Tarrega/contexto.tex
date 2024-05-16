@@ -1,6 +1,6 @@
 \chapter{Contexto y estado del técnica}
 
-Después de la introducción, se suele describir el contexto de aplicación. En este Capítulo debemos mostrar un sobrado conocimiento de la materia, plagando absolutamente TODO lo que mencionemos con referencias. Práticamente, cada frase puede necesitar de alguna referencia.
+Después de la introducción, se suele describir el contexto de aplicación. En este Capítulo debemos mostrar un sobrado conocimiento de la materia, plagando absolutamente TODO lo que mencionemos con referencias. Prácticamente, cada frase puede necesitar de alguna referencia.
 
 Las referencias NO están solo para aparentar. Rendimos tributo y reconocemos a las personas que han pensado los problemas antes que nosotros. Puede haber varias referencias válidas para una misma afirmación, y no pasa nada porque así se indique.
 
@@ -8,9 +8,379 @@ Recuerda que para citar trabajos de diferentes autores es fundamental e impresci
 
 EJEMPLO DE CITAS: Si queremos citar a alguien, por ejemplo porque vamos a hablar de Latex \citep{lamport1994} o porque, según las ideas de \cite{ackerman2017}, la liga de fútbol inglesa debe tener torneos de desempate, pues tenemos que hacerlo correctamente. {\bf{(Ver en la sección Bibliografía cómo deben incluirse las entradas bibliográficas).}}
 
-Este Capítulo puede tener secciones diferentes a las que se indican a continuación, que se indican a modo de ejemplo.
+Este Capítulo puede tener secciones diferentes a las que se indican a continuación, que se indican a pmodo de ejemplo.
 
 \section{Antecedentes históricos}
+La conjetura de Collatz, también conocida por otros nombres como conjetura de Siracusa, conjetura de Ulam o conjetura $3n+1$, es uno de los problemas matemáticos sin resolver más conocido hasta la fecha.
+
+Fue enunciada por Lothar Collatz en 1937 y el 7 de julio de 2021.
+
+La empresa japonesa Bakuage Co. ofreció un premio de 120 millones de yenes (aproximadamente 1.085.000 dólares estadounidenses) a quien aporte una prueba matemática o un contraejemplo que la confirme o la desmienta.
+
+Lothar Collatz fue un matemático alemán nacido el 6 de julio de 1910 en Arnsberg y fallecido en Varna, Bulgaria el 26 de septiembre de 1990 a la edad de 80 años.
+
+Collatz estudió en diferentes universidades alemanas incluyendo la Universidad de Berlín bajo la tutela de Alfred Klose y realizó el doctorado en 1935 con una tésis titutalada "Das Differenzenverfahren mit höherer Approximation für Differentialgleichungen" (El método de diferencias finitas para una mayor aproximación para ecuaciones diferenciales lineales).
+Trabajó en distintas universidades como la Universidad Técnica de Darmstadt o la Universidad de Hamburgo. Luego de su jubilación como profesor, participó activamente en congresos hasta que finalmente falleció inesperadamente de un ataque al corazón en Varna (Bulgaria) el 26 de septiembre de 1990, mientras asistía a un congreso.
+
+Por su gran trabajo, a Lothar Collatz le fueron entregados numerosos galardones, entre los cuales están:
+\begin{enumerate}
+    \item Elegido miembro de la Academia alemana de las ciencias naturales Leopoldina, la Academia de Ciencias del Instituto de Boloña y la Academia de pmoderna en Italia.
+    \item Miembro honorario de la Sociedad Matemática de Hamburgo
+    \item Grados honoríficos otorgados por la Universidad de São Paulo, la Universidad Técnica de Viena, la Universidad de Dundee (Escocia), la Universidad Brunel (Inglaterra), la Universidad de Hannover y la Universidad Politécnica de Dresde.
+\end{enumerate}
+
+Muchos matemáticos han tratado de resolver esta conjetura sin éxito y muchos de ellos desaconsejan incluso el intentarla siquiera.
+
+Por ejemplo Paul Erdös, manifestó en una ocasión que las matemáticas no estaban listas para este tipo de problemas.
+\begin{quote}
+    "Mathematics may not be ready for such problems."
+\end{quote}
 
 \section{Estado actual}
 
+En esta sección enumeraremos resultados y definiciones sobre la conjetura recogidos en \cite{lagariasAnnotatedBibliography1} y \cite{lagariasAnnotatedBibliography2} a no ser que especifiquemos lo contrario.
+
+
+
+\subsection{Definición de la función de Collatz $C(x)$}
+Dado $n\in\mathbf{N}$, el siguiente elemento en la secuencia vendrá dado por la función:
+\begin{equation}
+\label{C(n)}
+    C(x) = \begin{cases}
+    3n+1 & \text{si \ensuremath{x\equiv1\pmod2}},\\
+    \frac{n}{2} & \text{si \ensuremath{x\equiv0\pmod2}.}
+    \end{cases}
+\end{equation}
+
+
+
+
+\subsection{Definición de la función de Collatz con atajo $T(n)$}
+Debido a que si $n\equiv1\pmod2 \Longrightarrow 3n+1\equiv0\pmod2$, podemos ignorar los elementos de la secuencia de la forma $3n+1$ con $n$ impar obteniendo directamente los elementos de la forma $\frac{3n+1}{2}$. 
+
+Dado un elemento de esta nueva secuencia con atajo, el siguiente elemento vendrá dado por la siguiente función:
+\begin{equation}
+\label{T(n)}
+    T(n) = \begin{cases}
+    \frac{3n+1}{2} & \text{si \ensuremath{x\equiv1\pmod2}},\\
+    \frac{n}{2} & \text{si \ensuremath{x\equiv0\pmod2}.}
+    \end{cases}
+\end{equation}
+
+Que sería equivalente a:
+
+$$
+    T(n) = \begin{cases}
+    C(C(n)) & \text{si \ensuremath{x\equiv1\pmod2}},\\
+    C(n) & \text{si \ensuremath{x\equiv0\pmod2}.}
+    \end{cases}
+$$
+
+\subsection{Sucesión de Collatz}
+
+Si partimos de un elemento $n \in \mathbf{N}$ y denotamos:
+
+\begin{equation}
+\label{SucesionCollatz}
+    a_i = \begin{cases}
+    n & \text{para } i=0,\\
+    T(a_{i-1}) & \text{para } i>0.
+    \end{cases}
+\end{equation}
+
+Esto es: $a_i=T^i(n)$ donde $T^i(n)$ representa el valor de $T$ aplicado a $n$ recursivamente $i$ veces (y $T^0(n) = n$, es decir aplicar $T$ $0$ veces).
+
+La conjetura de Collatz aseguraría pues, que para todo $n\geq1$ existe algún $k$ tal que $T^k(n)=1$
+
+A menudo también se le denomina órbita o trayectoria de $n$ al conjunto formado por:
+$$ \{ n, T(n), T^2(n), ... \} $$
+
+Por ejemplo si tomamos $n=7$, tendremos que su Sucesión de Collatz es:
+$$\{7, 11, 17, 26, 13, 20, 10, 5, ... \}$$
+
+
+
+\subsection{Definición Ciclo de Collatz}
+
+Definimos Ciclo de Collatz de longitud $l\in\mathbf{N}$, como un conjunto:
+$$ \{ n, T(n), T^2(n), ..., T^{l-1}(n)\} $$
+En el que además se verifica que $T^l(n)=n$.
+Consideraremos además que $n< T^i(n)$, $\forall i \in [1,l[$ (Notar que siempre podemos reordenar los elementos del conjunto para obtener el elemento más pequeño en primer lugar).
+
+De ser cierta la conjetura de Collatz, implicaría (entre otras cosas) que el único ciclo de Collatz existente es el ciclo de longitud $2$: $\{ 1, 2 \}$.
+
+Es evidente que al verificarse $T^l(n)=n$ entonces también se verificará $T^{l+1}(n) = T(n)$, $T^{l+2}(n)=T^2(n), ...$ y en general se verificará:
+$$T^i(n) = T^j(n) \Longleftrightarrow i \equiv j \pmod l$$
+
+\subsection{Definición Sucesión de Paridad}
+
+Dada una Sucesión de Collatz  $\{ n, T(n), T^2(n), ... \}$, definimos Sucesión de Paridad de la Sucesión de Collatz como el conjunto:
+$$
+    \{ v_0, v_1, v_2, ...\}
+$$
+Donde 
+$$
+    p_i = \begin{cases}
+    1 & \text{si \ensuremath{T^i(n)\equiv1\pmod2}},\\
+    0 & \text{si \ensuremath{T^i(n)\equiv0\pmod2}.}
+    \end{cases}
+$$
+
+Es decir definimos Sucesión de Paridad de una Sucesión de Collatz como la sucesión en la que cada elemento es la paridad de dicha Sucesión de Collatz.
+
+Por ejemplo si tomamos $n=7$, y su respectiva Sucesión de Collatz $\{7, 11, 17, 26, 13, ... \}$, entonces su Sucesión de Paridad vendrá dada por:
+$$\{ 1, 1, 1, 0, 1, 0, 0, 1,... \}$$
+
+\subsection{Definición Ciclo Paridad}
+Análogamente, dado un Ciclo de Collatz de longitud $l$: $\{ n, T(n), T^2(n), ..., T^{l-1}(n)\}$, definiremos Ciclo de Paridad de dicho Ciclo de Collatz como el conjunto:
+
+$$
+    \{ v_0, v_1, v_2, ..., v_{l-1}\}
+$$
+
+Donde $\forall i \in [0,l[$:
+$$
+    p_i = \begin{cases}
+    1 & \text{si \ensuremath{T^i(n)\equiv1\pmod2}},\\
+    0 & \text{si \ensuremath{T^i(n)\equiv0\pmod2}.}
+    \end{cases}
+$$
+
+Y de nuevo es evidente que se verificará $p_i = p_j \Longleftrightarrow i \equiv j \pmod l$
+
+Muchas veces se considera en su lugar el vector $v=(v_0, ..., v_{l-1}) \in \{0,1\}^l$ y se le denomina Vector Paridad asociado al Ciclo de Collatz.
+
+\subsection{Extensión racional}
+Podemos extender el dominio de la función $T$ \ref{T(n)} a los racionales con denominador impar, ya que $T$ está bien definida en $\mathbf{Q}[(2)]$ (\cite{Lagarias1990}).
+
+Entonces dado un $v=(v_0, v_1, ..., v_{l-1}) \in \{0, 1\}^l$ existirá un único $q=x(v)\in\mathbf{Q}[(2)]$ de forma que $q$ estará en un ciclo racional de $T$ de longitud $l$ con $T^i(q) \equiv v_i \pmod{2}$
+
+Es decir tendríamos una nueva definición de Ciclo de Collatz Racional de longitud $l$ aplicada esta vez a un elemento $q \in \mathbf{Q}[(2)]$:
+$$\{ q, T(q), ..., T^{l-1}(q)\}$$
+Y el Vector de Paridad asociado a este Ciclo de Collatz Racional vendrá dado por tanto por:
+$$v = (v_0, v_1, ..., v_{l-1})$$ 
+
+Notar que al ser el denominador de $q$ (y de cada uno de los elementos del ciclo) impar, el vector de paridad describirá la paridad del numerador de cada uno de los elementos del ciclo.
+
+Se verificará además que:
+\begin{equation}
+    \label{FormulaCicloCollatz}
+    q=\frac{\sum\limits_{j=0}^{l-1} v_j 2^j 3^{v_{j+1}+ ... + v_{l-1}}}{2^l-3^{v_0+...+v_{l-1}}}
+\end{equation}
+
+
+Por tanto encontrar un Ciclo de Collatz de longitud $l>2$, para así encontrar un contraejemplo de la conjetura, se reducirá a encontrar un Ciclo de Collatz Racional $\{ q, T(q), ..., T^{l-1}(q)\}$ (y que por tanto verifique \ref{FormulaCicloCollatz}), que además verifique que $q\in \mathbf{N}$.
+
+Dicho de otra manera, se reducirá a encontrar un elemento $v=(v_0, v_1, ..., v_{l-1}) \in \{0, 1\}^l$ de forma que $2^l > 3^{v_0 + ... + v_{l-1}}$ y que además $2^l - 3^{v_0 + ... + v_{l-1}}$ divida a $\sum\limits_{j=0}^{l-1} v_j 2^j 3^{v_{j+1}+ ... + v_{l-1}}$.
+
+Encontrar un Ciclo de Collatz de longitud arbitraria $x\in\mathbf{N}$, se puede ver como encontrar $x, y \in \mathbf{N}$ y ciertos $a_0, a_1, ..., a_{y-1} \in \mathbf{N}$ con $x>a_0>a_1>...>a_k\geq0$ de forma que se verifique:
+$$\frac{\sum\limits_{j=0}^{y-1}3^j2^{a_j}}{2^{x+y} - 3^y} \in \mathbf{N}$$
+Y por tanto que el denominador sea positivo y divida al numerador.
+
+
+
+\subsection{Definición k-Ciclo de Collatz}
+Sea un Ciclo de Collatz de longitud $l$: $\{ n, T(n), T^2(n), ..., T^{l-1}(n)\}$ con Paridad de Ciclo $\{v_0, v_1, ..., v_{l-1}\}$, se dice que es un k-Ciclo de Collatz si existen exactamente $k$ elementos $v_i\in\{v_0, v_1, ..., v_{l-1}\}$ tal que $v_i \equiv 2 \pmod4$.
+
+Es decir, existen exactamente $k$ elementos que son pares pero no divisibles por $4$.
+
+Podemos entonces agrupar los elementos del ciclo en $k$ bloques donde cada bloque i-ésimo contendrá $x_i$ elementos impares y $y_i$ elementos pares.
+
+Podemos reescribir entonces el k-Ciclo de Collatz como:
+$$\{ (x_1,y_1),(x_2,y_2),...,(x_{k},y_{k}) \}$$
+con $(x_i,y_i) \in $
+
+Podemos también extender la definición a los racionales de denominador impar partiendo de un Ciclo de Collatz Racional. Diremos entonces que se trata de un k-Ciclo de Collatz Racional
+
+Por ejemplo el Ciclo de Collatz Racional de longitud $6$ y Paridad de Ciclo $(1,1,0,1,0,0)$ correspondería según la fórmula \ref{FormulaCicloCollatz} al racional:
+$$q = \frac{1\cdot2^0\cdot3^2 + 1\cdot2^1\cdot3^1 + 0\cdot2^2\cdot3^1 + 1\cdot2^3\cdot3^0 + 0\cdot2^4\cdot3^0 + 0\cdot2^5\cdot3^0}{2^6-3^3}=\frac{9+6+8}{64-27}=\frac{23}{37}$$
+
+
+
+Que forma el ciclo:
+$$\{ \frac{23}{37}, \frac{53}{37}, \frac{98}{37}, \frac{49}{37}, \frac{92}{37}, \frac{46}{37}\}$$
+
+Este Ciclo de Collatz Racional podría reescribirse como un 2-Ciclo de Collatz con $x_1=2$, $y_1=1$, $x_2=1$, $y_2=2$:
+$$\{(2,1),(1,2)\}$$
+
+Bajo esta nueva definición, se verificará que $l=\sum\limits_{j=0}^{k-1} x_j + \sum\limits_{j=0}^{k-1}y_j$ será la longitud del Ciclo de Collatz.
+
+Podemos por comodidad, definir $x:=\sum\limits_{j=0}^{k-1} x_j$ como la cantidad de términos impares en el Ciclo de Collatz y también $y:=\sum\limits_{j=0}^{k-1} y_j$ como la cantidad de términos pares, obteniendo así la relación $l=x+y$.
+
+
+
+\subsection{Fórmula 1-Ciclo de Collatz}
+En párticular, para un 1-Ciclo de Collatz $\{ (x_1, y_1) \}$, tendremos $x=x_1$, $y=y_1$, y por tanto $l=x+y=x_1+y_1$.
+La fórmula \ref{FormulaCicloCollatz} nos queda ahora como:
+\begin{equation}
+    \label{Formula1CicloCollatz}
+    q = \frac{3^y-2^x}{2^{x+y}-3^y}
+\end{equation}
+Que puede reescribirse también como:
+\begin{equation}
+    \label{Formula1CicloCollatzAlterna}
+    q = -1 + 2^x\frac{2^y-1}{2^{x+y}-3^y}
+\end{equation}
+
+Por lo tanto la búsqueda de 1-Ciclos con valores en $\mathbf{Z}$, se reduciría a encontrar $x,y \in \mathbf{N}$ tal que $2^{x+y}-3^y$ divida a $2^y-1$ (puesto que no divide a $2^x$).
+
+Si además imponemos la condición de que $2^{x+y}>3^y$ estaremos buscando 1-Ciclos de Collatz en $\mathbf{N}$.
+
+Está sin embargo demostrado (\cite{LowerBoundsCycleLength}) que el único 1-Ciclo en $\mathbf{N}$ (y de hecho el único k-ciclo con $k\leq91$) es el 1-Ciclo $\{(1,0)\}$ correspondiente a nuestro ya conocido ciclo $\{1,2\}$ de longitud 2.
+
+También está demostrado (\cite{Lagarias1990}) que los únicos Ciclos de Collatz en $\mathbf{Z}$ con longitud menor de $250.000$ son:
+\begin{enumerate}
+    \item $\{ {1, 2} \}$ con paridad $\{ 1, 0 \}$
+    \item $\{ {0} \}$ con paridad $\{ 0 \}$
+    \item $\{ {-1} \}$ con paridad $\{ 1 \}$
+    \item $\{ {-5, -7, -10} \}$ con paridad $\{ 1, 1, 0 \}$
+    \item $\{ {-17, -25, -37, -55, -82, -41, -61, -91, -136, -68, -34} \}$ con paridad $\{ 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0 \}$
+\end{enumerate}
+
+Los ciclos generados por $0$ y por $-1$ podemos considerarlos 0-ciclos o puntos estables ya que son ciclos de un solo elemento.
+
+Los ciclos generados por $1$ y por $-5$ serían 1-ciclos de la forma $\{ (1,1) \}$ y $\{ (2,1) \}$.
+
+El ciclo generado por $-17$ sería un 2-ciclo de la forma $\{ (4,1), (3,3) \}$
+
+Como podemos observar el 2-ciclo generado por $-17$ es el mismo conjunto que el 2-ciclo generado por $-41$ y lo representaríamos con $-17$ como primer elemento al ser el menor de ambos (en valor absoluto).
+
+
+
+\subsection{Fórmula de un 2-Ciclo de Collatz}
+En párticular, para un 2-Ciclo de Collatz $\{ (x_1, y_1),(x_2,y_2) \}$, la fórmula \ref{FormulaCicloCollatz} nos quedaría como:
+
+\begin{equation}
+    \label{Formula2CicloCollatz}
+        q = \frac{3^{x_1+x_2} - 2^{x_1}3^{x_2} + 2^{x_1+y_1}3^{x_2} - 2^{x_1+y_1+x_2}  }{2^{x_1+y_1+x_2+y_2}-3^{y_1+y_2} }
+\end{equation}
+
+Ahora tomando por comodidad $l_1 = x_1 + y_1$, $l_2 = x_2 + y_2$, $l=l_1+l_2$, $x=x_1+x_2$, $y=y_1+y_2$ y sacando $-1$ de la fracción y agrupando términos obtendríamos:
+
+\begin{equation}
+    \label{Formula2CicloCollatzAlterna}
+        q = -1 + 3^{x_2}2^{x_1} \frac{2^{y_1} - 1}{2^l-3^x} + 2^{l_1}2^{x_2} \frac{2^{y_2}-1}{2^l-3^x}
+\end{equation}
+
+Si consiguiéramos de alguna manera encontrar $x_1,y_1,x_2,y_2 \in \mathbf{N}$ de forma que $2^l-3^x$ divida simultáneamente a $2^{y_1}-1$ y a $2^{y_2}-1$ tendríamos automáticamente un 2-ciclo.
+
+Si bien podrían existir otros 2-ciclos que no verificaran lo anterior, una estrategia de búsqueda podría ser realizar un algoritmo que iterara sobre estas variables en busca de esta divisibilidad.
+
+
+
+
+\subsection{Fórmula de un k-Ciclo de Collatz}
+Si en general partimos de un k-Ciclo de Collatz con $k$ arbitrario: $\{ (x_1, y_1), ..., (x_{k},y_{k}) \}$, la fórmula \ref{FormulaCicloCollatz} nos quedaría como:
+
+\begin{equation}
+    \label{FormulakCicloCollatz}
+        q = \frac{\sum\limits_{j=1}^k 3^{X-X_j}2^{L_{j-1}}(3^{x_j}-2^{x_j})}{2^L-3^X} 
+\end{equation}
+
+Donde hemos tomado por comodidad:
+
+$X_j = \sum\limits_{i=1}^j x_i$ ($X_0=0, X_1=x_1$, $X_2=x_1+x_2$,...)
+
+$L_j = \sum\limits_{i=1}^j x_i + y_i$ ($L_0=0, L_1=x_1+y_1$, $L_2=x_1+y_1+x_2+y_2$,...)
+
+Y también para ahorrarnos el subíndice:
+
+$X=X_k$
+
+$L=L_k$
+
+Análogamente a los casos particulares anteriores, podemos extraer $-1$ de la fracción y arreglar términos para obtener una nueva ecuación:
+
+
+\begin{equation}
+    \label{FormulakCicloCollatzAlterna}
+        q = -1 + \sum_{j=1}^k 3^{X-X_j} 2^{L_{j-1}} 2^{x_j} \frac{2^{y_j}-1}{2^L-3^X}
+\end{equation}
+
+Si tomamos $k=1$ o $k=2$ obtendríamos nuestras fórmulas previas: \ref{Formula1CicloCollatz}, \ref{Formula1CicloCollatzAlterna}, \ref{Formula2CicloCollatz}, \ref{Formula2CicloCollatzAlterna}
+
+Si por ejemplo tomáramos $k=3$, obtendríamos:
+
+$X_1=x_1$
+$X_2=x_1+x_2$
+$X=X_3=x_1+x_2+x_3$
+$L_0=0$
+$L_1=x_1+y_1$
+$L_2=x_1+y_1+x_2+y_2$
+$L=L_3=x_1+y_1+x_2+y_2+x_3+y_3$
+
+y por tanto la fórmula \ref{FormulakCicloCollatzAlterna} nos quedaría:
+$$q = -1 + 3^{X-X_1}2^{L_0}2^{x_1}\frac{2^{y_1}-1}{2^L-3^X} + 3^{X-X_2}2^{L_1}2^{x_2}\frac{2^{y_2}-1}{2^L-3^X} + 3^{X-X}2^{L_2}2^{x_3}\frac{2^{y_3}-1}{2^L-3^X}$$
+
+Que remplazando nos quedaría finalmente:
+$$q = -1 + 3^{x_3+x_2}2^{x_1}\frac{2^{y_1}-1}{2^L-3^X} + 3^{x_3}2^{x_1+y_1+x_2}\frac{2^{y_2}-1}{2^L-3^X} + 2^{x_1+y_1+x_2+y_2+x_3}\frac{2^{y_3}-1}{2^L-3^X}$$
+
+Así pues, una estrategia para buscar k-Ciclos de Collatz en general (con valores en $\mathbf{N}$), podría ser hacer un algoritmo que itere sobre las variables $L$ y $X$ y buscar valores $y_1$, $y_2$,... de forma que se verifique la divisibilidad de cada uno de los $2^{y_i}-1$ entre el denominador común $2^L-3^X$.
+
+Más adelante en el documento, detallaremos como podemos utilizar el algoritmo de Shor para abordar el problema con computación cuántica siguiendo esta estrategia.
+
+
+
+
+\subsection{Tiempo de parada}
+Dada una Sucesión de Collatz $\{a_0, a_1, ...\}$ con $a_i$ definidos según \ref{SucesionCollatz}, definimos tiempo de parada $\sigma(n)$ como el menor $k$ de forma que $T^k(n)<n$, y se define como $\infty$ si dicho $k$ no existe.
+
+Una estrategia para abordar matemáticamente la conjetura de Collatz sería demostrar que dicho $k$ existe siempre para cualquier $n$, dado que así la conjetura podría ser probada por inducción.
+
+
+
+
+\subsection{Tiempo de parada total}
+Dada una Sucesión de Collatz $\{a_0, a_1, ...\}$ con $a_i$ definidos según \ref{SucesionCollatz}, definimos tiempo de parada total $\sigma_{\infty}(n)$ como el menor $k$ de forma que $T^k(n)=1$.
+Dicho de otra manera $\sigma_{\infty}(n):= inf\{ k: T^k(n) = 1\}$
+
+
+
+\subsection{Tiempo de parada total escalado}
+Dada una Sucesión de Collatz $\{a_0, a_1, ...\}$ con $a_i$ definidos según \ref{SucesionCollatz}, definimos tiempo de parada total escalado como $\gamma(n):=\frac{\sigma_{\infty}(n)}{log n}$
+
+
+
+\subsection{Cotas inferiores en el tiempo de parada}
+Existen infinitos enteros positivos cuyo tiempo de parada total esta acotado inferiormente:
+$$\sigma_{\infty}(n)>6.14316 \log n$$
+(\cite{LowerBoundsStoppingTime}).
+
+En este mismo paper, se afirma creer que la cota podría mejorarse a $6.95212 \log n$ pero se necesitaría más capacidad de computación.
+
+
+
+\subsection{Restricción en la longitud de un Ciclo}
+Dado un Ciclo de Collatz de longitud $l$, dicha longitud deberá verificar:
+
+\begin{equation}
+    \label{RestriccionLongitudCiclo}
+    l = 301 994a + 17 087 915b + 85 137 581c
+\end{equation}
+con $a,b,c \in \mathbf{Z}$, $a,c\geq 0$, $b>0$ y $ac=0$ (\cite{LowerBoundsCycleLength}).
+
+Podemos usar esta restricción para agilizar enormemente nuestros algoritmos de búsqueda de Ciclos de Collatz.
+
+
+
+
+\subsection{Inexistencia de k-Ciclos con $k\leq91$}
+Hasta la fecha, el mejor resultado que tenemos sobre la inexistencia de k-Ciclos de Collatz (exceptuando el ciclo trivial $\{1,2\}$ es que no existen k-Ciclos de Collatz con $k\leq91$ (\cite{hercher2023collatzmcycles}).
+
+Podemos utilizar esto para optimizar todavía más nuestros algoritmos de búsqueda de Ciclos de Collatz, descartándolos directamente si $k\leq91$.
+
+
+
+\subsection{Comprobación computacional}
+En 2021, se comprobó computacionalmente que todos los valores hasta $2^{68} \approx 2.95 \times 10^{20}$ convergen a $1$, es decir que la conjetura es cierta para todos los $n\in\mathbf{N}$ tal que $n\leq2^{68}$ (\cite{Barina2021}).
+
+
+
+\subsection{Cota para casi todas las órbitas}
+En 2019, Terrence Tao publicó lo que hasta hoy se conoce como el resultado más cercano a probar la conjetura sin llegar a demostrarla (\cite{Tao_2022}).
+
+Tao demostró utilizando densidad logarítmica, que dada una función $f:\mathbf{N}\longrightarrow\mathbf{R}$ con $\lim_{n \to \infty} f(n) = +\infty$, casi todas las órbitas de Collatz cumplen que $T_{min}(n) \leq f(n)$, donde se define $T_{min}(n):=\inf_{k\in\mathbf{N}}T^k(n)$.
+
+
+
+\subsection{Representación binaria}
