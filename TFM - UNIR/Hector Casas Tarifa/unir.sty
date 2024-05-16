@@ -1,0 +1,123 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{unir}
+%
+%---paquetes---------------------
+%
+%idioma y codificación
+\usepackage[spanish]{babel}
+
+%simbolos
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathabx}
+\usepackage{amsfonts}
+
+\usepackage{titling}
+\usepackage{titlesec}
+
+%imagenes
+\usepackage[dvips]{epsfig}
+\usepackage{graphicx}
+\usepackage{color}
+
+%colores en tablas
+\usepackage{colortbl}
+
+%bibliografía
+\usepackage[hyphens]{url}
+\usepackage[authoryear,round]{natbib}
+
+%cabeceras y pies de página
+\usepackage{vmargin}
+\usepackage{fancyhdr}
+\usepackage{sectsty}
+\pagestyle{fancy}
+\fancyhfoffset{20pt}
+\renewcommand{\headrulewidth}{0.0pt}
+\setlength{\headheight}{14pt}%
+\renewcommand{\maketitle}{\creaportada}
+\renewcommand{\baselinestretch}{1.5}
+
+\usepackage{etoolbox}
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{\if@openright\clearpage\else\clearpage\fi}{}{}
+
+%hiper-referencias
+\usepackage{hyperref}
+
+%
+\definecolor{azulunir}{rgb}{0,0.59,0.80}
+\definecolor{unir-azul-flojo}{rgb}{0,0.59,0.80}
+\definecolor{unir-azul-fuerte}{rgb}{0,0.59,0.80}
+
+\newcommand\director[1]{\def\@director{#1}}
+\newcommand\nombreciudad[1]{\def\@nombreciudad{#1}}
+\newcommand\titulacion[1]{\def\@titulacion{#1}}
+\director{}
+\nombreciudad{}
+
+\titleformat{\chapter}[hang]{\vspace{-4cm}\Huge\bfseries\color{azulunir}}{\thechapter. }{0pt}{\Huge\bfseries}
+
+%Entornos de teoremas
+\newtheorem{teo}{Teorema}[section]
+\newtheorem{prop}{Proposición}
+\newtheorem{coro}{Corolario}
+\newtheorem{lema}{Lema}
+\newtheorem{defi}{Definición}
+%estos entornos no están en itálica
+\theoremstyle{definition}
+\newtheorem{obs}{Observación}
+\newtheorem{ex}{Ejemplo}
+
+\newcommand{\creaportada}{\begingroup
+\thispagestyle{empty}
+\includegraphics[width= 0.8\textwidth]{logo_unir}
+
+\vspace{1cm}
+\centering{
+\begin{tabular}{!{\color{azulunir}\vrule width 2pt}p{12cm}}
+{\Large {\bf Universidad Internacional de la Rioja (UNIR)}} \\ \vspace{0.1cm}
+{ \huge {\bf Escuela Superior de Ingeniería y Tecnología}} \\ \vspace{0.1cm}
+{ \Large {\bf \@titulacion}}\\ \vspace{1cm}
+{\Huge {\bf {\color{azulunir}{\thetitle} }  }  }
+\end{tabular}
+}
+\vfill
+
+\noindent
+\flushleft{
+{\bf Trabajo Fin de Estudios}\\  \vspace{0.3cm}
+{\bf presentado por:} \theauthor\\  \vspace{0.3cm}
+{\bf Dirigido por:} \@director %\thedirector
+}
+\vspace{3cm}
+
+{\color{azulunir}{Ciudad:}} \@nombreciudad\\
+{\color{azulunir}{Fecha:}} \thedate
+\newpage
+\thispagestyle{empty}
+\endgroup}
+
+%---------------------------
+%cabecera del trabajo
+%---------------------------
+\lhead{}
+\rhead{\theauthor\\\@titulacion}
+%\lfoot{\thetitle}
+\rfoot{\thepage}
+\cfoot[]{}
+\chead[]{}
+
+\renewcommand{\labelitemi}{$\textcolor{unir-azul-fuerte}{\bullet}$}
+\renewcommand{\labelitemii}{$\textcolor{unir-azul-fuerte}{\cdot}$}
+\renewcommand{\labelitemiii}{$\textcolor{unir-azul-fuerte}{\diamond}$}
+\renewcommand{\labelitemiv}{$\textcolor{unir-azul-fuerte}{\ast}$}
+\titleformat{\chapter}[hang]{\vspace{-4cm}\huge\bfseries\color{unir-azul-fuerte}}{\thechapter. }{0pt}{\Huge\bfseries}
+\chapterfont{\color{unir-azul-fuerte}}
+\sectionfont{\color{unir-azul-fuerte}}
+\subsectionfont{\color{unir-azul-fuerte}}
+\renewcommand{\listfigurename}{Índice de Ilustraciones}
+\renewcommand{\listtablename}{Índice de Tablas}
+\renewcommand{\contentsname}{Índice de Contenidos}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabla}
