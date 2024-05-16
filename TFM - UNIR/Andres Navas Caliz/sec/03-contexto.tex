@@ -1,4 +1,389 @@
-\chapter{Contexto y estado del técnica}
+\chapter{Contexto y estado de la técnica}
+
 \section{Introducción a la computación cuántica}
+
+En la segunda mitad del siglo \textit{XX}, en plena revolución científica de la física de partículas, la física teórica y otras ramas, se fundó un nuevo campo del conocimiento, la computación cuántica. Esta nueva rama del conocimiento es descendiente directa de dos de las teorías físicas mas importantes que vieron su nacimiento en la primera mitad del siglo \textit{XX}. Por un lado, la mecánica cuántica, teoría que da cuenta del comportamiento de la materia a pequeña escala, la cual fue desarrollada principalmente desde finales del siglo \textit{XIX} hasta los años 40 del siglo \textit{XX}. Por otro lado, la teoría de la información fundada por Shannon en su famoso artículo de 1948 \citep{Shannon1948}. En ese trabajo se introduce la teoría matemática detrás de la comunicación de información, estableciendo conceptos clave como la entropía de la información, entre otros conceptos. Shannon propuso un marco teórico que revolucionó nuestra comprensión de cómo la información es una magnitud física medible. \\
+
+De las combinación de las dos teorías nace la computación cuántica. En el artículo de 1980 \citep{benioff}, Paul Benioff introduce la idea de una computadora modelada como un sistema físico cuántico, abriendo nuevas posibilidades en la intersección entre la computación y la física fundamental. Posteriormente al artículo de Benioff, en una conferencia de 1982 \citep{richard}, Richard Feynman apoyado en el artículo de Benioff planteó la idea de utilizar sistemas basados en las reglas de la mecánica cuántica para simular sistemas cuánticos y poder superar así las limitaciones presentes en el paradigma de computación clásico. \\
+
+Desde entonces, se ha explorado la posibilidad de utilizar el marco teórico de la mecánica cuántica para poder diseñar algoritmos que superen a sus análogos clásicos. Este hecho no se vio confirmado hasta que en 1992, se publico un trabajo \citep{deutsch}, en el cual sus autores plateaban, por primera vez, un algoritmo cuántico capaz de resolver una tarea especifica, con una complejidad de resolución menor que cualquier posible algoritmo clásico existente. El problema a resolver consistía en clasificar si una función discreta dada era constante o balanceada, es decir, no constante. \\
+
+Posteriormente, numerosos algoritmos cuánticos han surgido, confirmando la hipótesis planteada por Feynman y Benioff de la utilidad de la mecánica cuántica como marco para el diseño de algoritmos cuánticos. Siendo uno de los algoritmos mas famosos e importantes del campo, el propuesto por Peter Shor de 1994 \citep{shor}, el cual permite encontrar los factores primos de cualquier numero de forma eficiente. \\
+
+La computación cuántica es un nuevo paradigma de procesamiento de la información que se basa en el marco de la mecánica cuántica para implementar nuevas operaciones no presentes en el paradigma clásico de computación. La unidad de información fundamental con la que se opera en este nuevo paradigma de computación no es el bit, el cual es un escalar, si no que es un nuevo objeto, el qubit. Dado que la computación cuántica se basa en la aplicación de las reglas de la mecánica cuántica, el formalismo de la computación cuántica es en esencia el formalismo de la mecánica cuántica. Bajo este marco teórico, la unidad de información básica, el qubit, representa un sistema cuántico de dos niveles, dos estados, bien diferenciados. Estos estados representan dos vectores del espacio vectorial usado para describir el sistema. En una notación compacta, denominada notación de Dirac \citep{dirac1939}, los dos estados cuánticos base del qubit representados por vectores vienen dados por la ecuación  \ref{eq: estados_qubits}.  
+
+
+\begin{equation}
+    \ket{0} = 
+    \begin{pmatrix}
+        1 \\
+        0
+    \end{pmatrix}
+    ;
+    \quad
+    \ket{1} = 
+    \begin{pmatrix}
+        0 \\
+        1
+    \end{pmatrix}
+    \label{eq: estados_qubits}
+\end{equation}
+
+
+Estos estados base, son vectores del espacio de Hilbert, $\mathbb{H}$. El hecho de que el formalismo necesario para describir el estado de un qubit sea el de un espacio vectorial produce que, a diferencia de los bits clásicos, el estado en el que se encuentra un qubit puede no ser ya solo $0$ o $1$, si no que puede ser cualquier combinación linear de los vectores base $\ket{0}$ y $\ket{1}$. Dado que además, los vectores son base del espacio de Hilbert, esta combinación linear puede contener coeficientes complejos. Es decir, dado un qubit, este puede encontrarse en el estado $\ket{\psi}$, que viene dado por la ecuación \ref{eq:estado_psi}.
+
+\begin{equation}
+    \ket{\psi} = \alpha\ket{0} + \beta\ket{1} \longrightarrow \alpha, \beta \in \mathbb{C}
+    \label{eq:estado_psi}
+\end{equation}
+
+La relación dada por \ref{eq:estado_psi} permite generar infinitos estados $\ket{\psi}$ dado los estados base $\ket{0}$ y $\ket{1}$.
+
+\newpage
+
+El espacio de Hilbert de un qubit es un espacio vectorial complejo es de dimensión 2, $\mathbb{C}^{2}$. Este espacio complejo de dimensión 2 puede visualizarse mediante la denominada esfera de Bloch. La esfera de Bloch es la representación geométrica del espacio de Hilbert de un qubit. Esta representación permite entender de forma sencilla e intuitiva los estados cuánticos en los que se puede encontrar un qubit. La figura \ref{fig:bloch_sphere} muestra la visualización de la esfera de Bloch.
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale = 0.5]{img/03-esfera_bloch.png}
+    \caption{Esfera de Bloch para un qubit.}
+    Fuente: adaptada de \cite{bloch}
+    \label{fig:bloch_sphere}
+\end{figure}
+
+Cada punto de la superficie de la esfera representa cada uno de los estados cuánticos puros, en los que se puede encontrar un qubit. Entendiendo como estado cuántico puro el estado que representa completamente la información sobre el sistema en cuestión, es decir, proporciona una descripción completa y detallada de las propiedades cuánticas del sistema. Bajo el marco de la esfera de Bloch, los coeficientes de la ecuación \ref{eq:estado_psi} pueden escribirse en función de los ángulos internos que fijan el estado $\ket{\psi}$, reescribiendo la ecuación por la expresión dada por la ecuación \ref{eq:estado_bloch}.
+
+
+\begin{equation}
+    \ket{\psi} = \cos{\frac{\theta}{2}}\ket{0} + e^{i\phi}\sin{\frac{\theta}{2}}\ket{1}
+    \label{eq:estado_bloch}
+\end{equation}
+
+La utilidad de la esfera de Bloch queda limitada a solo un qubit, ya que si se quiere describir el estado conjunto $\ket{\psi'}$ que representa el estado global de dos qubits o mas, la esfera de Bloch no es útil, dado que el espacio de Hilbert del estado $\ket{\psi'}$ es de dimensión mayor de 2. 
+
+\newpage
+
+El espacio de Hilbert conjunto del $\ket{\psi'}$ que describe el estado de $n$ qubits no es mas el producto tensorial de los espacios individuales de cada qubit. Sea $\mathbb{H}$ el espacio de Hilbert de un qubit, el espacio de Hilbert de $n$ viene dado por $\ket{\psi'} \in \mathbb{H}^{\otimes n}$. Esto hace inviable una representación fidedigna del estado mediante la esfera de Bloch.\\
+
+Realizar operaciones en el paradigma de computación cuántica, consiste en realizar transformaciones a los qubits de tal forma que el vector $\ket{\psi}$ de cada qubit cambie de posición dentro de su esfera de Bloch individual. Sin embargo hay una serie de sutilezas matemáticas que deben exponerse antes de continuar. Dado que trabajamos en el marco de la mecánica cuántica, existen una serie de requisitos que deben satisfacerse. En primer lugar, los vectores $\ket{\psi}$ que describen los estados cuánticos de un qubit o conjuntos de qubits, deben ser unitarios. Matemáticamente esta condición viene expresada por la ecuación \ref{eq:unitariedad}. 
+
+\begin{equation}
+    |\braket{{\psi}|{\psi}}| = 1
+    \label{eq:unitariedad}
+\end{equation}
+
+La interpretación física de esta condición implica que los estados cuánticos usados para describir un sistema, qubit, son completos, contienen toda la información necesaria para describir en su totalidad al sistema. Esta es la razón por la cual, los estados cuánticos puros de un qubit, son aquellos que se encuentran en la superficie de la esfera de Bloch, figura \ref{fig:bloch_sphere}, ya que son aquellos estados que tienen norma unidad. \\
+
+En segundo lugar, las operaciones que se implementan para operar sobre un estado $\ket{\psi}$ dado deben ser operaciones unitarias. Las operaciones en computación cuántica vienen descritas por operadores, los cuales son objetos matemáticos que realizan transformaciones sobre un estado cuántico dado. Los operadores, deben ser unitarios, esto implica que las transformaciones y operaciones que se realicen sobre un estado $\ket{\psi}$ no deben cambiar la norma del mismo. Matemáticamente la condición de  unitariedad dado un operador $U$ viene dada por la ecuación \ref{eq:operador_unitario}.
+
+\begin{equation}
+    U U^{\dagger} = U^{\dagger} U = I
+    \label{eq:operador_unitario}
+\end{equation}
+
+La condición de unitariedad es un restricción que debe cumplir cualquier operación que actué sobre un qubit o qubits, con la salvedad de la operación de medida para extraer la información del sistema.
+
+\newpage
+
+En computación cuántica los operadores representan rotaciones dentro de la esfera de Bloch. Los operadores pueden actuar sobre uno o varios qubits de forma simultanea. Dado que estamos operando sobre unidades de información utilizaremos la palabra puerta cuántica y operador cuántico de forma indistinta durante la presente sección.  \\
+
+Para aliviar el uso de la notación, durante años se ha ido desarrollando notación abstracta la cual permite identificar distintas operaciones que pueden realizarse sobre los qubits. Un ejemplo de puerta cuántica es la dada por la expresión \ref{eq:operador_x}.
+
+
+\begin{equation}
+    X = \begin{bmatrix}
+    0 & 1 \\
+    1 & 0 \\
+    \end{bmatrix}
+    \label{eq:operador_x}
+\end{equation}
+
+La acción de esta puerta, que solo puede actuar sobre un qubit, cambia o invierte el estado original del qubit. La ecuación \ref{eq:operador_x_estado} da cuenta de la acción de la puerta sobre un qubit en un estado general $\ket{\psi}$.
+
+\begin{equation}
+    X \ket{\psi} = X(\alpha\ket{0} + \beta\ket{1}) = \beta\ket{0} + \alpha\ket{1}
+    \label{eq:operador_x_estado}
+\end{equation}
+
+En términos de la esfera de Bloch se ha desplazado el estado del qubit desde un punto dado de la superficie de la esfera hasta aquel situado en el punto diametralmente opuesto. El operador que permite realizar un desplazamiento genérico para desplazar el estado $\ket{\psi}$ a cualquier punto de la esfera de Bloch es el dado por la expresión \ref{eq:matriz_bloch}.
+
+\begin{equation}
+    \hat{R}(\theta, \phi) = 
+    \begin{pmatrix}
+        \cos{\frac{\theta}{2}} & -\sin{\frac{\theta}{2}}e^{-i\phi} \\
+        \sin{\frac{\theta}{2}}e^{i\phi} & \cos{\frac{\theta}{2}}
+    \end{pmatrix}
+    \label{eq:matriz_bloch}
+\end{equation}
+
+Las expresiones \ref{eq:operador_x} y \ref{eq:matriz_bloch} son puertas cuánticas que tan solo pueden actuar sobre un qubit. Si se quiere implementar tareas de computo en un ordenador cuántico para que pueda llegar a ser una maquina universal cuántica, esto es, poder implementar cualquier tipo de algoritmo cuántico, es necesario introducir puertas cuánticas capaces de actuar sobre 2 qubits. Una de las puertas cuánticas de dos qubits mas conocida es la puerta CNOT, dada por la expresión \ref{eq:cnot}.
+
+
+\begin{equation}
+    \text{CNOT} = \begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 1 \\
+    0 & 0 & 1 & 0 \\
+    \end{bmatrix} = 
+    \begin{quantikz}
+     &  \ctrl{1}      &  \qw \\
+     &  \targ{}       & 
+    \end{quantikz}
+    \label{eq:cnot}
+\end{equation}
+
+\newpage
+
+Esta puerta cuántica implementa la operación clásica OR exclusiva. Cualquier operación cuántica que opere sobre $n$ qubits puede descomponerse en operaciones cuánticas de 1 y 2 qubits. Además, existe un conjunto de puertas base que permiten la construcción genérica de cualquier operador unitario, esta familia de puertas base no es univoca. La elección de que conjunto de puertas base se utiliza para realizar la descomposición depende principalmente de la tecnología del hardware cuántico empleado. 
+
+\section{Formulación de problemas de optimización en computación cuántica}
+
+En el paradigma de computación cuántica, la formulación de problemas de optimización no es una tarea trivial, dado que esta debe adaptarse al propio paradigma y a las características únicas de los sistemas cuánticos. En este contexto, es crucial definir cómo representar un problema clásico de optimización, como el problema del viajante $(TSP)$ o el problema de la mochila  $(KP)$, utilizando conceptos cuánticos como qubits, operadores unitarios y medidas cuánticas. Una vía para modelar problemas de optimización, ya sea de naturaleza cuántica o clásica para poder ser resueltos dentro del paradigma de computación cuántica, es utilizar una formulación binaria del problema. Esto permitiría una correspondencia directa entre las variables del problema y los qubits del sistema cuántico. Dado que cada qubit podría representar una variable del problema, y donde el estado del qubit, $\ket{0}$ o $\ket{1}$, representaría el valor de la variable binaria. \\
+
+Un caso particular de formulación binaria dado un problema, es la denominada formulación QUBO o Quadratic unconstrained binary optimization  por sus siglas en inglés. De manera formal si se denota $\Vec{x} = (x_{1}, ..., x_{n})$ como el conjunto de las variables binarias del problema y $f$ la función objetivo del problema, un problema tipo QUBO viene representado por la ecuación \ref{eq:qubo}.
+
+\begin{equation}
+    f(\Vec{x}) = \sum_{i=1}^{n} \alpha_{i} x_{i} + \sum_{i,j}^{n} \beta_{ij} x_{i} x_{j}
+    \label{eq:qubo}
+\end{equation}
+
+
+El problema de optimización se ha transformado en un problema de optimización combinatoria, en el cual se quiere encontrar el vector $\Vec{x}$ que minimice la función $f$.
+
+\newpage
+
+Existen serie de consideraciones a tener en cuenta cuando se modeliza un problema de optimización en una formulación QUBO. En primer lugar, dado que las variables son binarias, es decir, solo pueden tomar el valor $0$ o el valor $1$, implica que $x_{i}^{2} = x_{i}$ para cualquier variable binaria. \\
+
+Otro punto a considerar de la formulación QUBO es que no permite la existencia de restricciones. Sin embargo, en muchos de los problemas, la existencia de restricciones es algo común. Una forma habitual de incorporar las restricciones a la función objetivo $f(\Vec{x})$ de tal manera que formalmente las restricciones se eliminen aunque si estén incorporadas, es incluir las restricciones como términos de penalización adicionales dentro de la función $f$ del tal forma que si una solución no satisface una restricción, se eleve artificialmente el valor de la función objetivo. Una restricción típica puede ser la dada por la expresión \ref{eq:linear_restriction}.
+
+\begin{equation}
+    \sum_{i=1}^{n}c_ix_i = C, \; \; c_i \in \mathbb{Z} 
+    \label{eq:linear_restriction}
+\end{equation}
+
+Esta restricción se incorpora a la función $f$ como un termino adicional resultando en una nueva función objetivo dada por la ecuación \ref{eq:qubo_restriction}.
+
+\begin{equation}
+    f(\Vec{x}) = \sum_{i=1}^{n} \alpha_{i} x_{i} + \sum_{i,j}^{n} \beta_{ij} x_{i} x_{j} + \lambda_0(\sum_{i=1}^n c_ix_i-C)^2
+    \label{eq:qubo_restriction}
+\end{equation}
+
+El parámetro $ \lambda_0$ es un hiperparametro, denominado constante de Lagrange, cuyo valor se determina de forma heurística, de tal forma que si una solución no satisface la restricción se eleve 'moderadamente' la energía de la función objetivo. Otras restricciones mas complicadas como aquellas que poseen desigualdades, son mas complejas de introducir, ya usualmente se requiere de variables adicionales, denominadas variables slack, para transformar la restricción de desigualdad en una restricción de igualdad  y para posteriormente introducirse como termino de penalización dentro de la función objetivo. Sea una restricción de desigualdad como la dada por la expresión \ref{eq:restriction_inequality}.
+
+
+\begin{equation}
+    \sum_{i=1}^nl_ix_i \leq B, \; \; l_i \in \mathbb{Z}
+    \label{eq:restriction_inequality}
+\end{equation}
+
+Esta restricción se transforma en una restricción de igualdad dada por la expresión \ref{eq:restriction_nonequal_equal}.
+
+\begin{equation}
+    B - \sum_{i=1}^n l_ix_i - S = 0
+    \label{eq:restriction_nonequal_equal}
+\end{equation}
+
+\newpage
+
+Donde $S$ toma valores cuyo rango es $0 \leq S \leq B - min_x \sum_{i=1}^n l_ix_i$. Para transformar $S$ en variables binarias, se expresa $S$ como una suma de variables binarias tal y como se observa en la expresión \ref{eq:s_binary}.
+
+\begin{equation}
+    S = \sum_{k=0}^{N-1}2^ks_k
+    \label{eq:s_binary}
+\end{equation}
+
+Introduciendo \ref{eq:s_binary} en  \ref{eq:restriction_nonequal_equal} e introduciendo el resultado en \ref{eq:qubo}, conseguimos incluir la restricción de desigualdad como un termino de penalización tal y como se puede ver en la ecuación  \ref{eq:s_binary}.
+
+\begin{equation}
+    f(\Vec{x}) = \sum_{i=1}^{n} \alpha_{i} x_{i} + \sum_{i,j}^{n} \beta_{ij} x_{i} x_{j} + \lambda_1 (B - \sum_{i=1}^n l_ix_i - \sum_{k=0}^{N-1}2^ks_k)^2,
+    \label{eq:s_binary}
+\end{equation}
+
+Se han desarrollado metodologías alternativas como la presentada en \citep{montañez} donde las restricciones de desigualdad se introducen como términos de penalización en la función objetivo $f$ sin requerir variables adicionales para tal objetivo. \\
+
+En resumen, la modelización de problemas de optimización mediante formulación QUBO es una forma habitual de proceder cuando se pretende formular un problema de optimización de tal forma pueda ser computado dentro del paradigma de computación cuántico. Existen formulaciones en donde se permite la existencia dentro de la función objetivo $f$ de términos de orden superior a los cuadráticos. No obstante, dichas formulaciones no tienen impacto alguno dentro del trabajo desarrollado en este documento.
+
+
 \section{Algoritmos variacionales cuánticos}
+
+En está sección se presentan la clase de algoritmos cuánticos utilizados en el desarrollo de trabajo. Los algoritmos cuánticos variacionales conforma un subconjunto de algoritmos cuánticos orientados a la resolución de problemas de optimización. Es necesario introducir un nuevo concepto de mecánica cuántica para explicar de forma holística el funcionamiento este grupo de algoritmos.\\
+
+El Hamiltoniano de un sistema es el operador cuántico de energía del sistema. Este operador determina cual es la energía de cada estado posible dentro del espacio de estados del sistema cuántico.
+
+\newpage
+
+El Hamiltoniano no es un operador unitario, a diferencia de las puertas cuánticas, dado que el objetivo de este operador no es actuar sobre un qubit o conjunto de qubits para cambiar su estado, si no que el objetivo de este operador es conocer la energía del estado en el que se encuentra el sistema cuántico. Formalmente, la acción del Hamiltoniano, $H$ sobre un estado del sistema $\ket{\psi}$ viene dado por la ecuación \ref{eq:autovalor_h}.
+
+\begin{equation}
+    H \ket{\psi} = E \ket{\psi}
+    \label{eq:autovalor_h}
+\end{equation}
+
+La ecuación \ref{eq:autovalor_h} se denomina ecuación de autovalores y permite obtener la energía de cada estado $\ket{\psi}$ del sistema. Este hecho permite mostrar una analogía entre la ecuación de autovalores con la evaluación de una función QUBO $f(\Vec{x})$, para un conjunto de valores dados de las variables binarias. Dado un vector $\ket{\psi}$ la ecuación \ref{eq:autovalor_h} nos devuelve el valor $E$ asociado para un $H$ especifico, del mismo modo que dado un vector de variables fijadas $\Vec{x}_{0}$, la evaluación $f(\Vec{x}_0)$ nos devuelve el valor de $f$ en el estado $\Vec{x}_0$. Se puede establecer una relación matematica entre las formulaciones QUBO clásicas de los problemas y formulaciones cuánticas mediante Hamiltonianos. Existe un mapeo directo de la formulación QUBO a una formulación cuántica mediante Hamiltonianos denominada formulación Ising. La transformación entre formulaciones QUBO-Ising viene dada por la expresión \ref{eq:qubo_ising}.
+
+\begin{equation}
+    x_{i} \longrightarrow \frac{1 - z_{i}}{2}
+    \label{eq:qubo_ising}
+\end{equation}
+
+Donde $z_{i}$ representa el operador o puerta cuántica de Pauli $z$ actuando sobre el qubit i-esimo. Esta regla permite traducir de forma directa un problema QUBO, escrito en terminos de variables binarias clásicas, a un Ising, escrito en terminos de operadores cuánticos. Podemos ahora introducir el funcionamiento de los algoritmos cuánticos variacionales una vez entendida la relación entre la formulación de Hamiltonianos y la formulación  QUBO de problemas clásicos.\\
+
+Los algoritmos variacionales cuánticos hacen uso del denominado principio variacional de Rayleigh-Ritz. El principio viene expresado matemáticamente por la ecuación \ref{eq:variational_principle}.
+
+\begin{equation}
+    \bra{\psi} H \ket{\psi} \geq E_{0}
+    \label{eq:variational_principle}
+\end{equation}
+
+El principio variacional determina que el valor esperado del Hamiltoniano, la energía del sistema que es observada, se minimiza cuando $\ket{\psi}$ representa el estado fundamental del sistema cuántico. Para cualquier otro estado genérico $\ket{\psi_{i}}$ el valor esperado, $E_{i}$, siempre es mayor que el valor mínimo $E_{0}$. Esto permite establecer un criterio de búsqueda para encontrar el estado $\ket{\psi}$ que representa el estado fundamental del sistema, ya que será este estado el que minimice la ecuación \ref{eq:variational_principle}. Los algoritmos variacionales cuánticos hacen uso de este principio para encontrar el estado $\ket{\psi}$ que minimiza el valor esperado del Hamiltoniano. En terminos clásicos esto es equivalente a encontrar el vector de parámetros $\Vec{x}$ que minimiza la función de coste $f(\Vec{x})$. \\
+
+El primer algoritmo variacional cuántico propuesto, fue el denominado  Variational Quantum Eigensolver, o VQE por sus siglas en inglés, presentado en \citep{peruzzo}. El flujo de trabajo del algoritmo VQE puede resumirse mediante la imagen \ref{fig:vqe}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale = 0.7]{img/03-vqe_workflow.png}
+    \caption{Flujo de trabajo del algoritmo VQE.}
+    Fuente: adaptada de \citep{peruzzo}.
+    \label{fig:vqe}
+\end{figure}
+
+
+El algoritmo VQE como algoritmo híbrido clásico-cuántico consta de dos partes bien diferenciadas. En un primer paso, el ordenador cuántico prepara un estado cuántico $\ket{\psi(\Vec{\theta})}$ que depende de un conjunto de parámetros $\Vec{\theta}$. Esto se consigue mediante los denominados PQC o circuitos cuánticos parametrizados, los cuales son una secuencia de puertas cuánticas que actúan sobre los qubits y que dependen de un conjunto de parámetros $\Vec{\theta}$. La construcción del estado $\Vec{\theta}$ viene dado por la expresión \ref{eq:pqc}.
+
+\begin{equation}
+    |\psi(\boldsymbol{\Vec{\theta}}) \rangle = U(\boldsymbol{\Vec{\theta}}) |0\rangle^{\otimes n}
+    \label{eq:pqc}
+\end{equation}
+
+Donde $U(\boldsymbol{\Vec{\theta}})$ es el operador unitario que representa la acción del circuito cuántico parametrizado sobre los n qubits que se encuentran todos ellos en el estado $\ket{0}$. La acción del PQC se realiza descomponiendo el operador global en terminos de operadores o puertas cuánticas de 1 y 2 qubits, tal y como se ve en la expresión \ref{eq:pqc_descompuesto}.
+
+\begin{equation}
+    U(\boldsymbol{\Vec{\theta}}) = U_n(\theta_n) U_{n-1}(\theta_{n-1}) \cdots U_1(\theta_1)
+    \label{eq:pqc_descompuesto}
+\end{equation}
+
+Una ver el ordenador cuántico ha preparado el sistema en el estado $\ket{\psi(\Vec{\theta})}$, el siguiente paso es el calculo del valor esperado del Hamiltoniano que codifica el problema que nos interesa resolver. Una vez calculado el valor esperado del Hamiltoniano, un ordenador clásico analiza el resultado y calcula un nuevo vector de parámetros $\Vec{\theta'}$ para construir un nuevo estado $\ket{\psi(\Vec{\theta'})}$. Este nuevo estado $\ket{\psi(\Vec{\theta'})}$ a su vez se utiliza para calcular el valor del Hamiltoniano para posteriormente actualizar los parámetros $\Vec{\theta}$ del circuito cuántico parametrizado. \\
+
+Realizando este proceso de forma iterativa, se llegará en un numero finito de pasos a un circuito cuántico parametrizado que genere un estado $\ket{\psi(\Vec{\theta_{final}})}$, el cual minimiza el valor esperado del Hamiltoniano. Por el principio variacional, este vector representa el estado que minimiza la energía del sistema, o lo que es lo mismo, el estado fundamental. Se ha encontrado así el estado que minimiza el Hamiltoniano o en terminos de formulación QUBO, se ha encontrado el valor de las variables binarias que minimiza la función de coste $f$. \\
+
+Posterior a la aparición del algoritmo VQE, numerosos algoritmos cuánticos variacionales han surgido en la literatura académica. Uno de los mas destacados es el algoritmo Quantum Approximate Optimization Algorithm, o QAOA  por sus siglas en inglés, desarrollado en \citep{farhi}. La diferencia principal entre el algoritmo QAOA y el algoritmo VQE es en que tipo de circuito cuántico parametrizado se usa para la preparación del estado  $\ket{\psi(\Vec{\theta})}$. En el algoritmo QAOA el circuito encargado de construir un estado parametrizado $\ket{\psi(\Vec{\theta})}$ viene dado por la expresión \ref{eq:pqc_qaoa}.
+
+
+\begin{equation}
+    U(\vec \gamma,\vec \beta)=\prod_{k=1}^p e^{-i \gamma_k H_C} e^{- i \beta_k H_M}
+    \label{eq:pqc_qaoa}
+\end{equation}
+
+\newpage
+
+Donde las $H_C$ hace referencia al hamiltoniano problema y $H_M=-\sum_{i=1}^n X_i$. El productorio implica la aplicación de $p$ capas, de los operadores $e^{-i \gamma_k H_p}$ y $e^{- i \beta_k H_d}$, que actúan sobre el estado base. En la imagen \ref{fig:qaoa_layers} se puede observar la estructura de $p$ capas para construir un estado parametrizado.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale = 0.4]{img/03-qaoa_layers.png}
+    \caption{Esquema de PQC para el algoritmo QAOA.}
+    Fuente: adaptada de \citep{jack}
+    \label{fig:qaoa_layers}
+\end{figure}
+
+Los operadores expresados como exponenciales complejas pueden implementarse a través de una secuencia de puertas cuánticas de 1 y 2 qubits. El resto del funcionamiento de algoritmo es equivalente al del algoritmo VQE. Una vez construido el estado parametrizado, $\ket{\psi(\Vec{\gamma}, \Vec{\beta})}$, se evalúa el valor esperado del Hamiltoniano para posteriormente, gracias a un ordenador clásico que implementa un optimizador, se actualizan el conjunto de parámetros para reducir el valor esperado de la energía del sistema. \\
+
+En general cualquier algoritmo cuántico variacional consta de tres componentes principalmente. 
+
+\begin{itemize}
+    
+    \item Circuito cuántico parametrizado: modelo cuántico utilizado para preparar el estado inicial en un ordenador cuántico. Codifica los parámetros variacionales que pueden ajustarse durante el proceso de optimización.
+
+    \item Optimizador clásico: El optimizador clásico se encarga de ajustar los parámetros variacionales en el PQC para minimizar la función de coste. Utiliza técnicas clásicas de optimización para encontrar el conjunto óptimo de parámetros que produzcan el resultado deseado.
+
+    \item Función de coste: La función de coste cuantifica el objetivo que el algoritmo variacional pretende optimizar. Evalúa la calidad de la salida obtenida del circuito o modelo cuántico. El objetivo es minimizar la función de coste ajustando los parámetros variacionales.
+    
+\end{itemize}
+
+\newpage 
+
+Puede afirmarse que tanto el algoritmo VQE como el algoritmo QAOA son los algoritmos fundacionales dentro de los algoritmos cuánticos variacionales. Numerosos algoritmos han surgido como versiones modificadas y mejoradas tanto del algoritmo VQE como del algoritmo QAOA. Por ejemplo el algoritmo F-VQE desarrollado en \citep{amaro} implementa un optimizador clásico nativo basado en el descenso del gradiente. Otras versiones modificadas del algoritmo VQE como el algoritmo MOVCO, desarrollado en \citep{luis}, implementa dos funciones de coste que deben ser optimizadas de forma simultanea. Así mismo, también se han desarrollado numerosas versiones del algoritmo QAOA, como el ADAPT-QAOA desarrollado en \citep{zhu}, en el cual cada una de las capas del QAOA se optimiza de forma iterativa y donde la construcción del circuito cuántico parametrizado se construye de forma dinámica. \\
+
+El objetivo de todas las versiones surgidas posteriores a los algoritmos VQE y QAOA originales tratan de mitigar y superar las deficiencias que existen en esta clase de algoritmos. Los problemas que presentan esta clase de algoritmos está asociado principalmente a que no aseguran la convergencia a soluciones que sean óptimos globales. Otro problema asociado se debe al efecto de Barren Plateaus, un fenómeno por el cual las superficies de energía, de las funciones de costo, exhiben zonas casi planas en el paisaje de la función objetivo. Esto significa que los gradientes de la función (es decir, las direcciones en las que cambia más rápidamente la función) se vuelven extremadamente pequeños o cercanos a cero en muchas partes del espacio de parámetros. La presencia de estas Barren Plateaus puede ser problemática para los algoritmos de optimización cuántica, ya que los métodos estándar que confían en la exploración guiada por gradientes pueden volverse ineficaces. 
+
 \section{Introducción a tensor networks}
+
+
+Tensor networks es una herramienta fundamental en física teórica y computación cuántica que permite representar estados cuánticos complejos y realizar cálculos eficientes en sistemas de muchas partículas. En una tensor network, un estado cuántico se descompone en un conjunto de tensores interconectados, donde cada tensor representa una parte localizada del sistema. La estructura y disposición de estos tensores captura las correlaciones cuánticas entre las distintas partes del sistema. \\
+
+La utilidad de las tensor networks radica en su capacidad para manejar estados cuánticos de alta dimensionalidad de manera eficiente. Por ejemplo, en sistemas cuánticos con muchas partículas, representar directamente el estado completo sería computacionalmente prohibitivo debido a la explosión combinatoria de las dimensiones. Sin embargo, mediante una representación basada en tensor networks, podemos enfocarnos en las correlaciones locales significativas y omitir aquellas que son menos relevantes, reduciendo así el costo computacional. Es decir, permite un manejo eficiente de sistemas cuánticos grades que bajo otro formalismo no sería factible. \\
+
+
+Los tensor networks se han aplicado con éxito en diversas áreas, incluida la simulación de materia condensada y sistemas cuánticos, donde permiten estudiar propiedades como la energía, la magnetización y las funciones de correlación. Además, han encontrado aplicaciones en el campo emergente del aprendizaje automático cuántico. \\
+
+Dado un estado cuántico $\ket{\psi}$, se puede expresar dicho estado cuántico en terminos de una combinación lineal de los estados base, que para el caso particular de un solo qubit son los estados $\ket{0}$ y $\ket{1}$. La expansión del estado viene dado por la expresión \ref{eq:psi_expansion}.
+
+\begin{equation}
+    \ket{\psi} = \sum_{i_1, i_2, ...,i_N} C_{i_1, i_2, ...,i_N} \ket{i_1}\otimes\ket{i_2}\otimes...\otimes \ket{i_N}
+    \label{eq:psi_expansion}
+\end{equation}
+
+Donde los estados $\ket{i_1}\otimes\ket{i_2}\otimes...\otimes \ket{i_N}$ son los estados de la base del estado $\ket{\psi}$ expresado en terminos de los estados base $\ket{i_s}$ de cada uno de los qubits del sistema. Los coeficientes $C_{i_1, i_2, ...,i_N}$ de la expansión puede entenderse como un tensor que posee $N$ índices cada uno de los cuales puede tomar valores distintos. Graficamente puede representarse, en el formalismo de tensor networks al tensor $C$ tal y como se observa en \ref{fig:orus}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale = 0.8]{img/03_tensor_coeficientes.png}
+    \caption{Representación del tensor de coeficientes $C$  de la expansión del estado $\ket{\psi}$.}
+    Fuente: adaptada de \citep{orus}
+    \label{fig:orus}
+\end{figure}
+
+\newpage
+
+En \ref{fig:orus} cada una de las patas del tensor $C$ representa cada uno de los índices del tensor. Sin embargo, la dimesionalidad del tensor $C$ es enrome para sistemas cuánticos de muchos qubits o partículas, por lo que es necesario descomponer el tensor $C$ en terminos de tensores mas pequeños para poder trabajar de forma eficiente con el. Formalmente y siguiendo la regla de índices de Einstein, un tensor $C$ puede expresarse como producto de varios tensores de menor rango, menor numero de índices, tal y como se muestra en la expresión \ref{eq:contracction}.
+
+\begin{equation}
+    C_{i j} = \sum_{\alpha} A_{i , \alpha} B_{j, \alpha} = A_{i , \alpha} B^{j, \alpha}
+    \label{eq:contracction}
+\end{equation}
+
+Esto permite expresar un tensor arbitrariamente grande en terminos de una descomposición de tensores de menor dimensión. Graficamente, esta descomposición puede dar lugar a distintas redes de tensores, dado que la descomposición de un tensor no es única. En la figura \ref{fig:c_descomposition} puede observarse distintas posibles descomposiciones del tensor $C$ en terminos de tensores de menor dimesionalidad.
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale = 0.7]{img/03-tensor_descomposicion.png}
+    \caption{Descomposición del tensor $C$ en distintas redes tensoriales.}
+    Fuente: adaptada de \citep{orus} 
+    \label{fig:c_descomposition}
+\end{figure}
+
+\newpage
+
+Las conexiones internas entre los tensores de la red representan los índices de los tensores que se contraen tal y como ocurre en la ecuación \ref{eq:contracction} para poder obtener el tensor $C$. Por otro lado, las conexiones abiertas, representan los índices físicos del tensor $C$, ya al contraer la red, estos índices sobreviven. La figura $(a)$ de la imagen \ref{fig:c_descomposition} representa un tipo especifico de descomposición denominada Matrix Product State, o MPS por sus siglas en inglés, y es una representación especialmente conveniente para simular sistemas en computación cuántica. Bajo la representación MPS, cada tensor de la red corresponde con un qubit del sistema cuántico, donde cada índice o pata abierta corresponde con la dimensión física del qubit. En el trabajo desarrollado en este documento se hará uso de la representación MPS para realizar simulaciones eficientes de sistemas cuánticos. Es importante tener en cuenta, que dado que bajo este formalismo podemos realizar simulaciones eficientes de sistemas cuánticos, pero simulaciones no exactas. El parámetro que dicta que tan buena es la aproximación entre la simulación aproximada y la exacta es la dimensión $D$, de los índices internos de la red de tensores. Cuanto mayor sea el valor de $D$ mejor será la aproximación. La dimensión de los índices internos determinan la cantidad de correlaciones que la red de tensores es capaz de capturar del sistema cuántico. Un sistema cuántico con correlaciones entre las partículas baja, requiere un valor bajo de $D$ para poder ser simulado de forma suficientemente buena. En la figura \ref{fig:mps_hilbert_space} podemos ver como la dimensión interna de los índices de la red impacta en el tamaño del espacio de Hilbert total que es capaz de capturar en la representación MPS.
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale = 0.55]{img/03-mps_espacio_hilbert.png}
+    \caption{Subespacio de Hilbert que es capaz de representar una red MPS en función de la dimensión interna $D$ para un sistema de $N$ qubits.}
+    Fuente: adaptada de \citep{orus} 
+    \label{fig:mps_hilbert_space}
+\end{figure}
+
+\newpage
+
+Sin embargo, aumentar la dimensión interna de la red de tensores conlleva un coste computacional, ya que por la ecuación \ref{eq:contracction}, el aumento de la dimensión implica un aumento en el numero de productos y sumas a realizar cuando se quieren contraer dos tensores de la red. Es necesario fijar una dimensión interna suficientemente alta para realizar simulaciones fidedignas pero que no impliquen un coste computacional prohibitivo.
+
+
+\section{Computación cuántica en entornos industriales}
+
+Es necesario contextualizar el estado teórico de los algoritmos cuánticos de los cuales se pretenden hacer uso con el estado del hardware en los cuales deben ejecutarse. Actualmente nos encontramos en la época denominada  ordenadores ruidosos de escala intermedia o NISQ por sus siglas en inglés. Las computadoras cuánticas en la era NISQ están limitadas en términos de la cantidad de qubits que poseen y la calidad de las operaciones cuánticas que pueden realizar. Esto significa que estas máquinas no están completamente libres de errores y tienen una capacidad de cómputo limitada en comparación con lo que se espera en sistemas cuánticos futuros. \\
+
+ Los qubits en las máquinas NISQ son susceptibles a errores debido a ruido y decoherencia cuántica. Estos errores pueden surgir debido a fluctuaciones ambientales y limitaciones tecnológicas en el control de los sistemas cuánticos. La decoherencia es el fenómeno físico por el cual un estado cuántico $\ket{\psi}$ se destruye después de un tiempo dado, es decir, el tiempo de coherencia es la cantidad de tiempo que un estado cuántico $\ket{\psi}$ permanece, el tiempo en el que el sistema cuántico conserva la información. Actualmente el tiempo de coherencia de los ordenadores cuánticos impone una restricción fuerte en terminos de la profundidad de los circuitos cuánticos que pueden ejecutarse. La profundidad del circuito no puede superar el tiempo de coherencia, esto provoca que los circuitos deban ser poco profundos y la cantidad de puertas cuánticas que se apliquen sean limitadas. Esto limita a su vez los algoritmos cuánticos que puede ser ejecutados actualmente en ordenadores cuánticos. Siendo los algoritmos cuánticos variacionales de los pocos tipos de algoritmos que actualmente pueden ejecutarse de forma relativamente fiable en las plataformas cuánticas. 
+
+ \newpage
+
+ Otro problema asociado al estado actual del hardware se debe al costo económico por el acceso y uso de plataformas cuánticas reales. El numero de ordenadores cuánticos disponibles es limitado, esto supone que el acceso al uso y ejecución de estos ordenadores conlleva un gran costo económico asociado, por lo que utilizar algoritmos cuánticos para la resolución de problemas que requieran de un uso intensivo de ordenadores cuánticos puede ser inviable en terminos de coste económico. 
+
+
+
+
+

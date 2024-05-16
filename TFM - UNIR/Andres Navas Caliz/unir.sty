@@ -12,7 +12,7 @@
 \usepackage{amsthm}
 \usepackage{mathabx}
 \usepackage{amsfonts}
-
+\usepackage{quantikz}
 \usepackage{titling}
 \usepackage{titlesec}
 
@@ -63,8 +63,10 @@
 
 \newcommand\director[1]{\def\@director{#1}}
 \newcommand\nombreciudad[1]{\def\@nombreciudad{#1}}
+\newcommand\codirector[1]{\def\@codirector{#1}}
 \newcommand\titulacion[1]{\def\@titulacion{#1}}
 \director{}
+\codirector{}
 \nombreciudad{}
 
 \titleformat{\chapter}[hang]{\vspace{-4cm}\Huge\bfseries\color{azulunir}}{\thechapter. }{0pt}{\Huge\bfseries}
@@ -99,7 +101,8 @@
 \flushleft{
 {\bf Trabajo Fin de Estudios}\\  \vspace{0.3cm}
 {\bf presentado por:} \theauthor\\  \vspace{0.3cm}
-{\bf Dirigido por:} \@director %\thedirector
+{\bf Dirigido por:} \@director \\%\thedirector
+{\bf Codirigido por:} \@codirector
 }
 \vspace{3cm}
 
