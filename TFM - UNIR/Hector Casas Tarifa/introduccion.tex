@@ -1,16 +1,23 @@
 \chapter{Introducción}
 
-La dificultad para mantener la coherencia en sistemas cuánticos ha sido siempre un gran obstáculo en el desarrollo de
-la computación cuántica. Por este motivo, la corrección cuántica de errores ha sido siempre un campo de gran interés
-en el ámbito del procesamiento de información cuántica \citep{qecb}.
+La mecánica cuántica es la teoría en Física que describe el comportamiento de la materia a escala atómica y subatómica (Feynman, Leighton y Sands, 1964). Su orígen suele ubicarse en dos artículos: uno de Max Planck (1901) que resolvía el problema conocido como la Catástrofe Ultravioleta proponiendo una discretización de la energía y otro Albert Einstein (1905) que daba una explicación satisfactoria para el efecto fotoeléctrico suponiendo que la luz se presentaba en forma de partículas. A lo largo del siglo XX, un gran número de científicos contribuyeron al desarrollo de esta disciplina introduciendo importantes conceptos tales como el principio onda-corpúsculo (De Broglie, 1924), la ecuación de Schrödinger (1926) o el principio de incertidumbre (Heisenberg, 1927), entre otros. 
 
-En este sentido, la publicación del código de \cite{shor95} fue un avance de gran interés ya que fue el primer
-algoritmo de corrección cuántica de errores funcional y abrió la puerta para superar el obstáculo frente al que se encontraba el desarrollo de la computación cuántica. Se trata de un código degenerado que permite la corrección de un error de amplitud y un error de fase en un qubit.
+A principios de los 80, Richard Feynman (1982) señaló que existían ciertos problemas físicos cuya simulación requería recursos que crecían de manera exponencial. La observación de esta dificultad ponía de manifiesto la necesidad de un nuevo paradigma de computación basado en los efectos de la mecánica cuántica. De esta manera, nace la computación cuántica.
 
-No obstante, mientras que la implementación del código propiamente dicho se encuentra bien documentada en fuentes
-tales como Quantum Computation and Quantum Information \citep{nielsenchuang} o el artículo original de \cite{shor95}, no se han encontrado implementaciones específicas del circuito correspondiente al cálculo del síndrome. Así pues, este trabajo pretende rellenar este vacío aportando posibles implementaciones de dicho circuito contempladas desde diferentes prismas.
+En este contexto, el bit clásico encuentra su contrapartida cuántica, el qubit (Schumacher, 1995). Así pues, los estados con lo que se puede computar dejan de ser únicamente los estados “0” y “1” si no también cualquier posible superposición cuántica de dichos estados. No obstante, es sabido que los estados cuánticos son efímeros y volátiles y tienen tendencia a destruirse, fenómeno conocido como pérdida de la coherencia cuántica (o decoherencia cuántica). Por lo tanto, uno de los requisitos que debe cumplir un qubit es que la capacidad de mantener su coherencia cuántica durante el tiempo suficiente para que pueda operarse sobre él (Divincenzo, 2000)
 
-\textbf{¿Me pregunto si esto iría mejor en el apartado de objetivos? Las dos opciones principales ante las que nos encontramos son: priorizar el ahorro de qubits reutilizando los mismos a costa de un mayor consumo energetico, utilizar más qubits.}
+
+La dificultad para mantener la coherencia en sistemas cuánticos ha sido siempre un gran obstáculo en el desarrollo de la computación cuántica. Por este motivo, la corrección cuántica de errores ha sido siempre un campo de gran interés en el ámbito del procesamiento de información cuántica (Devitt, Munro y Nemoto, 2013). 
+
+En este sentido, la publicación del código de Shor (1995) fue un avance de gran interés ya que fue el primer algoritmo de corrección cuántica de errores funcional y abrió la puerta para superar el obstáculo frente al que se encontraba el desarrollo de la computación cuántica. Se trata de un código degenerado que permite la corrección de un error de amplitud y un error de fase en un qubit.
+
+No obstante, mientras que la implementación del código propiamente dicho se encuentra bien documentada en fuentes tales como Quantum Computation and Quantum Information (Nielsen y Chuang, 2001) o el artículo original de Shor (1995), no se han encontrado implementaciones específicas del circuito correspondiente al cálculo del síndrome. Así pues, este trabajo pretende rellenar este vacío aportando posibles implementaciones de dicho circuito contempladas desde diferentes prismas. 
+
+Las distintas versiones de dicho circuito que se propondrán en este proyecto atienden, principalmente, a dos líneas de trabajo: en una de ellas, se hará uso de los recursos del computador sin restricción y, en la otra, se priorizará minimizar el número de qubits a costa de reutilizar los mismo con el consiguiente gasto energético. 
+
+
+
+\textbf{Duda: Supongo que esto también implicará un mayor tiempo de ejecución (al menos así suele ser en computación clásica}
 
 
 

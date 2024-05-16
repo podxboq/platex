@@ -1,3 +1,79 @@
 \chapter{Desarrollo del trabajo}
 Este es el grueso del TFM. Por supuesto, la estructura de este Capítulo dependerá de el trabajo específico que se desarrolle.
 
+\section{Introducción a la corrección cuántica de errores}
+
+Una de las principales dificultades a las que se enfrenta la computación cuántica es la destrucción de los estados cuánticos debido a la decoherencia producida por la interacción con el entorno (Shor, 1995). Este hecho pone de manifiesta la necesidad de utilizar técnicas para la corrección cuántica de errores.
+
+En computación clásica, el uso de códigos correctores de errores es una técnica bien desarrollada. Uno de sus elementos clave es la incorporación de información redundante. Debido a los principios de la mecánica cuántica, se encuentran diversas dificultades al tratar de aplicar esta técnica (Benenti, Casati y Strini, 2007):
+\begin{enumerate}
+    \item El teorema de no clonado prohíbe copiar un estado cuántico. Por tanto, no es posible proteger un estado $ | \psi \rangle $ codificándolo como $| \psi \rangle | \psi \rangle | \psi \rangle $.
+    \item Medir un estado cuántico con el objetivo de decidir qué técnicas de corrección aplicar no es una opción posible ya que toda medida cuántica destruye el estado cuántico medido.
+    \item En el caso clásico, solo puede producirse un tipo de error, la inversión de bit (bit flip). En el caso cuántico, los errores que pueden producirse no son discretos si no continuos. Esto se debe a que cualquier rotación indeseada que se produzca sobre el estado de un qubit constituye un error cuántico. A primera vista, podría parecer que es necesaria una cantidad infinita de recursos para salvar este obstáculo.
+\end{enumerate}
+
+No obstante, a pesar de estas dificultades, la corrección cuántica de errores es posible. Durante las siguientes secciones veremos cómo.
+
+\subsection{Código de inversión de bit (Bit-flip code)}
+
+El código de 3 qubits de inversión de bit fue propuesto por Asher Peres (1985) y, aunque no se trata de un código de corrección de errores completo, suele utilizarse como introducción a la corrección cuántica de errores (Devitt et al., 2013). Veamos el funcionamiento de este código.
+
+Para proteger el estado cuántico $ | \psi \rangle $ se utilizará la siguiente codificación
+
+$$ | 0 \rangle \rightarrow | 0 \rangle_L \equiv | 000 \rangle,  \phantom{abcd}   | 1 \rangle \rightarrow | 1 \rangle_L \equiv | 111 \rangle, $$
+
+donde $ |0 \rangle_L$ y $| 1 \rangle_L $ representan los estados lógicos 0 y 1, respectivamente.
+
+De manera análoga, el estado genérico $| \psi \rangle = \alpha |0 \rangle + \beta | 1 \rangle $ queda codificado como $|\psi \rangle_L = \alpha | 0 \rangle_L + \beta | 1 \rangle_L = \alpha | 000 \rangle + \beta | 111 \rangle $. Este es un estado entrelazado conocido como estado GHZ (Greenberger, Horne y Zeilinger, 2007; Nermin, 1990). El siguiente circuito permite codificar dicho estado.
+
+FIGURA CIRCUITO
+
+Supongamos que, debido al ruido, se produce un error de amplitud sobre uno de los 3 qubits que forman el código. Este tipo de error hace que el estado $ | \psi \rangle = \alpha | 0 \rangle + \beta | 1 \rangle$ evolucione al estado $X | \psi \rangle = \beta | 0 \rangle + \alpha | 1 \rangle $.
+
+La técnica a utilizar es un procedimiento de corrección de errores en dos pasos: detección del error y recuperación del estado (Nielsen y Chuang, 2010). 
+
+Para la primera parte, detectar sobre qué qubit se ha producido el error (en caso de que así haya sido), se utilizarán dos qubits ancila. Midiendo dichos qubits obtenemos dos bits de información clásica $x_0$ y $x_1$ (conocidos como síndrome) que nos indicarán donde se ha producido dicho error. El siguiente circuito implementa el cálculo del síndrome.
+
+FIGURA SINDROME
+
+La siguiente tabla muestra el síndrome obtenido en función del error producido: \\
+
+
+\begin{tabular}{|c|c|c|}
+  \hline
+  $x_0$ & $x_1$ & Error \\
+  \hline
+  0 & 0 & Sin errores \\
+  \hline
+  0 & 1 & Tercer qubit \\
+  \hline
+  1 & 0 & Segundo qubit \\
+  \hline
+  1 & 1 & Primer qubit \\
+  \hline
+\end{tabular}
+\\
+
+Por último, para recuperar el estado corrupto, basta con aplicar una puerta $X$ sobre el qubit erróneo y realizar la decodificación del estado. La siguiente figura muestra el proceso
+
+FIGURA RECOVERY AND DECOD
+
+Veamos algunas consideraciones finales sobre esta técnica. Este código permite recuperar el estado cuántico si un único qubit ha sido invertido. En caso contrario, el código fallará. Nótese que la medida realizada sobre el síndrome no permite obtener ninguna información sobre el estado $ | \psi \rangle $ y, por tanto, su coherencia cuántica no es destruida. Esto es posible debido a que el estado del qubit queda codificado como un estado entrelazado de varios qubits y, únicamente, se están midiendo las propiedades colectivas del estado cuántico (Benenti, Casati y Strini, 2007).
+
+\subsection{Código de inversión de fase (Phase-flip code)}
+
+A diferencia de su versión clásica, el error de amplitud no es el único posible y, por tanto, en el campo de la corrección cuántica de errores también debe tenerse en cuenta el error de fase. Este nuevo tipo de error no tiene un equivalente clásico ya que no existe ninguna propiedad clásica equivalente a la fase. 
+
+El código expuesto en el apartado anterior no es un código completo, ya que no permite corregir simultáneamente ambos tipos de errores (Devitt et al., 2013). Este hecho pone de manifiesto la necesidad de un código que permita corregir el error de fase. 
+
+Este error, cuando se produce, provoca que el estado $ | \psi \rangle = \alpha | 0 \rangle + \beta | 1 \rangle$ evolucione al estado $Z | \psi \rangle = \alpha | 0 \rangle - \beta | 1 \rangle $. De aquí, se deduce que un error de amplitud en la base computacional $ \{ | 0 \rangle, | 1 \rangle  \}$ es equivalente a un error de fase en la base de Hadamard  $ \{ | + \rangle, | - \rangle  \}$ (Benenti, Casati y Strini, 2007).
+
+Los vectores de la base computacional pueden transformarse en los vectores de la base de Hadamard mediante la aplicación de puerta Hadamard. Por tanto, el método anteriormente expuesto para la corrección de errores de amplitud puede reutilizarse para la corrección de errores de fase añadiendo únicamente un cambio de base.
+
+FIGURA CIRCUITO
+
+Mediante un proceso equivalente, es posible identificar sobre qué qubit se ha producido el error de fase y corregirlo mediante la aplicación de una puerta $Z$ sobre dicho qubit. Por último, será necesario descodificar el estado cuántico de nuestro qubit mediante la aplicación inversa de las puertas utilizadas en la codificación. La siguiente figura muestra el circuito con el proceso completo. 
+
+FIGURA COMPLETA 
+
+\subsection{Código de Shor}
