@@ -1,0 +1,530 @@
+\chapter{Desarrollo del trabajo}
+
+\section{Conjetura de Collatz}
+
+La conjetura de Collatz, también conocida como conjetura de Ulam o conjetura $3n+1$, fue propuesta por Lothar Collatz en 1937 su enunciado es el siguiente:
+Sea la siguiente operación, aplicable a cualquier número entero positivo:
+Si el número es par, se divide entre 2.
+Si el número es impar, se multiplica por 3 y después se suma 1.
+Entonces dado cualquier número inicial que escojamos, si aplicamos esta operación repetidamente alcanzaremos siempre el número 1.
+
+De hecho una vez alcanzado dicho número, al aplicar de nuevo esta operación obtendremos los valores 4, 2 y nuevamente 1. Es decir estaremos en un ciclo de valores 1, 4, 2.
+
+\subsection{Definición matemática}
+Matemáticamente se puede definir de la siguiente manera:
+
+$$f(n)=\begin{cases}
+\frac{n}{2}, & \text{si \ensuremath{n} es par}\\
+3n+1 & \text{si \ensuremath{n} es impar}
+\end{cases}$$
+
+donde $f:\mathbb{N\rightarrow N}$, es decir una función definida en los números Naturales.
+$\\$
+
+Ahora a cada iteración resultante de aplicar dicha función podemos llamarla $n_i=f(n_{i-1})$, $\forall i>0$ y $n_0\in\mathbb{N}$ 
+$\\$
+
+La conjetura por tanto nos dice que $\forall n_0\in\mathbb{N}$ exitirá un $i$ tal que $n_i=1$
+$\\$
+
+Teniendo en cuenta que si $n$ es impar entonces $3n+1$ dará siempre par, podemos compactar la definición con una nueva función $f'$ que realice dos iteraciones seguidas cuando $n$ es impar, es decir que devuelva $\frac{3n+1}{2}$ cuando $n$ es impar
+
+$$f'(n)=\begin{cases}
+\frac{n}{2}, & \text{si \ensuremath{n} es par}\\
+\frac{3n+1}{2} & \text{si \ensuremath{n} es impar}
+\end{cases}$$
+
+
+\subsection{Definición de ciclo}
+Diremos que un número $n_0$, es un ciclo de Collatz de longitud $l$ si $n_l = n_0$.
+Es decir al aplicar la operación de Collatz $f$ $l$ veces obtendríamos de nuevo el número inicial $n_0$.
+$\\$
+
+Esto significaría que $n_i$ solamente podría tomar $l$ valores, ya que $n_i=n_j$ si se verifica que $i \equiv j \pmod{l}$
+$\\$
+
+De ser cierta la conjetura, significaría que el único ciclo de Collatz que existe sería el ciclo de longitud $3$: $1\rightarrow4\rightarrow2$
+(o de longitud 2: $1\rightarrow2$ si consideramos la operación compacta $f'$).
+$\\$
+
+Por tanto si encontráramos un ciclo distinto, significaría que hemos hallado un contraejemplo de esta conjetura y por tanto demostraríamos que la conjetura no es cierta en general.
+
+
+
+
+\subsection{Definición de 1-ciclo}
+si consideramos la paridad (o imparidad) de cada iteración de Collatz, es decir si $n_i$ es par o impar, esto nos definirá el siguiente elemento de la iteración.
+$\\$
+
+Por ejemplo un ciclo de la forma ($i,i,i,p,p$), es decir (impar, impar, impar, par, par) será un ciclo de forma que $n_0$ sea impar, $n_1$ impar, $n_2$ impar, $n_3$ par y finalmente $n_4$ par (recordemos que $n_5=n_0$, $n_6=n_1$, ... al ser un ciclo de longitud $5$).
+$\\$
+
+
+Ahora como $n_0$ es impar entonces $n_1=\frac{3n_0+1}{2}$.
+
+Como $n_1$ es impar entonces:
+$n_2=\frac{3n_1+1}{2}=\frac{3\frac{3n_0+1}{2}+1}{2}=\frac{\frac{3^2n_0+3}{2}+1}{2}=\frac{3^2n_0+3+2}{2^2}$
+
+Como $n_2$ es impar entonces:
+$n_3=\frac{3n_2+1}{2}=\frac{3\frac{3^2n_0+3+2}{2^2}+1}{2}=\frac{\frac{3^3n_0+3^2+3*2}{2^2}+1}{2}=\frac{3^3+3^2+3*2+2^2}{2^3}$
+
+Ahora como $n_3$ es par entonces: $n_4=\frac{n_3}{2}=\frac{3^3n_0+3^2+3*2+2^2}{2^4}$
+
+Por último como $n_4$ es par entonces: $n_5=\frac{n_4}{2}=\frac{3^3n_0+3^2+3*2+2^2}{2^5}$
+$\\$
+
+
+Esto se verifica para todo $n_0$ que sea ($i,i,i,p,p$) (sea o no sea ciclo).
+
+Si además añadimos la condición de que sea ciclo, entonces se verificará también $n_5=n_0$ y podremos despejar para obtener $n_0$ en función de una fracción como veremos más adelante.
+$\\$
+
+
+Notar que al ser par lo único que hacemos es añadir un 2 en el denominador y al ser impar lo que hacemos es extender el sumatorio de treses y doses en el numerador.
+$\\$
+
+
+Definiremos pues de forma general el 1-ciclo $(x i, y p)$ con $x,y\in\mathbb{N}$ (o 1-sucesión), como un ciclo (o sucesión) de iteraciones que resultan ser impar $x$ veces y después par $y$ veces:
+$(i, ..., i, p, ... ,p)$.
+
+Dicho de otra manera $n_i$ impar si $i=0,1,...,x-1$ y par si $i=x,x+1,...,x+y-1$ y $n_{x+y}=n_0$ al ser un ciclo (o sucesión) de longitud $l=x+y$
+$\\$
+
+
+Se puede ver (demostrar en apéndice) que la fórmula general para una 1-sucesión $(xi, yp)$ es:
+
+$n_{l} = \frac{ 3^x n_0 + 3^{x-1} + 3^{x-2}*2 + 3^{x-3}*2^2 + ... + 3*2^{x-2} + 2^{x-1}}{2^{l}}$ con $l=x+y$
+
+y como $3^{x-1} + 3^{x-2}*2 + 3^{x-3}*2^2 + ... + 3*2^{x-2} + 2^{x-1} = 3^x - 2^x$ obtenemos finalmente:
+
+$n_{l} = \frac{ 3^x n_0 + 3^x - 2^x}{2^{l}}$
+$\\$
+
+
+Si ahora además imponemos que sea ciclo, se deberá cumplir que $n_l=n_0$ y por tanto
+
+$n_0 = \frac{ 3^x n_0 + 3^x - 2^x}{2^{l}}$ y despejando obtenemos lo fórmula final:
+
+$$n_0 = \frac{3^x - 2^x}{2^{x+y}-3^x}$$
+
+que se puede reescribir también como:
+
+$$n_0 = -1 + 2^x \frac{2^y - 1}{2^{x+y}-3^x}$$
+$\\$
+
+Un $1-ciclo$ $(xi, yp)$ existirá pues, cuando $n_0 = -1 + 2^x \frac{2^y - 1}{2^{x+y}-3^x} \in \mathbb{N}$
+
+Dicho de otra manera, la búsqueda de $1-ciclos$ se reduce a comprobar que la fracción $\frac{2^y - 1}{2^{x+y}-3^x}$ sea un numero natural, ya que $2^{x+y}-3^x$ no divide a $2^x$ a no ser que sea $2^{x+y}-3^x=1$ (en cuyo caso divide también a $2^y-1$)
+
+
+
+
+\subsection{Búsqueda de 1-ciclos}
+Como hemos visto, la búsqueda de 1-ciclos se reduce a encontrar dos números $x,y \in \mathbb{N}$ que verifiquen que $\frac{2^y-1}{2^{x+y}-3^x} \in \mathbb{N}$
+
+Dicho de otra manera se reduce a encontrar dos números $x,y \in \mathbb N$ que verifiquen que $2^{x+y} - 3^x$ divida a $2^y-1$ 
+
+Lo que equivale a:
+$2^y-1 \equiv 0 \pmod {2^l-3^x}$ con $l=x+y$
+
+Y por tanto también equivale a:
+$$2^y \equiv 1 \pmod {2^l-3^x}$$
+$\\$
+
+Como vemos esto tiene bastante relación con la parte cuántica del algoritmo de Shor (insertar referencia algoritmo de Shor) para la descomposición de un número en sus factores primo, ya que se basa en buscar el periodo $r$, es decir el menor $r$ que verifica
+$2^r \equiv 1 \pmod{N}$
+$\\$
+
+Pero antes de lanzarnos a la búsqueda de $1-ciclos$ con el algoritmo de shor, debemos plantearnos si esto es mejor que hacerlo mediante computación clásica o incluso si es necesario.
+
+En este caso no es siquiera necesario ya que se puede demostrar matemáticamente que estos $1-ciclos$ no pueden existir (insertar referencia).
+Exceptuando por supuesto el ciclo trivial $(1 \rightarrow 2)$, que como podemos observar es un $1-ciclo$ $(1i, 1p)$ ($x=1$, $y=1$).
+
+Es decir verifica $n_0=-1+2^1 \frac{2^1-1}{2^2-3}=-1+2\frac{1}{1}=1$
+
+Este ciclo existe debido a que el denominador es $2^2-3^1=1$ que evidentemente divide al numerador $2^1-1=1$
+$\\$
+
+Debido a que $2^l - 3^y = 1$ no tiene soluciones si $l>1$, $y>1$ (insertar referencia conjetura de Catalan/teorema de Mihăilescu), esto significa que no existen otros $1-ciclos$ cuyo denominador es 1 (que lo convertiría automáticamente en $1-ciclo$ ya que 1 divide a cualquier número).
+
+Sin embargo podría existir otro $1-ciclo$ con un denominador diferente de $1$, aunque también se puede demostrar que no existe aunque la demostración es más compleja hay que utilizar el hecho de que $n_0>0$
+$\\$
+
+De hecho si extendemos la función de Collatz a todos los números enteros, es decir incluimos también los números negativos y el $0$ podemos ver que hay otras soluciones.
+$\\$
+
+
+Por ejemplo si $x=1$, $y=0$ tenemos que $2^1-3^0=1$ y por tanto tenemos otro ciclo para $n_0 = -1 + 2^1 \frac{2^0-1}{1} = -1 + 2*0 = -1$.
+
+Esto es el ciclo $-1 \rightarrow -1$, es decir el ciclo con una única iteración, ya que $n_1 = \frac{3*n_0 + 1}{2} = \frac{3*(-1) + 1}{2}$ es nuevamente $-1$. 
+Este es el 1-ciclo $(1i, 0p)$ (o quizás podríamos definirlo como 0-ciclo, ya que $y=0 \notin \mathbb{N}$)
+$\\$
+
+
+O si por ejemplo tomamos $x=2, y=1$ tenemos $n_0 = -1 + 2^2 \frac{2^1 - 1}{2^3-3^2} = -1 + 4(-1)= -5$ y obtenemos el 1-ciclo $(2i,1p)$ para $n_0=-5$
+$\\$
+
+
+También podemos obtener otros ciclos que no son 1-ciclo, por ejemplo si $n_0=-17$ tenemos el ciclo:
+
+$-17 \rightarrow -25 \rightarrow -37 \rightarrow -55  \rightarrow -82  \rightarrow -41 \rightarrow -61 \rightarrow -91 \rightarrow -136 \rightarrow -68 \rightarrow -34 \rightarrow -17$
+
+Que es un ciclo de la forma $(i,i,i,i,p,i,i,i,p,p,p) \equiv (4i,1p),(3i,3p)$ que como veremos más adelante es un 2-ciclo.
+
+
+
+
+\subsection{Definición de 2-ciclo}
+Análogamente al 1-ciclo, podemos también definir un 2-ciclo como un ciclo $(x_1 i, y_1 p),(x_2 i, y_2 p)$ con $x_1, y_1, x_2, y_2 \in \mathbb{N}$ (sugerencia, cambiar nomenclatura a $x_0, y_0, x_1, y_1$)
+
+utilizando un proceso similar al anterior de los 1-ciclos podemos ver que:
+
+$n_{l_1} = \frac{3^{x_1} n_0 + 3^{x_1} - 2^{x_1}}{2^{l_1}}$ con $l_1 = x_1 + y_1$
+
+y por tanto:
+
+$n_{l_1 + l_2} = \frac{3^{x_2} n_{l_1} + 3^{x_2} - 2^{x_2}}{2^{l_2}}$
+$ = \frac{3^{x_2} \frac{3^{x_1} n_0 + 3^{x_1} - 2^{x_1}}{2^{l_1}} + 3^{x_2} - 2^{x_2}}{2^{l_2}}$
+$ = \frac{3^{x_1+x_2} n_0 + 3^{x_1 + x_2} - 2^{x_1} 3^{x_2}}{2^{l_1 + l_2}} + \frac{3^{x_2} - 2^{x_2}}{2^{l_2}}$
+$ = \frac{3^{x_1+x_2} n_0 + 3^{x_1 + x_2} - 2^{x_1} 3^{x_2} + 2^{l_1} 3^{x_2} - 2^{l_1} 2^{x_2} }{2^{l_1 + l_2}}$
+$\\$
+
+
+Si ahora aplicamos la condición de que sea un ciclo, es decir que $2^l=n_0$ con $l=l_1+l_2$ podemos despejar $n_0$
+
+$$ n_0 = \frac{3^{x_1 + x_2} - 2^{x_1} 3^{x_2} + 2^{l_1} 3^{x_2} - 2^{l_1} 2^{x_2} }{2^{l_1 + l_2} - 3^{x_1+x_2}}$$
+$\\$
+
+
+Que podemos reescribir como:
+
+$$ n_0 = -1 + \frac{2^{l_1 + l_2} - 2^{x_1} 3^{x_2} + 2^{l_1} 3^{x_2} - 2^{l_1} 2^{x_2} }{2^{l_1 + l_2} - 3^{x_1+x_2}}$$
+$\\$
+
+
+Y sacando factor común $3^{x_2} 2^{x_1}$ y $2^{l_1} 2^{x_2}$ respectivamente obtenemos finalmente:
+$$ n_0 = -1 + 3^{x_2} 2^{x_1} \frac{2^{y_1} -1}{2^{l_1 + l_2} - 3^{x_1+x_2}} + 2^{l_1} 2^{x_2} \frac{2^{y_2} -1}{2^{l_1 + l_2} - 3^{x_1+x_2}}$$
+$\\$
+
+
+Ahora si consiguiéramos valores $x_1, y_1, x_2, y_2$ de forma que que $2^{l_1 + l_2} - 3^{x_1+x_2}$ divida simultáneamente a $2^{y_1}-1$ y a $2^{y_2}-1$ tendríamos un 2-ciclo
+
+
+
+
+
+\subsection{Búsqueda de 2-ciclos}
+Si bien esta demostrada la no existencia de los 1-ciclos (para números naturales), no se sabe todavía si existen 2-ciclos o no.
+
+Como ya vimos en un apartado anterior, se conoce el 2-ciclo para el número $n_0=-17$ (negativo, así que no contradice la conjetura).
+
+Se trata en efecto del 2-ciclo de la forma $(4i,1p),(3i,3p)$, es decir $x_1=4, y_1=1, x_2=3, y_2=3$
+$\\$
+
+
+La forma de buscar 2-ciclos con computación clásica sería iterar sobre los números $x_1$, $x_2$, $y_1$, $y_2$
+y comprobar si $N=2^l-3^x$ divide a $3^{x_2} 2^{x_1} (2^{y_1} -1) + 2^{l_1} 2^{x_2} (2^{y_2} -1)$
+(con $l=l_1+l_2=x_1+y_1+x_2+y_2$ y $x=x_1+x_2$)
+
+Podemos como mucho sacar factor común $2^{x_1}$ por tanto bastaría con comprobar la divisibilidad de $N$ entre $3^{x_2} (2^{y_1} -1) + 2^{y_1} 2^{x_2} (2^{y_2} -1)$
+
+Si bien podemos ahorrarnos algunas iteraciones de $x_1$, $x_2$, $y_1$, $y_2$ (añadir referencia a la relación $(x_1+x_2) \approx log_2 3 (y_1+y_2)$ utilizando algunas relaciones que han de verificar, podemos hacernos una idea de lo inviable que resulta esto con computación clásica.
+$\\$
+
+
+Debido justamente a esta relación, una opción que podemos hacer para buscar 2-ciclos (aunque podrían existir otros), sería encontrar el periodo $r$ que verifique $2^r\equiv 1 \pmod N$ con $N=2^{x_1 + x_2 + y_1 + y_2} - 3^{x_1+x_2}$, y después comprobar si $y_1$ y $y_2$ son simultáneamente múltiplos de $r$.
+
+Para ello iteraríamos sobre $y=y_1+y_2$, y para cada $y$ obtendríamos su correspondiente $x=x_1+x_2$ aproximando $log_2 3 (y_1+y_2)$ al entero más cercano.
+$\\$
+
+
+
+
+
+\subsection{Definición de s-ciclo}
+Siguiendo con la formulación anterior, podemos generalizar a la definición al s-ciclo como un ciclo de la forma $(x_1 i, y_1 p), ..., (x_s i, y_s p)$ con $x_1, y_1, ... , x_s, y_s \in \mathbb{N}$ (sugerencia, cambiar nomenclatura a $x_0, y_0, ..., x_{s-1}, y_{s-1}$)
+
+Se puede comprobar (hacer en apéndice) que la fórmula general para un s-ciclo es
+
+$$n_0  = \frac{\sum_{k=1}^s 3^{X - X_k} 2^{L_{k-1}} \left(3^{x_k} - 2^{x_k} \right) }{ 2^{L} - 3^{X} }$$
+
+Dónde:
+
+$X_k = \sum_{i=1}^k x_i $
+
+$L_k = \sum_{i=1}^k l_i $
+
+
+Y por ahorrarnos el subíndice definimos también las sumas completas:
+
+$X = X_s$
+
+$L = L_s$
+$\\$
+
+
+Esta fórmula se puede reescribir también como (hacer en apéndice):
+
+$$n_0 = - 1 + \sum_{k=1}^{s} 3^{X - X_k} 2^{L_{k-1}} 2^{x_k} \frac{2^{y_k} - 1}{ 2^{L} - 3^{X} }$$
+$\\$
+
+
+Por ejemplo si $s=3$ tendríamos:
+
+$X_1 = x_1$
+
+$X_2 = x_1 + x_2$
+
+$X = X_3 = x_1 + x_2 + x_3$
+
+$L_0 = 0$
+
+$L_1 = l_1 = x_1 + y_1$
+
+$L_2 = l_1 + l_2 = x_1 + y_1 + x_2 + y_2$
+
+$L = L_3 = l_1 + l_2 + l_3= x_1 + y_1 + x_2 + y_2 + x_3 + y_3$
+
+y por tanto la fórmula nos quedaría:
+
+$$
+n_0 = - 1 
++ 3^{X - X_1} 2^{L_0} 2^{x_1} \frac{2^{y_1} - 1}{ 2^{L} - 3^{X}}
++ 3^{X - X_2} 2^{L_1} 2^{x_2} \frac{2^{y_2} - 1}{ 2^{L} - 3^{X}}
++ 3^{X - X} 2^{L_2} 2^{x_3} \frac{2^{y_3} - 1}{ 2^{L} - 3^{X}}
+$$
+
+que remplazando nos quedaría finalmente:
+
+$$
+n_0 = - 1 
++ 3^{x_2 + x_3} 2^{x_1} \frac{2^{y_1} - 1}{ 2^{L} - 3^{X}}
++ 3^{x_3} 2^{x_1 + y_1 + x_2} \frac{2^{y_2} - 1}{ 2^{L} - 3^{X}}
++ 2^{x_1 + y_1 + x_2 + y_2 + x_3} \frac{2^{y_3} - 1}{ 2^{L} - 3^{X}}
+$$
+$\\$
+
+
+\subsection{Búsqueda de s-ciclos}
+
+Como podemos ver en un s-ciclo obtenemos $s$ fracciones con denominador $N=2^L-3^X$ y cuyos numeradores son $2^{y_i} - 1$ multiplicados por un respectivo factor que podemos llamar $F_i = 3^{X - X_i} 2^{L_{i-1}} 2^{x_i}$.
+$\\$
+
+
+De esta manera, después de calcular nuestro $r$ de forma que $2^r \equiv 1 \pmod N$, si pudiéramos encontrar los $s$ términos $y_i$ de forma que fueran múltiplos de $r$, entonces habríamos encontrado automática un s-ciclo y por tanto un contraejemplo de la conjetura, demostrando su falsedad.
+$\\$
+
+
+De todas formas, no debemos olvidar que el hecho de no encontrar s-ciclos no probaría nada, ni siquiera la inexistencia de estos s-ciclos, pues podría existir un s-ciclo cuyo denominador $N$ no dividiera a alguno de sus numeradores (o a ninguno), y sin embargo si dividir al producto $\sum_{i}^s F_i (2^{y_i} - 1)$. 
+
+Aunque quizás pueda ser demostrado matemáticamente la equivalencia entre estas dos condiciones, eso nos aseguraría la inexistencia de s-ciclos de una longitud determinada (y un $s$ arbitrario), por tanto la inexistencia de ciclos de la longitud sobre la que estamos iterando (recordemos que iteraremos computacionalmente sobre la variable $Y$ y hallaremos por aproximación la variable $X$ y por tanto también la variable $L=X+Y$)
+
+
+
+\subsection{restricción de la longitud de los ciclos}
+Sabemos gracias a (buscar referencia de la siguiente ecuación) que la longitud de un ciclo cualquiera debe ser de la forma:
+
+$$L = 301994a + 17087915b + 85137581c$$
+
+con $a,b,c \in \mathbb N$  y  $ac=0$
+$\\$
+
+
+Dicho de otra forma, la longitud de un ciclo sólo puede ser de dos formas:
+
+$$L = 301994a + 17087915b$$
+
+$$L = 17087915b + 85137581c$$
+
+Por tanto, esto nos permitiría que en lugar de iterar sobre $Y$ para aproximar $X$, podríamos iterar sobre $a,b$ primero (y por tanto sobre $L$) y después aproximar $X$ e $Y$ utilizando que $X+Y=L$ y que $X=log_2 3 Y$.
+
+Luego realizaríamos lo mismo iterando sobre $b$ y $c$ para iterar sobre los $L$ que son de la segunda forma
+$\\$
+
+
+Por ejemplo si $a=1$, $b=1$, obtendríamos $L=17.389.909$.
+
+Después calcularíamos $Y = L \frac{1}{1+log_2 3}$
+
+Luego $X = log_2 3 Y = L \frac{log_2 3}{1+log_2 3}$
+$\\$
+
+
+Esto desde luego nos permitiría optimizar mucho nuestro código, tanto clásico como cuántico, ya que estamos descartando muchas longitudes de ciclos que sabemos que no pueden existir debido a este resultado (insertar de nuevo referencia).
+
+
+\subsection{restricción sobre la dimensión $s$ de un s-ciclo}
+De momento esta probado que no existen s-ciclos con $s \leq 91$ (introducir referencia).
+
+Esto significa que habrán al menos $92$ variables $y_i$ que necesitarán ser múltiplo de $r$.
+
+como todas las $y_i$ deben ser múltiplos de $r$, entonces $Y=\sum_i^s y_i$ deberá ser también múltiplo de $r$, por tanto eso nos restringe los posibles valores de $Y$.
+$\\$
+
+
+Lo que ocurrirá normalmente, y que nos impedirá encontrar s-ciclos, será que $r$ no dividirá a $Y$, de hecho será probablemente mayor.
+$\\$
+
+
+Encontrar un $r$ que divida a nuestro $Y$ es pues el primer paso, que nos permitirá descartar la mayoría de iteraciones sin necesidad de proseguir con el algoritmo.
+
+En caso de que encontráramos un $r$ que sí dividiera a nuestro $Y$, tendríamos que proseguir, verificando que divida a cada uno de los $y_i$, ya que por ejemplo en un 2-ciclo podríamos obtener $r=4$, $Y=8$ pero $y_1 = 3$ y $y_2 = 5$
+
+
+
+
+\section{Algoritmo de Shor para buscar s-ciclos}
+
+En esta sección hablaremos de la parte cuántica que usaremos para la búsqueda de estos s-ciclos anteriormente mencionados.
+$\\$
+
+
+Como ya sabemos, el algoritmo de Shor nos permitiría una eficiencia mayor a la hora de calcular el periodo de la función $2^x \equiv 1 \pmod N$, lo que nos permitiría realizar la búsqueda de ciclos de una mayor longitud.
+
+
+\subsection{Breve introducción del algoritmo de Shor}
+(buscar referencias y hacer una introducción al algoritmo de Shor)
+
+
+\subsection{Algoritmo clásico para la búsqueda del periodo}
+Un algoritmo clásico en python para el cálculo del periodo podría ser el siguiente:
+
+\begin{verbatim}
+#Esta funcion busca el menor r>0 que verifica 2^r=1 (mod N) y que sea menor que Y
+#Devolvera 0 si no existe y r>0 si existe
+def CalculoPeriodoClasico(N, Y, debug = False):
+    r=0
+    mod = 1; #Comenzamos para almacenar la congruencia módulo de los respectivos 2^i
+    if debug:
+        print ("N:", N)
+        print ("Y:", Y)
+        
+    #Si N es multiplo de 2 no tiene sentido seguir,
+    #nunca encontraremos r>0 tal que 2^r=1(mod N)
+    if (N%2 == 0):
+        return 0
+    
+    for i in range(1, Y):
+        #Multiplicamos por 2 para obtener el siguiente 2^i
+        mod = mod*2
+        if mod>N:
+            #Como estamos multiplicando por 2, como maximo solo supera,
+            #a N una vez, es decir mod<2N
+            #Por lo tanto esto es análogo a hacer mod%N pero más rapido
+            mod = mod - N
+        if debug:
+            print (i, ": ", mod)
+        if mod == 1:
+            #Cuando obtenemos 2^i = 1 mod N devolvemos el indice i
+            return sp.Integer(i)
+    
+    #Si hemos acabado el for y no ha encontrado r devolvemos 0
+    return 0
+\end{verbatim}
+
+En este algoritmo (seguro que se puede optimizar), nos detenemos si llegamos a $Y$, puesto que si $r>Y$ entonces nunca será múltiplo, de hecho podríamos optimizar el algoritmo comprobando simplemente los divisores de $Y$ por ejemplo.
+
+Incluso podríamos utilizar también la restricción de que $s\geq92$ para iterar únicamente sobre los divisores de $Y$ menores de $\frac{Y}{92}$, ya que se deberá verificar que al menos $92$ valores de $y_i$ deberán ser múltiplos de $r$.
+
+Aunque realmente con la restricción de $\sqrt{Y}$ (el mayor divisor distinto de $Y$) estaríamos restringiendo más que con $\frac{Y}{92}$ en prácticamente todos los casos de interés, puesto que trabajaremos con valores de $Y$ grandes (mucho mas que $92^2$)
+
+
+
+\subsection{Algoritmo cúantico para la búsqueda del periodo}
+Introducir aquí la implementación de la parte cuántica de Shor
+
+
+
+\subsection{Algoritmo de búsqueda de s-ciclos}
+Definimos primero una función que calcule el periodo de forma cuántica o clásica en función de una variable booleana:
+
+\begin{verbatim}
+def CalculoPeriodo(N, Y, esCuantico = False, debugPeriodo = False):
+    if esCuantico:
+        return CalculoPeriodoCuantico(N, Y, debugPeriodo)
+    else:
+        return CalculoPeriodoClasico(N, Y, debugPeriodo)
+\end{verbatim}
+
+
+Ahora definimos una función para buscar los ciclos de una determinada longitud L:
+
+\begin{verbatim}
+#Esta funcion busca s-ciclos de longitud L
+def BuscarCiclo(L, debug = False, debugPeriodo = False):
+    #Establecemos este numero grande para debuggear N grande
+    sys.set_int_max_str_digits(10000000)
+    
+    #Guardamos la constante log2(3) (la usaremos constantemente)
+    log23 = np.log2(3)
+    #Guardamos esta constante mediante la cual calculamos Y: (Y = Kly * L)
+    Kly = 1/(1+log23) 
+    
+    #Mostramos L:
+    if debug:
+        print("L: ", L)
+        
+    #Calculamos Y en función de nuestro L
+    Y = round(Kly * L) 
+    #Mostramos Y:
+    if debug:
+        print("Y: ", Y)
+        
+    #Calculamos X en funciópn de Y (que a su vez esta en función de L)
+    X = round(log23 * Y)
+    #Mostramos X:
+    if debug:
+        print("X: ", X)
+        
+    #Calculamos N = 2^L - 3^X
+    N = pow(2,L) - pow(3,X)
+    #Mostramos N:
+    if debug:
+        print("N: ", N)
+
+    
+    #Calculamos el periodo de con la funcion CalculoPeriodo
+    r = CalculoPeriodo(N, Y, False, debugPeriodo) 
+    
+    #Mostramos el periodo obtenido (r=0 significa periodo no valido,
+    #bien porque N es multiplo de 2 o porque se ha superado el limite (Y)
+    if debug:
+        print("r:", r)
+        
+    #Comprobamos que r divida a Y (y no sea 0)
+    if r!=0:
+        print ("r>0!")
+        if Y%r == 0:
+            print ("¡¡¡¡¡CICLO ENCONTRADO!!!!!")
+
+
+    return(r)
+\end{verbatim}
+
+
+Por último buscamos todos los ciclos que verifiquen la condición $L = 301994a + 17087915b$ o bien $$L = 17087915b + 85137581c$$
+\begin{verbatim}
+#Buscamos primero el ciclo en que a=0, c=0:
+BuscarCiclo(17087915, True, False)
+
+for i in range(1, 1001):  #Iteramos la variable a entre 1 y 1000 incluidos
+    for j in range (1, 1001):  #Iteramos la variable b entre 1 y 1000 incluidos
+        #Buscamos s-ciclos con longitud L teniendo c=0
+        L = 301994 * i + 17087915 * j  
+        BuscarCiclo(L, True, False)
+        #Buscamos s-ciclos con longitud L teniendo a=0
+        L = 85137581 * i + 17087915 * j 
+        BuscarCiclo(L, True, False)
+\end{verbatim}
+
+
+
+\section{Algoritmo de Grover}
+Analizar si podría usarse el algoritmo de Grover de alguna forma (de una forma similar a como se puede utilizar para hacer una multiplicación aunque no sea la forma más eficiente) 
+
+
+
+
+
+\section{Problemas QUBO}
+Analizar si se puede formular algo como un problema de optimización (por ejemplo minimizar la distancia entre $\frac{X}{Y}-log_2 3$ o algo similar.
