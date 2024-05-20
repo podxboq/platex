@@ -1,0 +1,201 @@
+\documentclass[11pt,a4paper,spanish]{book}
+\usepackage{unir}
+
+
+
+%---------------------------
+%título del trabajo y autor
+%---------------------------
+\title{ Algoritmos cuánticos para optimización de rutas}
+\titulacion{ Máster en Computación Cuántica}
+\author{ Gustavo Recalde Vásquez}
+\date{ 17 de Abril de 2024}
+\director{ Francisco Costa Cano}
+\nombreciudad{ Quito - Ecuador}
+
+%---------------------------
+%marges
+%---------------------------
+%\usepackage[margin=1.9cm]{geometry}
+%---------------------------
+%---------------------------
+%---------------------------
+%---------------------------
+\begin{document}
+    \renewcommand{\listfigurename}{Índice de Ilustraciones}
+    \renewcommand{\listtablename}{Índice de Tablas}
+    \renewcommand{\contentsname}{Índice de Contenidos}
+    \renewcommand{\figurename}{Figura}
+    \renewcommand{\tablename}{Tabla}
+
+    \maketitle
+
+    \frontmatter
+    \tableofcontents
+    \listoffigures
+    \listoftables
+
+    \chapter{Resumen}
+
+    Este trabajo aborda el desarrollo y aplicación de algoritmos cuánticos para la optimización de rutas de entrega y carga en la empresa Wolf. Mediante el empleo de técnicas de computación cuántica, se propone mejorar la eficiencia en la distribución y el uso del espacio de carga en una flota de camiones. La investigación incluye el diseño, simulación y evaluación de algoritmos cuánticos, comparándolos con métodos clásicos para demostrar su potencial superior. Los resultados indican que los algoritmos cuánticos pueden ofrecer soluciones más eficientes, impactando positivamente en la reducción de costos y tiempos de entrega.
+
+        {\bf Palabras Clave:} computación cuántica, optimización de rutas, logística, algoritmos cuánticos, simulación.
+
+
+    \chapter{Abstract}
+
+    This work addresses the development and application of quantum algorithms for the optimization of delivery routes and load management for Wolf Company. Using quantum computing techniques, it aims to enhance efficiency in distribution and optimize cargo space utilization across a fleet of trucks. The study involves designing, simulating, and evaluating quantum algorithms, comparing them with classical methods to demonstrate their superior potential. The results suggest that quantum algorithms can offer more efficient solutions, positively impacting cost reduction and delivery times.
+
+        {\bf Keywords:} quantum computing, route optimization, logistics, quantum algorithms, simulation.
+
+    \mainmatter
+    \chapter{Introducción}
+
+
+    Este trabajo se centra en el desarrollo y aplicación de algoritmos cuánticos para la optimización de rutas de entrega y volumen de carga en la empresa Wolf. Utilizando técnicas de computación cuántica, se busca abordar los desafíos específicos relacionados con la eficiencia en la distribución y el aprovechamiento del espacio de carga en una flota de camiones.
+
+%Típicamente una introducción tiene tres apartados:
+    \begin{itemize}
+        \item Motivación.
+
+        El transporte y la logística son vitales para la economía global, pero enfrentan problemas significativos relacionados con la optimización de rutas y la carga de vehículos. Las soluciones actuales son a menudo ineficientes, llevando a un uso subóptimo de recursos, aumento de costos y tiempo de entrega. Este trabajo identifica y aborda estas ineficiencias utilizando algoritmos cuánticos, que prometen una capacidad superior para manejar la complejidad y dinamismo de tales sistemas.
+        La importancia de optimizar rutas de entrega y carga se magnifica en contextos de alta demanda y diversidad geográfica, como es el caso de las empresas de logística. Los desafíos incluyen la gestión eficiente de múltiples puntos de recolección y distribución, la variabilidad en el tamaño y volumen de los paquetes, y restricciones temporales estrictas. La computación cuántica ofrece un enfoque prometedor para superar estos retos, lo que podría resultar en una significativa reducción de costos operativos y mejora en la eficiencia del servicio.
+
+        \item Planteamiento del trabajo.
+
+        Este estudio se centra en el desarrollo y evaluación de algoritmos cuánticos diseñados para optimizar las rutas de entrega y la carga de camiones para la empresa Wolf. Se analizarán y compararán estos algoritmos con métodos clásicos de optimización para determinar su viabilidad y eficacia. Dividiremos el probleam en tres partes específicas:
+
+        \begin{itemize}
+            \item Optimización de rutas: Desarrollar un algoritmo que mejore la eficiencia de las rutas de entrega, teniendo en cuenta la ubicación geográfica de los puntos de distribución, el tamaño y volumen de los paquetes, y los intervalos de tiempo de entrega.
+
+            \item Planificación de itinerarios: Crear un sistema que detalle el tiempo estimado de llegada para cada vehículo a todos los puntos de distribución.
+
+            \item Optimización de la carga: Mejorar el proceso de carga de los vehículos, ordenando los paquetes de manera que se maximice el uso del espacio disponible y se optimice la eficiencia del transporte.
+
+            La investigación evaluará la aplicabilidad de varios algoritmos cuánticos, incluyendo el quantum annealing y el algoritmo de Grover, y utilizará plataformas como IBM Quantum, D-Wave y Rigetti.
+        \end{itemize}
+
+
+        \subsection{Estructura del trabajo}
+
+        Este trabajo estará organizado en los siguientes capítulos para abordar de manera sistemática el problema de investigación:
+
+        \textbf{Introducción:} Presentación del problema, justificación y objetivos del estudio.
+        Fundamentos Teóricos: Explicación de los conceptos básicos de la mecánica cuántica y la computación cuántica necesarios para entender los algoritmos utilizados.
+
+        \textbf{Metodología:} Detalle de las técnicas y herramientas cuánticas seleccionadas, así como la metodología de comparación con sistemas clásicos.
+        Desarrollo de Algoritmos y Simulaciones: Diseño de los algoritmos cuánticos y realización de simulaciones para evaluar su rendimiento.
+
+        \textbf{Resultados y Análisis:} Presentación y análisis de los resultados obtenidos, comparando las soluciones cuánticas con las clásicas.
+
+        \textbf{ Conclusiones y Recomendaciones:} Síntesis de los hallazgos y sugerencias para futuras investigaciones o aplicaciones prácticas.
+
+    \end{itemize}
+
+    \chapter{Contexto y Estado de la Técnica}
+
+    La logística y la optimización de rutas han sido áreas de estudio intensivo debido a su impacto crítico en la economía y la sostenibilidad ambiental. Con el avance de la tecnología, los métodos para abordar estos problemas han evolucionado significativamente. Desde los enfoques heurísticos clásicos hasta los algoritmos de optimización avanzados, el campo ha visto una considerable transformación. La introducción de la computación cuántica ha abierto nuevas avenidas de investigación, prometiendo superar las limitaciones de los algoritmos clásicos al manejar problemas de optimización NP-difíciles con una eficiencia potencialmente mayor \citep{nielsenChuang}.
+
+    El desarrollo de algoritmos cuánticos específicos para la optimización, como quantum annealing y el algoritmo de Grover, ha mostrado ser prometedor en la simulación de escenarios complejos dentro de la optimización de rutas \citep{farhiQuantum, groverAlgorithm}. Estos algoritmos han sido aplicados en diversos contextos, demostrando la capacidad de la computación cuántica para explorar eficientemente grandes espacios de soluciones \citep{QWalk-Based}.
+
+    \section{Aplicación de la Computación Cuántica en Transporte y Logística}
+
+    En el contexto del transporte y la logística, los algoritmos de paseo cuántico, por ejemplo, han sido propuestos como una metodología efectiva para optimizar redes de transporte \citep{quantumTransportOpt}. Este enfoque sugiere una mejora significativa en la planificación de rutas, permitiendo no solo la reducción de costos y tiempos de operación sino también la mejora en la sostenibilidad de las operaciones logísticas.
+
+    La investigación previa en algoritmos de routing clásicos también ha proporcionado un sólido fundamento para los desarrollos cuánticos, demostrando la importancia de robustecer los algoritmos frente a la incertidumbre y la variabilidad en las demandas y condiciones operativas \citep{transportationScience}. Esta base teórica es crucial para entender las áreas donde la computación cuántica puede ofrecer las mejoras más significativas.
+
+    \section{Tendencias Actuales y Financiación en la Investigación Cuántica}
+
+    Con el incremento del interés y la inversión en tecnologías cuánticas, ha habido un notable 'auge cuántico' con financiación privada y gubernamental fluyendo hacia startups y proyectos de investigación cuántica \citep{quantumTech}. Plataformas como IBM Quantum, D-Wave y Rigetti han sido líderes en proporcionar acceso a tecnologías cuánticas, lo que ha facilitado el desarrollo y la prueba de algoritmos cuánticos en un contexto real \citep{qiskit, dwaveOcean}.
+
+
+    \chapter{Objetivos}
+
+
+    \section{Objetivo General}
+    Mejorar significativamente la eficiencia de las rutas de entrega y la optimización del volumen de carga de la flota de camiones de la empresa Wolf a través del desarrollo y la implementación de algoritmos cuánticos.
+
+    \section{Objetivos Específicos}
+
+    \begin{itemize}
+        \item Desarrollar un algoritmo cuántico para la optimización de rutas de entrega que considere variables clave como la geolocalización de los puntos de entrega. Este algoritmo debe demostrar una mejora del 10\% en la eficiencia de las rutas comparado con los métodos de optimización clásicos utilizados actualmente por la empresa.
+
+        \item Implementar un sistema de planificación de itinerarios detallados utilizando el algoritmo cuántico desarrollado para predecir con precisión el tiempo estimado de llegada de cada camión en todos los puntos de distribución.
+
+        \item Optimizar el proceso de carga de los vehículos para maximizar el uso del espacio disponible y mejorar la eficiencia en el transporte, logrando una reducción de al menos el 5\% en el número de viajes necesarios por la misma cantidad de cargas comparado con el sistema actual.
+
+        \item Evaluar la viabilidad técnica y económica de la implementación de soluciones cuánticas en la logística de transporte, incluyendo un análisis de costos y beneficios que identifique los ahorros potenciales en costos operativos y tiempos de entrega.
+
+        \item Documentar y difundir los resultados y metodologías del proyecto a través de publicaciones en revistas científicas y presentaciones en conferencias relevantes en el campo de la computación cuántica y la logística, para compartir conocimientos y prácticas con la comunidad académica y profesional.
+
+    \end{itemize}
+
+    \section{Metodología de Trabajo}
+
+    Para alcanzar estos objetivos, se seguirán una serie de pasos metodológicos estructurados:
+
+    \begin{itemize}
+
+        \item Revisión de literatura: Estudio exhaustivo de trabajos previos en computación cuántica aplicada a la optimización y algoritmos clásicos de optimización de rutas.
+
+        \item Desarrollo de algoritmos: Diseño y codificación de algoritmos cuánticos basados en las necesidades identificadas.
+
+        \item Simulaciones y pruebas: Realización de simulaciones computacionales para validar la eficacia de los algoritmos cuánticos desarrollados.
+
+        \item Análisis comparativo: Comparación de los nuevos algoritmos con los sistemas tradicionales para evaluar las mejoras en eficiencia y costos.
+
+        \item Evaluación y ajustes: Iteraciones basadas en los resultados de las pruebas para perfeccionar los algoritmos y sistemas implementados.
+
+        \item Documentación y publicación: Preparación de documentos que describan el proceso y los resultados obtenidos para su revisión y publicación.
+
+    \end{itemize}
+
+
+    \chapter{Desarrollo del trabajo}
+
+    \chapter{Conclusiones y Trabajo Futuro}
+
+    \begin{thebibliography}{a}
+
+        \bibitem[Nielsen(2010)]{nielsenChuang} \textsc{Nielsen, M. A. \& Chuang, I. L.} (2010),
+        \textit{Quantum Computation and Quantum Information.}
+        Cambridge University Press.
+
+        \bibitem[QWalk(2021)]{QWalk-Based} \textsc{Bennett, T. and Matwiejew, E. and Marsh, S. and Wang, J. B.} (2021),
+        \textit{Quantum Walk-Based Vehicle Routing Optimisation.}
+        Frontiers in Physics.
+
+        \bibitem[Farhi(2014)]{farhiQuantum} \textsc{Farhi, E., Goldstone, J., \& Gutmann, S.} (2014),
+        \textit{A Quantum Approximate Optimization Algorithm.}
+        arXiv:1411.4028.
+
+        \bibitem[Grover(1997)]{groverAlgorithm} \textsc{Grover, L. K.} (1997),
+        \textit{Quantum Mechanics helps in searching for a needle in a haystack.}
+        Physical Review Letters, 79(2), 325.
+
+        \bibitem[Venegas(2003)]{quantumTransportOpt} \textsc{Venegas-Andraca, S. E., \& Bose, S.} (2003),
+        \textit{Quantum Walk Algorithms for Transportation Networks.}
+        Quantum Information \& Computation, 3(6), 563-574.
+
+        \bibitem[Bertsimas(1996)]{transportationScience} \textsc{Bertsimas, D., \& Simchi-Levi, D.} (1996),
+        \textit{A New Generation of Vehicle Routing Research: Robust Algorithms, Addressing Uncertainty.}
+        Operations Research, 44(2), 286-304.
+
+        \bibitem[Gibney(2019)]{quantumTech} \textsc{Gibney, E.} (2019),
+        \textit{Quantum gold rush: the private funding pouring into quantum start-ups.}
+        Nature, 574, 22-24.
+
+        \bibitem[Abraham(2019)]{qiskit} \textsc{Abraham, H., et al.} (2019),
+        \textit{Qiskit: An Open-source Framework for Quantum Computing.}
+        Accessed via https://qiskit.org.
+
+        \bibitem[Dwave(2020)]{dwaveOcean} \textsc{D-Wave Systems Inc.} (2020),
+        \textit{Ocean Software Documentation.}
+        Accessed via https://docs.ocean.dwavesys.com/en/latest.
+
+    \end{thebibliography}
+
+    \appendix
+    \chapter{Apendices}
+
+\end{document}
