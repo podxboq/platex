@@ -1,0 +1,37 @@
+\documentclass[11pt,spanish]{book}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[spanish]{babel}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{biblatex}
+\input{personalizacion}
+\input{cabecera}
+\renewcommand*\contentsname{\textcolor{unir-azul-fuerte}{Índice de contenidos}}
+\renewcommand{\listfigurename}{\textcolor{unir-azul-fuerte}{Índice de figuras}}
+\renewcommand{\listtablename}{\textcolor{unir-azul-fuerte}{Índice de tablas}}
+\begin{document}
+	\frontmatter
+	\personalheader{Gustavo Recalde Vásquez}{Algoritmos Cuánticos para optimzacion de Rutas}
+	\include{portada}
+	\include{resumen}
+	\include{abstract}
+	\include{indice}
+	\include{figuras}
+	\include{tablas}
+	\mainmatter
+	\include{introduccion}
+	\include{contexto}
+	\include{requisitos}
+	\include{evaluacion}
+	\include{conclusiones}
+	\include{referencias}
+	\backmatter
+	\include{anexos}
+\end{document}

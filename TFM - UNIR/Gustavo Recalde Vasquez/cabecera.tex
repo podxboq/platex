@@ -1,0 +1,32 @@
+\usepackage[left=1.75cm,
+	right=1.5cm,
+	top=3.52cm,
+	bottom=3.23cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{sectsty}
+\usepackage{titlesec}
+\setlength{\parskip}{\baselineskip}
+\newcommand{\personalheader}[2]{
+	\pagestyle{fancy}
+  \setlength{\headsep}{50pt}
+  \setlength{\footskip}{13.866141732pt}
+	\setlength{\headheight}{38.87935pt}
+	\addtolength{\topmargin}{-26.87935pt}
+	\renewcommand{\headrulewidth}{0pt}
+	\fancyhead[R]{#1\\\ \\#2}
+	\fancyfoot{}
+	\fancyfoot[R]{\thepage}
+}
+\newcommand{\titulo}[1]{\textcolor{unir-azul-fuerte}{\LARGE{\textbf{#1}}}\vspace{0.1in}}
+\titleformat{\chapter}[hang]{\vspace{-4cm}\huge\bfseries\color{unir-azul-fuerte}}{\thechapter. }{0pt}{\Huge\bfseries}
+\newcommand{\primersubtitulo}[1]{\textcolor{unir-azul-fuerte}{\large #1}}
+\newcommand{\subtitulo}[1]{\vspace{0.1in}\textcolor{unir-azul-fuerte}{\large #1}}
+\newcommand{\seccion}[1]{\vspace{0.1in}\textbf{#1}}
+\renewcommand{\labelitemi}{$\textcolor{unir-azul-fuerte}{\bullet}$}
+\renewcommand{\labelitemii}{$\textcolor{unir-azul-fuerte}{\cdot}$}
+\renewcommand{\labelitemiii}{$\textcolor{unir-azul-fuerte}{\diamond}$}
+\renewcommand{\labelitemiv}{$\textcolor{unir-azul-fuerte}{\ast}$}
+\chapterfont{\color{unir-azul-fuerte}}
+\sectionfont{\color{unir-azul-fuerte}}
+\subsectionfont{\color{unir-azul-fuerte}}

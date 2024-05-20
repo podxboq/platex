@@ -1,0 +1,45 @@
+\chapter{Descripción detallada e identificación de requisitos}
+
+%En este capítulo se debe indicar el trabajo previo realizado, detallando el problema a tratar, su contexto y los requisitos.
+
+\section{Contexto del Problema}
+
+La empresa Wolf opera una flota de 15 camiones que distribuyen productos a múltiples puntos de entrega dentro de una amplia región geográfica. La optimización actual de rutas y la carga de los camiones enfrentan desafíos significativos debido a la variabilidad en las demandas de entrega, los diferentes tamaños y volúmenes de los paquetes, y las restricciones de tiempo. Estas ineficiencias resultan en costos operativos elevados y tiempos de entrega prolongados, afectando la competitividad y la sostenibilidad de la empresa.
+
+
+\section{Identificación de Requisitos}
+Para abordar este problema mediante la aplicación de algoritmos cuánticos, se han identificado varios requisitos clave que deben ser satisfechos:
+
+\subsection{Requisitos Funcionales}
+Desarrollo de un Algoritmo de Optimización de Rutas Cuántico: Diseñar un algoritmo cuántico que mejore la eficiencia de las rutas de entrega, considerando variables como la geolocalización de los puntos de distribución, el tamaño y volumen de los paquetes, y los intervalos de tiempo preferidos para la entrega.
+
+\begin{itemize}
+\item Planificación de Itinerarios Detallados: El sistema debe ser capaz de generar un itinerario detallado que indique el tiempo estimado de llegada de cada camión a todos los puntos de distribución a lo largo de la ruta.
+
+\item Optimización de la Carga del Vehículo: Implementar un método para optimizar el proceso de carga en los vehículos, asegurando que el orden de los paquetes maximice el uso del espacio disponible y mejore la eficiencia del transporte.
+\end{itemize}
+
+\subsection{Requisitos No Funcionales}
+Eficiencia Computacional: El algoritmo debe ser computacionalmente eficiente para ser ejecutado en plataformas cuánticas disponibles actualmente, como las ofrecidas por IBM Quantum, D-Wave y Rigetti.
+
+\begin{itemize}
+\item Escalabilidad: El sistema debe ser escalable para adaptarse a aumentos en el número de vehículos o cambios en la red de distribución.
+
+\item Usabilidad: La interfaz del sistema debe ser intuitiva para los operadores logísticos, permitiendo ajustes y simulaciones fáciles de rutas y cargas.
+
+\item Seguridad y Privacidad: Garantizar la seguridad y privacidad de los datos de la empresa y la información sobre los clientes durante todo el proceso de optimización.
+\end{itemize}
+
+\subsection{Requisitos de Datos}
+\begin{itemize}
+\item Datos Geográficos: Acceso a datos actualizados sobre geolocalización para la planificación precisa de rutas.
+
+\item Datos de Carga: Información detallada sobre las dimensiones y el peso de los paquetes, así como la capacidad de carga de cada vehículo.
+
+\item Datos Temporales: Información sobre ventanas de tiempo para la entrega y recolección en cada nodo de la red de distribución.
+
+\end{itemize}
+
+\section{Trabajo Previo Realizado}
+
+Se ha llevado a cabo una revisión exhaustiva de la literatura existente sobre la aplicación de la computación cuántica en problemas de optimización, identificando las metodologías que podrían adaptarse al contexto de la logística de transporte. También se ha realizado un análisis preliminar de las plataformas cuánticas disponibles, evaluando su capacidad para soportar los algoritmos propuestos.

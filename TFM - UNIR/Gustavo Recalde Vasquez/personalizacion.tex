@@ -1,0 +1,42 @@
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\Z}{\mathbb{Z}}
+\providecommand{\Q}{\mathbb{Q}}
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\C}{\mathbb{C}}
+\providecommand{\H}{\mathcal{H}}
+\providecommand{\Im}[1]{Im(#1)}
+\providecommand{\Re}[1]{Re(#1)}
+\providecommand{\conjugate}[1]{\bar{#1}}
+\providecommand{\pescalar}[2]{\langle #1,#2 \rangle}
+\providecommand{\braket}[2]{\left\langle#1\mid#2\right\rangle}
+\providecommand{\bra}[1]{\left\langle#1\right\rvert}
+\providecommand{\ket}[1]{\left\lvert#1\right\rangle}
+\providecommand{\ketbra}[2]{\left\lvert#1\right\rangle\!\left\langle#2\right\rvert}
+\providecommand{\avg}[1]{\left\langle#1\right\rangle}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\nor}[1]{\lVert#1\rVert}
+\providecommand{\operatoravg}[3]{\left\langle#1|#2|#3\right\rangle}
+\providecommand{\set}[1]{\left\{#1\right\}}
+\providecommand{\so}{\Rightarrow}
+\providecommand{\tq}{\mid}
+\providecommand{\where}{\mathrel{}\middle|\mathrel{}}
+
+\definecolor{unir-azul-flojo}{RGB}{230,244,249}
+\definecolor{unir-azul-fuerte}{RGB}{0,152,205}
+%Kets notables
+\newcommand{\ketMas}{\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})}
+\newcommand{\ketMenos}{\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})}
+\newcommand{\ketIMas}{\frac{1}{\sqrt{2}}(\ket{0}+i\ket{1})}
+\newcommand{\ketIMenos}{\frac{1}{\sqrt{2}}(\ket{0}-i\ket{1})}
+\newcommand{\ketBellUno}{\frac{1}{\sqrt{2}}(\ket{00}+\ket{11})}
+\newcommand{\ketBellDos}{\frac{1}{\sqrt{2}}(\ket{00}-\ket{11})}
+\newcommand{\ketBellTres}{\frac{1}{\sqrt{2}}(\ket{10}+\ket{01})}
+\newcommand{\ketBellCuatro}{\frac{1}{\sqrt{2}}(\ket{10}-\ket{01})}
+
+%OPERADORES 2x2
+\newcommand{\matrixX}{\begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix}}
+\newcommand{\matrixY}{\begin{pmatrix}0 & -i \\ i & 0\end{pmatrix}}
+\newcommand{\matrixZ}{\begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix}}
+\newcommand{\matrixH}{\frac{1}{\sqrt {2}}  \begin{pmatrix}1 & 1 \\ 1 & -1\end{pmatrix}}
+%OPERADORES 4x4
+\newcommand{\matrixCNOT}{\begin{pmatrix}1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 0\end{pmatrix}}
