@@ -1,0 +1,311 @@
+\appendix
+
+\chapter{Quantum Gates}
+\label{app-gates}
+
+It is usually helpful to think of a quantum computer as performing a series
+of {\em gates}, drawn from some fairly small basic set of physically
+implementable unitary transformations.  The net transformation applied
+to the quantum computer is the product of the unitary transformations
+associated with the gates performed.  In order to have a universal quantum
+computer, it should be possible to get arbitrarily close to any unitary
+transformation.  This property makes no guarantees about how many gates
+are required to get within $\epsilon$ of the desired unitary operation,
+and figuring out how to get a given operator with the minimum
+number of basic gates is the goal of quantum algorithm design.
+
+There are a number of known sets of universal quantum gates
+\cite{lloyd-universal, gates}.  For instance, all single-qubit unitary
+operators and the controlled-NOT together comprise a universal set.  The
+controlled-NOT gate (or CNOT) is a two-qubit operator that flips the second
+qubit iff the first qubit is $\ket{1}$.  It has the matrix
+\begin{equation}
+	\pmqty{1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0}.
+\end{equation}
+In fact, the controlled-NOT and one single-qubit operator are sufficient,
+as long as the the single-qubit rotation acts by an angle incommensurate
+with $2 \pi$.  Another finite universal set of quantum gates consists of the
+Hadamard rotation $R$,
+\begin{equation}
+	R = \frac{1}{\sqrt{2}} \pmqty{1 & \ 1 \\ 1 & -1},
+\end{equation}
+the phase gate $P$,
+\begin{equation}
+	P = \pmqty{1 & 0 \\ 0 & i},
+\end{equation}
+the controlled-NOT, and the Toffoli gate, which is a three-qubit gate which
+flips the third qubit iff the first two qubits are in the state $\ket{11}$.
+
+In addition to the gates mentioned above, I refer to a number of other simple
+gates in this thesis.  For instance, the simple NOT gate, the sign gate, and
+the combined bit and sign flip gate (which are equal to $\X$, $\Z$, and $\Y$,
+respectively) play a crucial role in the stabilizer formalism.  I also
+refer to two other single-qubit gates related to $P$ and $R$.  They are
+\begin{equation}
+	Q = \frac{1}{\sqrt{2}} \pmqty{\ 1 & \ i \\ -i & -1},
+\end{equation}
+and
+\begin{equation}
+	T = \frac{1}{\sqrt{2}} \pmqty{ 1 & -i \\ 1 & \ i }.
+\end{equation}
+I also occasionally refer to the ``conditional sign'' gate, which is a
+two-qubit gate that gives the basis state $\ket{11}$ a sign of $-1$ and
+leaves the other three basis states alone.  The conditional sign gate is
+equivalent to the controlled-NOT via conjugation of one qubit by $R$.  The
+conditional sign gate is effectively a controlled-$\Z$ gate, where $\Z$
+gets applied to one qubit iff the other qubit is $\ket{1}$.  I also use
+an analogous controlled-$\Y$ operator.  The CNOT is the controlled-$\X$.
+
+To describe a series of gates, it is usually helpful to draw a diagram
+of the gate array.  Horizontal lines represent the qubits of the quantum
+computer, which enter at the left and leave from the right.  A summary
+of the symbols I use for the various gates is given in figure
+\ref{fig-gates}.
+\begin{figure}
+	\centering
+	\begin{picture}(320, 160)
+
+		\put(35,150){\line(1,0){20}}
+		\put(45,150){\circle{8}}
+		\put(45,146){\line(0,1){8}}
+		\put(55,144){\makebox(50,12){$\X$}}
+
+		\put(130,150){\line(1,0){4}}
+		\put(146,150){\line(1,0){4}}
+		\put(134,144){\framebox(12,12){$\Y$}}
+		\put(150,144){\makebox(50,12){$\Y$}}
+
+		\put(230,150){\line(1,0){4}}
+		\put(246,150){\line(1,0){4}}
+		\put(234,144){\framebox(12,12){$\Z$}}
+		\put(250,144){\makebox(50,12){$\Z$}}
+
+		\put(35,110){\line(1,0){20}}
+		\put(35,90){\line(1,0){20}}
+		\put(45,110){\circle*{4}}
+		\put(45,110){\line(0,-1){24}}
+		\put(45,90){\circle{8}}
+		\put(0,104){\makebox(35,12){Control}}
+		\put(0,84){\makebox(35,12){Target}}
+		\put(55,94){\makebox(70,12){Controlled-NOT}}
+
+		\put(130,110){\line(1,0){20}}
+		\put(130,90){\line(1,0){4}}
+		\put(146,90){\line(1,0){4}}
+		\put(140,110){\circle*{4}}
+		\put(140,110){\line(0,-1){14}}
+		\put(134,84){\framebox(12,12){$\Y$}}
+		\put(150,94){\makebox(70,12){Controlled-$\Y$}}
+
+		\put(230,110){\line(1,0){20}}
+		\put(230,90){\line(1,0){4}}
+		\put(246,90){\line(1,0){4}}
+		\put(240,110){\circle*{4}}
+		\put(240,110){\line(0,-1){14}}
+		\put(234,84){\framebox(12,12){$\Z$}}
+		\put(250,94){\makebox(70,12){Controlled-$\Z$}}
+
+		\put(35,50){\line(1,0){20}}
+		\put(35,30){\line(1,0){20}}
+		\put(35,10){\line(1,0){20}}
+		\put(45,50){\circle*{4}}
+		\put(45,30){\circle*{4}}
+		\put(45,50){\line(0,-1){44}}
+		\put(45,10){\circle{8}}
+		\put(0,44){\makebox(30,12){Control}}
+		\put(0,24){\makebox(30,12){Control}}
+		\put(0,4){\makebox(30,12){Target}}
+		\put(55,24){\makebox(70,12){Toffoli gate}}
+
+		\put(130,50){\line(1,0){4}}
+		\put(146,50){\line(1,0){4}}
+		\put(134,44){\framebox(12,12){$P$}}
+		\put(150,44){\makebox(50,12){$P$}}
+
+		\put(230,50){\line(1,0){4}}
+		\put(246,50){\line(1,0){4}}
+		\put(234,44){\framebox(12,12){$Q$}}
+		\put(250,44){\makebox(50,12){$Q$}}
+
+		\put(130,10){\line(1,0){4}}
+		\put(146,10){\line(1,0){4}}
+		\put(134,4){\framebox(12,12){$R$}}
+		\put(150,4){\makebox(70,12){Hadamard $R$}}
+
+		\put(230,10){\line(1,0){4}}
+		\put(246,10){\line(1,0){4}}
+		\put(234,4){\framebox(12,12){$T$}}
+		\put(250,4){\makebox(50,12){$T$}}
+
+	\end{picture}
+	\caption{Various quantum gates.}
+	\label{fig-gates}
+\end{figure}
+
+\chapter{Glossary}
+\label{app-glossary}
+
+\begin{description}
+
+	\item[additive code] Another name for a stabilizer code.  Often contrasted
+	with linear quantum codes, which are a subclass of additive codes.
+
+	\item[amplitude damping channel] A channel for which the $\ket{1}$ state
+	may relax to the $\ket{0}$ state with some probability.  An example is
+	a two-level atom relaxing via spontaneous emission.
+
+	\item[cat state] The $n$-qubit entangled state $\ket{0 \ldots 0} + \ket{1
+	\ldots 1}$.  Cat states act as ancillas in many fault-tolerant operations.
+
+	\item[coding space] The subset of the Hilbert space corresponding to correctly
+	encoded data.  The coding space forms a Hilbert space in its own right.
+
+	\item[concatenation] The process of encoding the physical qubits making
+	up one code as the logical qubits of a second code.  Concatenated codes
+	are particularly simple to correct, and can be used to perform arbitrarily
+	long fault-tolerant computations as long as the physical error rate is
+	below some threshhold.
+
+	\item[CSS code] Short for Calderbank-Shor-Steane code.  A CSS code is formed
+	from two classical error-correcting codes.  CSS codes can easily take
+	advantage of results from the theory of classical error-correcting codes
+	and are also well-suited for fault-tolerant computation.  See sections
+	\ref{sec-stab-examples} and \ref{sec-CSS}.
+
+	\item[cyclic code] A code that is invariant under cyclic permutations of
+	the qubits.
+
+	\item[decoherence] The process whereby a quantum system interacts with its
+	environment, which acts to effectively measure the system.  The world looks
+	classical at large scales because of decoherence.  Decoherence is likely to
+	be a major cause of errors in quantum computers.
+
+	\item[degenerate code] A code for which linearly independent correctable
+	errors acting on the coding space sometimes produce linearly dependent states.
+	Degenerate codes bypass many of the known bounds on efficiency of quantum
+	codes and have the potential to be much more efficient than any
+	nondegenerate code.
+
+	\item[depolarizing channel] A channel that produces a random error on each
+	qubit with some fixed probability.
+
+	\item[distance] The minimum weight of any operator $E_a^\dagger E_b$ such that
+	equation~(\ref{eq-condition}) is {\em not} satisfied for an orthonormal
+	basis of the coding space.  A quantum code with distance $d$ can detect
+	up to $d-1$ errors, or it can correct $\lfloor (d-1)/2 \rfloor$ general
+	errors or $d-1$ located errors.
+
+	\item[entanglement] Nonlocal, nonclassical correlations between two quantum
+	systems.  The presence of entangled states gives quantum computers their
+	additional computational power relative to classical computers.
+
+	\item[entanglement purification protocol] Often abbreviated EPP.  An EPP is
+	a protocol for producing high-quality EPR pairs from a larger number of
+	low-quality EPR pairs.  EPPs are classified depending on whether they use
+	one-way or two-way classical communication.  A 1-way EPP (or 1-EPP) is
+	equivalent to a quantum error-correcting code.
+
+	\item[EPR pair] Short for Einstein-Podalsky-Rosen pair.  An EPR pair is
+	the entangled state $(1/ \sqrt{2}) \left(\ket{00} + \ket{11} \right)$, and
+	acts as a basic unit of entanglement.
+
+	\item[erasure channel] A channel that produces one or more located errors.
+
+	\item[error syndrome] A number classifying the error that has occurred.  For
+	a stabilizer code, the error syndrome is a binary number with a 1 for each
+	generator of the stabilizer the error anticommutes with and a 0 for each
+	generator of the stabilizer the error commutes with.
+
+	\item[fault-tolerance] The property (possessed by a network of gates) that an
+	error on a single physical qubit or gate can only produce one error in any
+	given block of an error-correcting code.  A fault-tolerant network can be
+	used to perform computations that are more resistant to errors than the
+	physical qubits and gates composing the computer, provided the error rate
+	is low enough to begin with.  A valid fault-tolerant operation should also
+	map the coding space into itself to avoid producing errors when none existed
+	before.
+
+	\item[leakage error] An error in which a qubit leaves the allowed computational
+	space.  By measuring each qubit to see if it is in the computational space,
+	a leakage error can be converted into a located error.
+
+	\item[linear code] A stabilizer code that, when described in the GF(4)
+	formalism (section~\ref{sec-alternate}), has a stabilizer that is invariant
+	under multiplication by $\omega$.  Often contrasted with an additive code.
+
+	\item[located error] Sometimes called an erasure.  A located error is an
+	error which acts on a known qubit in an unknown way.  A located error is
+	easier to correct than a general error acting on an unknown qubit.
+
+	\item[nice error basis] A basis which shares certain essential properties
+	with the Pauli matrices and can be used to define a generalized stabilizer
+	code.  See section~\ref{sec-qudits}.
+
+	\item[nondegenerate code] A code for which linearly independent correctable
+	errors acting on the coding space always produce linearly independent states.
+	Nondegenerate codes are much easier to set bounds on than degenerate codes.
+
+	\item[pasting] A construction for combining two quantum codes to make a
+	single larger code.  See section~\ref{sec-construction}.
+
+	\item[perfect code] A code for which every error syndrome corresponds to a
+	correctable error.  See section~\ref{sec-perfect} for a construction of
+	the distance three perfect codes.
+
+	\item[quantum error-correcting code] Sometimes abbreviated QECC.  A QECC
+	is a set of states that can be restored to their original state after some
+	number of errors occur.  A QECC must satisfy equation~(\ref{eq-condition}).
+
+	\item[qubit] A single two-state quantum system that serves as the fundamental
+	unit of a quantum computer.  The word ``qubit'' comes from ``quantum bit.''
+
+	\item[qudit] A $d$-dimensional generalization of a qubit.
+
+	\item[shadow] The set of operators in $\G$ which commute with the
+	even-weight elements of the stabilizer and anticommute with the odd-weight
+	elements of the stabilizer.
+
+	\item[shadow enumerator] The weight enumerator of the shadow.  It is useful
+	for setting bounds on the existence of quantum codes.
+
+	\item[stabilizer] The set of tensor products of Pauli matrices that fix
+	every state in the coding space.  The stabilizer is an Abelian subgroup
+	of the group $\G$ defined in section~\ref{sec-general-prop}.  The stabilizer
+	contains all of the vital information about a code.  In particular, operators
+	in $\G$ that anticommute with some element of the stabilizer can be
+	detected by the code.
+
+	\item[stabilizer code] A quantum code that can be described by giving its
+	stabilizer.  Also called an additive code or a GF(4) code.
+
+	\item[teleportation] A process whereby a quantum state is destroyed and exactly
+	reconstructed elsewhere.  Quantum teleportation of a single qubit requires
+	one EPR pair shared between the source and destination, and involves two
+	measurements on the source qubit.  The two bits from the measurements must be
+	classically transmitted to the destination in order to reconstruct the original
+	quantum state.
+
+	\item[threshhold] The error rate below which a suitably configured quantum
+	computer can be used to perform arbitrarily long computations.  Current
+	methods for proving the existence of a threshhold use concatenated codes.
+	Most estimates of the threshhold lie in the range $10^{-6}$ -- $10^{-4}$.
+
+	\item[transversal operation] An operation applied in parallel to the
+	various qubits in a block of a quantum error-correcting code.  Qubits
+	from one block can only interact with corresponding qubits from another
+	block or from an ancilla.  Any transversal operation is automatically
+	fault-tolerant.
+
+	\item[weight] A property of operators only defined on operators which
+	can be written as the tensor product of single-qubit operators.  For such
+	an operator, the weight is the number of single-qubit operators in the
+	product that are not equal to the identity.
+
+	\item[weight enumerator] A polynomial whose coefficients $c_n$ are the number
+	of elements of weight $n$ in some set, such as the stabilizer or
+	the normalizer of the stabilizer.  Weight enumerators are very helpful
+	in setting bounds on the possible existence of quantum error-correcting
+	codes through identities such as the quantum MacWilliams identities (equation
+	(\ref{eq-QMW})).
+
+\end{description}

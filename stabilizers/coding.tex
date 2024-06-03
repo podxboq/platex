@@ -1,0 +1,780 @@
+\chapter{Concatenated Coding}
+\label{chap-concatenation}
+
+\section{The Structure of Concatenated Codes}
+
+Encoding data using a quantum error-correcting code and applying
+fault-tol\-er\-ant operations to it may or may not actually improve the basic
+error rate for the computation.  Since the gates involved in error correction
+are themselves noisy, the process of error correction introduces errors at
+the same time it is fixing them.  If the basic gate error rate is low enough,
+the error correction will fix more errors than it introduces on the average,
+and making a fault-tolerant computation will help rather than harm.  If
+the error rate is too high, attempting to correct errors will introduce more
+errors than are fixed, and error correction is actively doing harm.  Even if
+error correction helps rather than harms, statistical fluctuations will
+eventually produce more errors than the code can correct, resulting in a
+real error in the data.  Furthermore, the extra computational overhead
+required to do fault-tolerant operations may counteract the additional
+resistance to errors provided by the code, so the encoded computer may
+not be able to do longer computations than the original computer.
+
+Nevertheless, if the basic error rate in the quantum computer is low
+enough, we {\em will} be able to do longer computations using quantum
+codes and fault-tolerance than we could without them.  Suppose we can get
+a certain amount of improvement by using a specific code, say the seven-qubit
+code.  We might imagine that by using a code that corrects more errors, we
+could do a longer computation yet, and by increasing the number of errors
+the code corrects indefinitely, we could do arbitrarily long computation.
+However, for arbitrary families of codes, the number of steps required to
+do error correction may increase rapidly with the number of errors
+corrected.  Therefore, the time required to do error correction may
+eventually overwhelm the capability of the code to deal with errors, and
+the performance of the computer will start to decrease again.  To solve this
+problem, we need to find a class of codes where the time to measure the
+error syndrome increases only slowly with the error-correcting capabilities
+of the code.
+
+The desired class of codes is concatenated codes
+\cite{aharonov,knill-concatenate2,knill-concatenate1,zalka}.  For a
+concatenated code, the data is encoded using some $[n, k, d]$ code, then
+each qubit in a block is again encoded using an $[n_1, 1, d_1]$ code.  The
+qubits making up blocks in the new code may be further encoded using an
+$[n_2, 1, d_2]$ code, and so on indefinitely.  The result is an $[n n_1 n_2
+\cdots n_{l-1}, k, d d_1 d_2 \cdots d_{l-1}]$ code.  We can find the error
+syndrome of such a code rather rapidly.  We measure the error syndrome
+for the $[n_{l-1}, 1, d_{l-1}]$ code (the {\em first level} of the code) for
+all of the blocks of $n_{l-1}$ qubits at once.  To do this, we must make the
+assumption that we can do parallel computation on different qubits.  Note
+that we need this assumption anyway, or storage errors will always build
+up on some block while we are correcting errors on the other blocks.
+Similarly, we measure the error syndrome for the $[n_{l-2}, 1, d_{l-2}]$
+code at the second level of the code in parallel for different blocks, and so
+on, for all $l$ levels of the code.  Therefore, we can measure the error
+syndrome for the whole code in only the sum of the number of steps
+required to measure each constituent code, instead of something like the
+product, which would be a more typical complexity for a code of the same
+parameters.
+
+In order to analyze concatenated codes, it is useful to make a few
+simplifying assumptions.  One assumption is that we are using the same
+code at every level.  One particularly good code for this purpose is the
+$[7,1,3]$ code, because any operation in $N(\G)$ can be immediately
+performed transversally, keeping the overhead for fault-tolerant
+computation small.  In addition, it is a small code, so the complexity of
+error correction is not too large.  Allowing varying codes at different levels
+may improve the space efficiency of the code, but it will not change the
+basic results.  The other simplifying assumption is that the operations at
+level $j$ are basically similar to operations at level $j+1$.  Each level feeds
+information about error rates for different gates and storage errors and
+relative times for the different operations to the next lower level, but
+nothing else.  Error correction at each level is an independent process.
+Note that this will impair the error-correction properties of the code, since
+the full minimum distance of the code assumes that we combine
+information about the error syndrome from all the different levels.
+However, even with this assumption, we will find that for low enough basic
+error rates, we can do arbitrarily long computations with arbitrarily low
+real error rates by using sufficiently many levels of concatenation (the
+basic error rate is the rate of errors in actual physical qubits due to gates
+or storage errors; the real error rate is the rate of errors in the encoded
+data).  When the basic error rate is low enough, adding an extra level of
+concatenation further reduces the real error rate; if the basic error rate
+is too high, adding an extra layer increases the real error rate because of
+the extra time spent on error correction and calculation.
+
+In this chapter, I will present a rough calculation of the error threshhold
+below which arbitrarily long computation is possible.  In my discussion,
+the zeroth level of the code consists of the individual physical qubits making
+it up.  These qubits form the blocks of a $[7,1,3]$ code.  Each block of seven
+physical qubits forms a qubit at the first level of the code.  In general,
+qubits at the $j$th level of the code consist of $7^j$ physical qubits.  There
+are a total of $l$ levels in the code.  The qubits at the $l$th level are the
+real data qubits.  We wish to keep the effective error rate on these qubits as
+low as possible.  For this calculation, I will assume that storage errors occur
+independently on different physical qubits with rate $p_{stor}$.  The error
+rate for any one- or two-qubit gate in $N(\G)$ will be $p_g$, and the error
+rate for the Toffoli gate will be $p_{Tof}$.  I assume any gate may produce
+correlated errors on the qubits affected by the gate, but will produce no
+errors on any other qubits.  There will be an additional storage error on
+qubits unaffected by the gate, but the storage error is included in the gate
+error for qubits that are affected by the gate.  All the errors are assumed
+to be stochastically distributed, so the error probabilities for different
+qubits will add instead of the error amplitudes in the quantum states.  In
+addition, the error rates for state preparation and state measurement will
+be important.  I will denote them by $p_{prep}$ and $p_{meas}$,
+respectively.
+
+The computation will call for various operations performed on the qubits
+encoded at various different levels.  After any operation at level $j$, I will
+perform error correction at level $j$.  This means we can give an effective
+error rate to each operation at level $j$.  The fact that a given error rate
+refers to a gate at level $j$ will be noted by a superscript $(j)$.  Thus,
+$p_{stor}^{(0)}$ is the storage error rate on the physical qubits, while
+$p_{g}^{(l)}$ is the effective error rate on the data qubits from performing
+an operation in $N(\G)$.  Only allowing one gate per error correction will
+typically reduce the performance of the code.  Errors created during error
+correction will dominate; an optimized code would perform error
+correction when the expected accumulated chance of errors was roughly
+equal to the chance of errors during error correction.  However, the
+assumption of one gate per error correction is another very useful simplifying
+assumption because it preserves the self-similar character of the
+concatenated code, allowing a relatively straightforward recursive
+calculation of the real error rates.
+
+Some logical operations, such as the Toffoli gate, will require more and
+more physical operations as the level increases.  The basic time required to
+perform a physical operation will be $1$, and the storage error rate (at any
+level) is the error rate per unit time.  The time to perform a Toffoli gate at
+level $j$ will be denoted $t_{Tof}^{(j)}$.  Because operations in $N(\G)$ can
+be performed at any level just by performing a single operation from
+$N(\G)$ in parallel at the next lower level, the time to perform an
+operation in $N(\G)$ at any level is just $1$.  The time to prepare a state
+encoded at the $j$th level is $t_{prep}^{(j)}$ and the time to measure a
+qubit at the $j$th level is $t_{meas}^{(j)}$.  $\tpj{0} = 0$ and $\tmj{0} = 1$.
+
+\section{Threshhold for Storage Errors and Gates From $N(\G)$}
+
+To determine $\pgj{j}$ in terms of quantities at level $j-1$, we note
+that a gate in $N(\G)$ at level $j$ consists of a single gate in $N(\G)$ on
+each of the constituent qubits at level $j-1$ followed by a full error
+correction cycle at level $j-1$.   In order for the level $j$ gate to have an
+error, there must be two errors at level $j-1$, either in the $N(\G)$ gate or
+in the error correction.  I will assume that there is no residual error
+that was missed in an earlier error correction step.  A more careful
+calculation should consider such leftover errors, which can be significant.
+Suppose the chance of an error occuring in a single
+data qubit during a single measurement of the error syndrome is $p_{EC}$.
+There are a few possible situations that result in an error at level $j$.  Two
+errors at level $j-1$ could occur in any of
+\raisebox{0ex}[0ex][0ex]{\mbox{\tiny $\pmqty{7 \\ 2}$}$ = 21$}
+choices of two qubits.  This could occur from two $N(\G)$ gates going
+wrong, with probability $(\pgj{j-1})^2$.  We repeat the error syndrome
+measurement until we get the same result twice.  If there is one error from an
+$N(\G)$ gate and one from either of these measurements of the error syndrome,
+there will be an error at level $j$.  The probability of this is $4 \pgj{j-1}
+p_{EC}$.  Finally, both errors could come from the error correction.  This
+could be two errors in the first or second syndrome measurement, with
+probability $2 p_{EC}^2$.  Given one error in a syndrome measurement, we
+will need to do three syndrome measurements total.  If two of those go
+wrong, it will also produce an error at level $j$.  This has probability $6
+p_{EC}^2$.  There are also a number of possibilities involving an error in the
+ancilla state producing an incorrect syndrome and requiring more
+measurements.  However, I assume the error rates involved are all fairly
+low, so the probability of this situation producing an error at level $j$ is
+smaller by $O(p)$, which I will assume is negligable.  Thus, the total gate
+error rate at level $j$ is
+\begin{equation}
+	\pgj{j} = 21 \left((\pgj{j-1})^2 + 4 \pgj{j-1} p_{EC} + 8 p_{EC}^2 \right).
+	\label{eq-pg-recursion}
+\end{equation}
+Similarly, a single time step at level $j$ without a gate involves a single
+time step without a gate at level $j-1$ followed by error correction.
+Therefore,
+\begin{equation}
+	\psj{j} = 21 \left((\psj{j-1})^2 + 4 \psj{j-1} p_{EC} + 8 p_{EC}^2 \right).
+	\label{eq-ps-recursion}
+\end{equation}
+
+The salient aspect of these equations is that the probability of error at
+level $j$ is of the order of the square of the error rate at level $j-1$.  This
+means that $\pgj{l}$ will scale roughly as
+\begin{equation}
+	\pgj{0} (\pgj{0}/p_{thresh})^{2^l}
+\end{equation}
+for some threshhold error rate $p_{thresh}$ and
+similarly for $\psj{l}$.  This is a very rapid decrease in $\pgj{l}$ as a
+function of $l$ when $\pgj{0} < p_{thresh}$.  We will thus only need a few
+levels, of order $\log (\log p)$ to bring the real error rate down to $O(p)$
+per step.  Thus, the number of extra qubits necessary for a fault-tolerant
+computation is only $\mbox{polylog } p$ times the original number, which
+is a very good scaling.  However, while the asymptotic scaling is quite good,
+for vaguely reasonable $p$, the actual number of extra qubits needed is
+quite large.
+
+In order to determine the threshhold $p_{thresh}$, let us calculate
+$p_{EC}$.  I will assume we are using Shor's cat state method to correct
+errors, although another method (such as Steane's) might ultimately lead
+to better performance.  We have to measure six syndrome bits, so we will need
+to prepare six cat states, each using four qubits.  I will assume a limited
+ability to plan ahead in the calculation, so the data qubits will have to wait
+for the first cat state in a single measurement of the error syndrome, but
+the other cat states are being prepared at the same time, so they will be
+ready just when they are needed.  To prepare a cat state, we start with all
+four qubits in the state $\ket{0}$ (encoded using the code at level $j-1$),
+perform a Hadamard rotation $R$ on the first qubit, then a CNOT from the
+first qubit to the third qubit, and then two more CNOTs, from the first
+qubit to the second and from the third to the fourth, as shown in
+figure~\ref{fig-4qubitcat}.
+\begin{figure}
+	\centering
+	\begin{picture}(210,120)
+
+		\put(0,14){\makebox(20,12){$\ket{0}$}}
+		\put(0,34){\makebox(20,12){$\ket{0}$}}
+		\put(0,54){\makebox(20,12){$\ket{0}$}}
+		\put(0,74){\makebox(20,12){$\ket{0}$}}
+		\put(0,94){\makebox(20,12){$\ket{0}$}}
+
+		\put(20,20){\line(1,0){120}}
+		\put(20,40){\line(1,0){114}}
+		\put(20,60){\line(1,0){114}}
+		\put(20,80){\line(1,0){114}}
+		\put(20,100){\line(1,0){14}}
+		\put(46,100){\line(1,0){88}}
+
+		\put(34,94){\framebox(12,12){$R$}}
+
+		\put(60,100){\circle*{4}}
+		\put(60,100){\line(0,-1){44}}
+		\put(60,60){\circle{8}}
+
+		\put(80,100){\circle*{4}}
+		\put(80,100){\line(0,-1){24}}
+		\put(80,80){\circle{8}}
+		\put(80,60){\circle*{4}}
+		\put(80,60){\line(0,-1){24}}
+		\put(80,40){\circle{8}}
+
+		\put(100,80){\circle*{4}}
+		\put(100,80){\line(0,-1){64}}
+		\put(100,20){\circle{8}}
+
+		\put(120,40){\circle*{4}}
+		\put(120,40){\line(0,-1){24}}
+		\put(120,20){\circle{8}}
+
+		\put(134,34){\framebox(12,12){$R$}}
+		\put(134,54){\framebox(12,12){$R$}}
+		\put(134,74){\framebox(12,12){$R$}}
+		\put(134,94){\framebox(12,12){$R$}}
+		\put(140,14){\makebox(40,12){Measure}}
+
+		\put(146,40){\line(1,0){14}}
+		\put(146,60){\line(1,0){14}}
+		\put(146,80){\line(1,0){14}}
+		\put(146,100){\line(1,0){14}}
+
+	\end{picture}
+	\caption{Cat state construction and verification.}
+	\label{fig-4qubitcat}
+\end{figure}
+Bit flip errors at this point will become phase errors after the final
+Hadamard transform, so we need to ensure that there is at most one.
+Every way a single gate error earlier in the construction can produce two
+bit flip errors here makes the second and fourth qubits different.
+Therefore, we perform CNOTs from the second and fourth qubits to an
+additional ancilla test qubit and measure the test qubit.  If it is $\ket{0}$,
+we can use the ancilla; if it is $\ket{1}$, there is at least one error in the
+cat state, possibly two.  We throw the cat state out and construct another
+one.  Finally, we must perform a Hadamard transform on each of the four
+qubits in the cat state to get the actual ancilla used in error correction.
+
+An examination of the circuit shows that any bit flip errors before the
+cycle in which there are two CNOTs will cause the test qubit to flip.
+Therefore, only errors at this stage or later will have a chance of affecting
+the actual ancilla used.  For the second and fourth qubits, the error must
+actually occur after (or during) the CNOT to the test qubit.  Therefore, the
+chance of an important error in any single ancilla qubit is $2 p_g +
+p_{stor}$ (for qubits two and four) or $p_g + 2p_{stor}$ (for qubits one and
+three).  Although only phase errors can feed back, the fault-tolerant network
+does not treat $\X$ and $\Z$ errors symmetrically, so in order to be safe, I
+will consider the worst case where every error is of the most  dangerous type.
+However, in no case can an error in the test qubit feed back into the data
+qubits, so I have not included errors from this source.
+
+Now, we can construct a network for error syndrome measurement such
+that each data qubit contributes to at most four syndrome bits.  In
+addition, two Hadamard rotations are necessary.  Therefore, the process of
+syndrome measurement introduces at most an additional probability $6
+p_g + 2 p_{stor}$ of error.  To this, we must add the probability of an error
+feeding back, plus the accumulation of storage errors while we prepare the
+cat state and measure the ancilla.  There is only waiting time for the
+preparation of the first cat state and measurement of the last one, since
+preparation and measurement of the other cat states is taking place in
+parallel.  Feedback is a more serious problem, but we can arrange it so
+that no data qubit interacts with more than two ancilla qubits with error
+rate $2p_g + p_{stor}$, so the total feedback is at most $6 p_g + 6 p_{stor}$.
+Therefore,
+\begin{eqnarray}
+	p_{EC} &  = & (6 p_g + 6 p_{stor}) + (6 p_g + 2 p_{stor}) +
+	(6 + t_{prep} + t_{meas}) p_{stor} \\
+	&  = &  12 p_g + (14 + t_{prep} + t_{meas}) p_{stor}.
+\end{eqnarray}
+
+Now, in order to measure a qubit encoded at some level, it is sufficient to
+measure all of the constituent qubits.  At level one, this gives us some
+seven-bit string which is a codeword of the classical Hammng code (possibly
+with some errors).  Whether it is a codeword of even or odd parity will tell us
+whether the corresponding level one qubit is $\ket{0}$ or $\ket{1}$.  We can
+continue to do this at all levels, using classical error correction at each
+level to correct any errors in individual bits.  This will, in general, require
+a fair amount of classical computation.  However, I will assume that classical
+computation is much faster than quantum computation when it can
+perform the same task, and that in the regime of interest, $t_{meas} = 1$.
+No matter what the speed of the classical computer, eventually $\tmj{j}$
+will become greater than one, but due to the rapid convergence of the double
+exponential, this will have a very small effect on the threshhold.
+
+Preparing encoded $\ket{0}$ states at level $j-1$ does take a fair amount
+of time, however.  Furthermore, the amount of time will increase with
+level.  One way to prepare encoded $0$ states reliably is by performing a
+full error correction cycle for the code with the addition of the $\Zbar$
+operator $\Zs{5} \Zs{6} \Zs{7}$.  The input state can be anything.  The time to
+do this is at most $4(t_{EC} + 1)$.  Recall that we must get the same error
+syndrome twice before we trust it.  If there is an error in the second
+syndrome measurement, we may have to measure the syndrome twice
+more, for a total of four times.  The chance of two errors is lower order,
+and therefore we ignore it.
+
+The time for one error correction cycle is $t_{EC} = 14 + t_{prep} +
+t_{meas}$, so $\tpj{j} = 64 + 4 \tpj{j-1}$.  In order to cut down the growth
+rate with level, I will assume we can plan ahead enough to prepare the
+ancillas for later syndrome measurements while measuring the earlier
+syndromes.  Then $\tpj{j} = 43 + \tpj{j-1}$.  Recalling that $\tpj{0} = 0$, we
+then get $\tpj{j} = 43 j$.  One benefit of preparing states using error
+correction is that the chance of residual error is minimal.  I will take
+$\ppj{j} = 0$ where it matters.
+
+Finally, we get the result for $p_{EC}$.  The $t_{prep}$ that contributes is
+actually $\tpj{j-1}$, so
+\begin{equation}
+	p_{EC}^{(j)} = 12 \pgj{j-1} + [15 + 43 (j-1)]\,\psj{j-1}.
+\end{equation}
+Therefore,
+\begin{eqnarray}
+	\pgj{j} & = & 21 \left[(\pgj{j-1})^2 + 4 \pgj{j-1} p_{EC} + 8 p_{EC}^2
+	\right] \\
+	& = & 25221\,(\pgj{j-1})^2 + \left[61740 + 176988 (j-1) \right] \pgj{j-1}
+	\psj{j-1} \nonumber \\
+	& & \mbox{} + \left[37800 + 216720 (j-1) + 310632 (j-1)^2 \right] (\psj{j-1})^2
+\end{eqnarray}
+and
+\begin{eqnarray}
+	\psj{j} & = & 21 \left[(\psj{j-1})^2 + 4 \psj{j-1} p_{EC} + 8 p_{EC}^2
+	\right] \\
+	& = & 24192\,(\pgj{j-1})^2 + \left[61488 + 173376 (j-1) \right] \pgj{j-1}
+	\psj{j-1} \nonumber \\
+	& & \mbox{} + \left[39081 + 220332 (j-1) + 310632 (j-1)^2 \right] (\psj{j-1})^2.
+\end{eqnarray}
+Note a number of things here.  If we perform error correction after every
+time step, whether it has a gate or not, the storage error rate and gate
+error rate at the next level will actually be dominated by the error rate of
+error correction, so they will be very close.  Also, at levels beyond the
+first, the error rate is dominated by storage errors occuring while we wait
+around encoding the ancilla qubits for error correction.  Therefore, the
+algorithm will benefit greatly from a more rapid preparation algorithm, a
+better ability to plan ahead, or both.
+
+First, consider the limit in which storage errors are negligable.  In this
+case, we do not perform error correction after a step without a gate.
+Therefore, $\psj{j} = 0$ at all levels.  Then, $\pgj{j} = 25221\,(\pgj{j-1})^2$,
+and the threshhold for a computation involving only operations from $N(\G)$ is
+$p_{thresh} = 1/25200 = 4.0 \times 10^{-5}$.  A second limit would be when
+$\pgj{0} = \psj{0}$, so there are no gate errors beyond the simple storage
+error in the same time step.  Then they should be equal at all other levels,
+as well.  Then
+\begin{equation}
+	\psj{j} = \left[124761 + 393708 (j-1) + 310632 (j-1)^2 \right] (\psj{j-1})^2.
+\end{equation}
+Then $\psj{1} = 124800\,(\psj{0})^2$, $\psj{2} = 8.3 \times 10^5\,(\psj{1})^2$,
+and $\psj{3} = 2.2 \times 10^6\,(\psj{2})^2$.  For higher $j$, we approximate
+\begin{equation}
+	\psj{j} = 3.1 \times 10^5\,(j-1)^2 (\psj{j-1})^2 = \left[ (j-1)^2
+	\psj{j-1}/ (3.2 \times 10^{-6}) \right] \psj{j-1}.
+\end{equation}
+To get continual improvement, it is sufficient for $\psj{j}/\psj{j-1} < (j-
+1)^2/j^2$.  This will mean $\psj{j} \leq \frac{9}{j^2} \psj{3}$.  It suffices
+for $\psj{4} = \frac{9}{16} \psj{3}$, so $\psj{3} = \frac{1}{16} (3.2 \times
+10^{-6})$.  Following this back, we find that for only storage errors, the
+threshhold is roughly $p_{thresh} = 2.2 \times 10^{-6}$, or slightly more
+than an order of magnitude worse than for just gate errors.
+
+Let us consider another case.  Suppose we can plan ahead well, and
+prepare ancillas for error correction just in time for when they are needed.
+Then $p_{EC} = 12 p_g + 9 p_{stor}$, and
+\begin{eqnarray}
+	\pgj{j} & = & 25221\,(\pgj{j-1})^2 + 37044\,\pgj{j-1} \psj{j-1} + 13608\,
+	(\psj{j-1})^2 \\
+	\psj{j} & = & 24192\,(\pgj{j-1})^2 + 37296\,\pgj{j-1} \psj{j-1} + 14385\,
+	(\psj{j-1})^2.
+\end{eqnarray}
+For all practical purposes, for $j > 1$, $\pgj{j} = \psj{j} = p^{(j)} = 75873\,
+(p^{(j-1)})^2$.  This means that the threshhold occurs at $p^{(1)} = 1/75873 =
+1.3 \times 10^{-5}$.  At the limit $\psj{0} = 0$, we get a threshhold for
+$p_g$ of $p_{thresh} = 2.3 \times 10^{-5}$.  At the limit $\pgj{0} = \psj{0}$,
+we get a threshhold $p_{thresh} = 1.3 \times 10^{-5}$.
+
+Finally, suppose we do not do error correction after every step, but instead
+attempt to optimize the number of steps $N$ between error corrections.
+Then the chance of error in $N$ steps is $N \pgj{j-1}$ or $N \psj{j-1}$, and
+equations (\ref{eq-pg-recursion}) and (\ref{eq-ps-recursion}) become
+\begin{eqnarray}
+	N \pgj{j} & = & 21 \left[N^2 (\pgj{j-1})^2 + 4 N \pgj{j-1} p_{EC} + 8 p_{EC}^2
+	\right] \\
+	N \psj{j} & = & 21 \left[N^2 (\psj{j-1})^2 + 4 N \psj{j-1} p_{EC} + 8 p_{EC}^2
+	\right].
+\end{eqnarray}
+The values $\pgj{j}$ and $\psj{j}$ now represent average error rates,
+rather than strict error rates per step.  As long as we do gates from
+$N(\G)$ only or storage only, these values will be accurate representations,
+but if we mix and match, the story will be a bit different.  Optimizing with
+respect to $N$ gives us
+\begin{eqnarray}
+	-\frac{21}{N^2} \left[N^2 (\pgj{j-1})^2 + 4 N \pgj{j-1} p_{EC} + 8 p_{EC}^2
+	\right] & & \\
+	\mbox{} + \frac{21}{N} \left[2 N (\pgj{j-1})^2 + 4 \pgj{j-1} p_{EC} \right]
+	& = & 0
+\end{eqnarray}
+\vspace{-\belowdisplayskip}
+\begin{eqnarray}
+	N^2 (\pgj{j-1})^2 + 4 N \pgj{j-1} p_{EC} + 8 p_{EC}^2 & = & 2 N^2
+	(\pgj{j-1})^2 + 4 N \pgj{j-1} p_{EC} \nonumber \\ \\
+	N^2 (\pgj{j-1})^2 - 8 p_{EC}^2 & = & 0 \\
+	N & = & \sqrt{8}\,(p_{EC}/\pgj{j-1}).
+\end{eqnarray}
+The same is true for storage steps.  The optimum number of steps makes
+the accumulated chance of error during gates $\sqrt{8}$ times the chance
+of error during error correction.  Plugging in this value for $N$ gives us
+\begin{equation}
+	\pgj{j} = \frac{21}{N} (16 + 8 \sqrt{2}) p_{EC}^2.
+\end{equation}
+Assuming no storage errors, $p_{EC} = 12 \pgj{j-1}$, so $N =
+34$ and $\pgj{j} = 2.4 \times 10^3\,(\pgj{j-1})^2$, so the threshhold is
+$p_{thresh} = 4.1 \times 10^{-4}$.  In practice, we will not be able to perform
+error correction after exactly 34 gates, since there will be Toffoli gates
+occuring at possibly inconvenient times, but if we get close to the right
+frequency of error correction, the actual threshhold will not be too much
+worse than this.
+
+\section{Toffoli Gate Threshhold}
+
+To figure out the recursion relation for the Toffoli gate, look at figure
+\ref{fig-toffoli}, which summarizes the construction in section
+\ref{sec-toffoli}.
+\begin{figure}
+	\centering
+	\begin{picture}(335,200)
+
+		\put(0,174){\makebox(20,12){$\ket{0}$}}
+		\put(0,154){\makebox(20,12){$\ket{0}$}}
+		\put(0,134){\makebox(20,12){$\ket{0}$}}
+		\put(0,114){\makebox(20,12){$\ket{cat}$}}
+		\put(0,94){\makebox(20,12){$\ket{cat}$}}
+		\put(0,74){\makebox(20,12){$\ket{cat}$}}
+		\put(0,54){\makebox(20,12){$\ket{d_1}$}}
+		\put(0,34){\makebox(20,12){$\ket{d_2}$}}
+		\put(0,14){\makebox(20,12){$\ket{d_3}$}}
+
+		\put(20,180){\line(1,0){4}}
+		\put(24,174){\framebox(12,12){$R$}}
+		\put(20,160){\line(1,0){4}}
+		\put(24,154){\framebox(12,12){$R$}}
+		\put(20,140){\line(1,0){4}}
+		\put(24,134){\framebox(12,12){$R$}}
+
+		\put(36,180){\line(1,0){279}}
+		\put(36,160){\line(1,0){218}}
+		\put(266,160){\line(1,0){49}}
+		\put(36,140){\line(1,0){218}}
+		\put(266,140){\line(1,0){49}}
+
+		\put(20,80){\line(1,0){19}}
+		\put(51,80){\line(1,0){6}}
+		\put(69,80){\line(1,0){21}}
+		\put(57,74){\framebox(12,12){$R$}}
+
+		\put(39,74){\framebox(12,12){$\Z$}}
+		\put(45,140){\circle*{4}}
+		\put(45,140){\line(0,-1){54}}
+
+		\put(80,180){\circle*{4}}
+		\put(80,180){\line(0,-1){104}}
+		\put(80,160){\circle*{4}}
+		\put(80,80){\circle{8}}
+
+		\put(90,74){\makebox(30,12){Meas.}}
+
+		\put(20,100){\line(1,0){69}}
+		\put(101,100){\line(1,0){6}}
+		\put(119,100){\line(1,0){21}}
+		\put(107,94){\framebox(12,12){$R$}}
+
+		\put(89,94){\framebox(12,12){$\Z$}}
+		\put(95,140){\circle*{4}}
+		\put(95,140){\line(0,-1){34}}
+
+		\put(130,180){\circle*{4}}
+		\put(130,180){\line(0,-1){84}}
+		\put(130,160){\circle*{4}}
+		\put(130,100){\circle{8}}
+
+		\put(138,94){\makebox(30,12){Meas.}}
+
+		\put(20,120){\line(1,0){119}}
+		\put(151,120){\line(1,0){6}}
+		\put(169,120){\line(1,0){19}}
+		\put(157,114){\framebox(12,12){$R$}}
+
+		\put(139,114){\framebox(12,12){$\Z$}}
+		\put(145,140){\circle*{4}}
+		\put(145,140){\line(0,-1){14}}
+
+		\put(180,180){\circle*{4}}
+		\put(180,180){\line(0,-1){64}}
+		\put(180,160){\circle*{4}}
+		\put(180,120){\circle{8}}
+
+		\put(190,114){\makebox(30,12){Meas.}}
+
+		\put(200,140){\circle{8}}
+		\put(200,136){\line(0,1){8}}
+		\put(190,130){\framebox(20,60){}}
+		\put(150,80){\vector(1,1){50}}
+		\put(120,80){\line(1,0){30}}
+		\put(165,100){\line(1,0){5}}
+		\put(202,122){\vector(0,1){8}}
+
+		\put(20,60){\line(1,0){270}}
+		\put(20,40){\line(1,0){250}}
+		\put(20,20){\line(1,0){214}}
+
+		\put(238,180){\circle*{4}}
+		\put(238,180){\line(0,-1){124}}
+		\put(238,60){\circle{8}}
+
+		\put(230,160){\circle*{4}}
+		\put(230,160){\line(0,-1){124}}
+		\put(230,40){\circle{8}}
+
+		\put(222,20){\circle*{4}}
+		\put(222,20){\line(0,1){124}}
+		\put(222,140){\circle{8}}
+
+		\put(234,14){\framebox(12,12){$R$}}
+		\put(246,20){\line(1,0){4}}
+
+		\put(250,14){\makebox(30,12){Meas.}}
+		\put(270,34){\makebox(30,12){Meas.}}
+		\put(290,54){\makebox(30,12){Meas.}}
+
+		\put(260,180){\circle*{4}}
+		\put(260,180){\line(0,-1){14}}
+		\put(254,154){\framebox(12,12){$\Z$}}
+		\put(254,134){\framebox(12,12){$\Z$}}
+		\put(250,130){\framebox(20,60){}}
+		\put(260,26){\vector(0,1){104}}
+
+		\put(276,180){\circle*{4}}
+		\put(276,180){\line(0,-1){44}}
+		\put(276,140){\circle{8}}
+		\put(284,160){\circle{8}}
+		\put(284,156){\line(0,1){8}}
+		\put(270,130){\framebox(20,60){}}
+		\put(280,46){\vector(0,1){84}}
+
+		\put(300,180){\circle{8}}
+		\put(300,176){\line(0,1){8}}
+		\put(300,160){\circle*{4}}
+		\put(300,160){\line(0,-1){24}}
+		\put(300,140){\circle{8}}
+		\put(290,130){\framebox(20,60){}}
+		\put(300,66){\vector(0,1){64}}
+
+		\put(315,174){\makebox(20,12){$\ket{d_1'}$}}
+		\put(315,154){\makebox(20,12){$\ket{d_2'}$}}
+		\put(315,134){\makebox(20,12){$\ket{d_3'}$}}
+
+	\end{picture}
+	\caption[The Toffoli gate construction.]{The Toffoli gate construction.  Each
+	line represents seven qubits at the next lower level.}
+	\label{fig-toffoli}
+\end{figure}
+I will follow each qubit individually in order to figure out the final chance
+of error for that qubit.  This is a construction for the Toffoli gate at level
+$j+1$.  I will assume we do error correction on all three ancilla qubits only
+after the Toffoli gate is completed.  All three ancilla qubits start out with
+$\ppj{j+1}$ chance of error from preparing encoded $\ket{0}$'s.  There are
+actually two types of relevant encoding errors.  There can be errors
+remaining at lower levels.  Since we have just done an error correction
+cycle, I assume that the number of residual errors is negligable.  There is
+also a chance that the qubit will not be an encoded $\ket{0}$, but some
+other encoded state.  This would count as a complete failure of the Toffoli
+gate, since it would produce a real error at level $j+1$.  However, I will
+assume that the chance of this happening is also zero.
+
+Assume the chance of a remaining bit flip error in a cat state is $p_{cat}$
+and the time to make a cat state is $t_{cat}$.  Only bit flip errors feed back
+from the cat states to the ancilla qubits in this network.  Let $A_1$, $A_2$,
+and $A_3$ be the accumulated chances of error in the three ancilla qubits.
+First we have a Hadamard transform on all three of these qubits.  After the
+first gate in the ancilla construction, $A_3 = t_{cat}\,\psj{j} + 2 \pgj{j} + p_{cat}$.  It will have to sit around an additional $1 + \ttj{j}$
+time steps before the interaction with the next cat state begins.  Thus, after
+the first cat state is finished, $A_3 = (t_{cat} + \ttj{j} + 1) \psj{j} +
+2 \pgj{j} + p_{cat}$.  By the time of the Toffoli gate with the first two
+ancilla qubits, the chance of errors in the cat state which can feed back into
+the main ancilla is at most $p_{cat} + 2 \pgj{j}$.  The first two ancilla
+qubits have already waited a time $t_{cat}+2$, so the overall chance of errors
+in the first two ancilla qubits is
+\begin{equation}
+	A_1 = A_2 = (t_{cat}+2) \psj{j} + p_{cat} + 3 \pgj{j} + \ptj{j}.
+\end{equation}
+
+We repeat the cat state interaction two more times with new cat states,
+which we have been preparing in parallel with the first cat state.
+Therefore, we only need $2+\ttj{j}$ more time steps for each interaction,
+introducing the same amount of error as the equivalent steps in the first
+interaction.  We must also measure the cat states.  We can do it in the basis
+they end up in; we check for odd or even parity.  If two of the three cat
+states have odd parity, we decide the ancilla is in the state $\ket{B}$, and
+we perform $\X$ on the third ancilla qubit.  This process will take an
+additional $\tmj{j} + 1$ time units.  After the ancilla creation is completed,
+the chances of error on the three qubits are
+\begin{eqnarray}
+	A_1 & = & \left(t_{cat} + \tmj{j} + 7 \right) \psj{j} + 3p_{cat} + 7 \pgj{j} +
+	3 \ptj{j} \\
+	A_2 & = & \left(t_{cat} + \tmj{j} + 7 \right) \psj{j} + 3p_{cat} + 7 \pgj{j} +
+	3 \ptj{j} \\
+	A_3 & = & \left(t_{cat} + \tmj{j} + 3 \ttj{j} + 3 \right) \psj{j} + 3p_{cat} +
+	5 \pgj{j}.
+\end{eqnarray}
+The whole ancilla construction has taken a time $t_{cat} + \tmj{j} + 3 \ttj{j}
++ 7$, during which time the data qubits have been accumulating storage
+errors.  I assume here that $t_{cat} \geq \tpj{j} + 1$.
+
+Now we perform the CNOTs between the data qubits and the ancilla qubits.
+Again we make the conservative assumption that all of the accumulated chance of
+error on the data qubits feeds into the ancilla qubits.  Thus,
+\begin{eqnarray}
+	A_1 & \! = & \! \left(2 t_{cat} + 2 \tmj{j} + 3 \ttj{j} + 14 \right) \psj{j} +
+	3 p_{cat} + 8 \pgj{j} + 3 \ptj{j} \\
+	A_2 &\!  = & \! \left(2 t_{cat} + 2 \tmj{j} + 3 \ttj{j} + 14 \right) \psj{j} +
+	3 p_{cat} + 8 \pgj{j} + 3 \ptj{j} \\
+	A_3 & \! = & \! \left(2 t_{cat} + 2 \tmj{j} + 6 \ttj{j} + 10 \right) \psj{j} +
+	3 p_{cat} + 6 \pgj{j}.
+\end{eqnarray}
+Now we measure $\Z$ for the first two data qubits and $\X$ for the third
+data qubit.  We will add one time step for the Hadamard rotation on the third
+data qubit, plus $\tmj{j}$ to measure.  We should include a chance of the
+Toffoli gate failing because of the wrong result on one of these
+measurements, but I will assume that chance is small compared to the
+accumulated errors on the ancilla qubits.  Before we start doing the
+conditional operations to convert the ancilla states to complete the transfer
+of the data, the chances of error are
+\begin{eqnarray}
+	A_1 & \! = & \! \left(2 t_{cat} + 3 \tmj{j} + 3 \ttj{j} + 15 \right) \psj{j} +
+	3 p_{cat} + 8 \pgj{j} + 3 \ptj{j} \\
+	A_2 & \! = & \! \left(2 t_{cat} + 3 \tmj{j} + 3 \ttj{j} + 15 \right) \psj{j} +
+	3 p_{cat} + 8 \pgj{j} + 3 \ptj{j} \\
+	A_3 & \! = & \! \left(2 t_{cat} + 3 \tmj{j} + 6 \ttj{j} + 11 \right) \psj{j} +
+	3 p_{cat} + 6 \pgj{j}.
+\end{eqnarray}
+
+I will now assume that all three operations are necessary; this is the
+worst case, and usually there will be fewer gate errors.  The first
+conditional operation interacts ancilla qubits one and two, giving
+\begin{eqnarray}
+	A_1 & \!\! = & \!\! \left(4 t_{cat} + 6 \tmj{j} + 6 \ttj{j} + 30 \right) \psj{j}
+	+ 6 p_{cat} + 17 \pgj{j} + 6 \ptj{j} \\
+	A_2 & \!\! = & \!\! \left(4 t_{cat} + 6 \tmj{j} + 6 \ttj{j} + 30 \right) \psj{j}
+	+ 6 p_{cat} + 17 \pgj{j} + 6 \ptj{j} \\
+	A_3 & \!\! = & \!\! \left(2 t_{cat} + 3 \tmj{j} + 6 \ttj{j} + 11 \right) \psj{j}
+	+ 3 p_{cat} + 7 \pgj{j}.
+\end{eqnarray}
+The second conditional operation interacts ancilla qubits one and three, so
+\begin{eqnarray}
+	A_1 & \!\!\!\! = & \!\!\!\! \left(6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} + 41
+	\right) \psj{j} + 9 p_{cat} + 25 \pgj{j} + 6 \ptj{j} \\
+	A_2 & \!\!\!\! = & \!\!\!\! \left(4 t_{cat} + 6 \tmj{j} + 6 \ttj{j} + 30
+	\right) \psj{j} + 6 p_{cat} + 18 \pgj{j} + 6 \ptj{j} \\
+	A_3 & \!\!\!\! = & \!\!\!\! \left(6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} + 34
+	\right) \psj{j} + 9 p_{cat} + 25 \pgj{j} + 6 \ptj{j}.
+\end{eqnarray}
+The third operation interacts the second and third ancilla qubits.  Much of
+the error from the first and second ancilla qubits has already been
+introduced into the third qubit, so there is no need to add it again.  In fact,
+much of it may cancel out instead.  However, I assume it remains.  The
+only new error for the third ancilla qubit is the gate error on the second
+qubit from the previous operation plus the gate error for this operation.
+Thus,
+\begin{eqnarray}
+	A_1 & \!\!\!\!\! = & \!\!\!\!\! \left(6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} + 41
+	\right) \psj{j} + 9 p_{cat} + 26 \pgj{j} + 6 \ptj{j} \\
+	A_2 & \!\!\!\!\! = & \!\!\!\!\! \left(6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} + 41
+	\right) \psj{j} + 9 p_{cat} + 27 \pgj{j} + 6 \ptj{j} \\
+	A_3 & \!\!\!\!\! = & \!\!\!\!\! \left(6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} + 41
+	\right) \psj{j} + 9 p_{cat} + 27 \pgj{j} + 6 \ptj{j}.
+\end{eqnarray}
+The overall chance of error on a single one of the new data qubits after the
+full Toffoli gate construction is thus
+\begin{equation}
+	\left(6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} + 41 \right)
+	\psj{j} + 9 p_{cat} + 27 \pgj{j} + 6 \ptj{j}.
+\end{equation}
+The time taken to perform this Toffoli gate is
+\begin{equation}
+	\ttj{j+1} = t_{cat} + 2 \tmj{j} + 3 \ttj{j} + 12.
+\end{equation}
+
+After error correction, the chance of a real error at level $j+1$ is
+\begin{eqnarray}
+	\ptj{j+1} & \!\!\!\!\! = & \!\!\!\!\! 21\,\Bigg\{ \!\left[(6 t_{cat} + 9
+	\tmj{j} + 12 \ttj{j} + 41)\,\psj{j} + 9 p_{cat} + 27 \pgj{j} + 6
+	\ptj{j}\right]^2 \nonumber \nopagebreak \\
+	& & \!\!\!\!\!\! \mbox{} + 4 \! \left[ (6 t_{cat} + 9 \tmj{j} + 12 \ttj{j} +
+	41)\,\psj{j} + 9 p_{cat} + 27 \pgj{j} + 6 \ptj{j}\right] \! p_{EC} \nonumber
+	\nopagebreak \\
+	& & \!\!\!\!\!\! \mbox{} + 8 p_{EC}^2 \Bigg\}.
+\end{eqnarray}
+In order to simplify the recursion relation so that it is easily solvable,
+I will only investigate the limit where there are no storage errors.  In
+this case, it makes sense to verify the cat state used in the construction
+until the chance of errors in it is negligable.  Therefore, I will also
+assume that $p_{cat} = 0$.  Then the recursion relation for the Toffoli
+gate becomes
+\begin{eqnarray}
+	\ptj{j+1} & = & 21 \left[ (27 \pgj{j} + 6 \ptj{j})^2 + 4\,(27 \pgj{j} +
+	6 \ptj{j})\,p_{EC} + 8 p_{EC}^2 \right] \\
+	& = & 66717\,(\pgj{j})^2 + 12852\,\pgj{j} \ptj{j} + 756\,(\ptj{j})^2.
+\end{eqnarray}
+Recall that in this limit, $\pgj{j} = 25221\,(\pgj{j-1})^2$, so
+\begin{equation}
+	\pgj{j} = 25200^{a(j)} (\pgj{0})^{2^j},
+\end{equation}
+where $a(j+1) = 1 + 2a(j)$, with $a(1) = 1$.  Therefore, $a(j) = 2^j - 1$,
+and
+\begin{eqnarray}
+	\pgj{j} & = & 4.0 \times 10^{-5}
+	\left[ \pgj{0}/ (4.0 \times 10^{-5}) \right]^{2^j} \\
+	& = & p_{thresh} \left( \pgj{0}/p_{thresh} \right)^{2^j}.
+\end{eqnarray}
+Writing $\epsilon = \pgj{0}/p_{thresh}$, we have
+\begin{equation}
+	\ptj{j+1} = 1.1 \times 10^{-4}\,\epsilon^{2^{j+1}} + 0.51\,\epsilon^{2^j}
+	\ptj{j} + 756\,(\ptj{j})^2.
+\end{equation}
+The first term is often negligable compared to the second term, in which case
+\begin{equation}
+	\ptj{j+1} = \left( 0.51\,\epsilon^{2^j} + 756\,\ptj{j} \right) \ptj{j}.
+\end{equation}
+In the limit where $\epsilon$ is small, we find a threshhold value of
+$\ptj{0} = 1/756 = 1.3 \times 10^{-3}$.
+
+Even when $\epsilon$ is fairly large, the presence of Toffoli gates does
+not present much of a problem for the threshhold.  For instance, if we demand
+that $\ptj{0} = \pgj{0} = \epsilon p_{thresh}$, then
+\begin{eqnarray}
+	\ptj{1} & = & 1.1 \times 10^{-4}\,\epsilon^2 + \left[12852\,p_{thresh} \epsilon
+	+ 756\,p_{thresh} \epsilon \right] \ptj{0} \\
+	& \approx & 1.3 \times 10^{-4}\,\epsilon^2, \\
+	\ptj{2} & = & 1.1 \times 10^{-4}\,\epsilon^4 + \left[0.51\,\epsilon^2 +
+	756\,(1.3 \times 10^{-4})\,\epsilon^2 \right] \ptj{1} \\
+	& = & 1.9 \times 10^{-4}\,\epsilon^4, \\
+	\ptj{3} & = & 1.1 \times 10^{-4}\,\epsilon^8 + \left[0.51\,\epsilon^4 +
+	756\,(1.9 \times 10^{-4})\,\epsilon^4 \right] \ptj{2}, \\
+	& = & 2.3 \times 10^{-4}\,\epsilon^8.
+\end{eqnarray}
+If we let $\epsilon^4 = 1.9 / 2.3$, so $\epsilon \approx 0.95$, then $\ptj{3} =
+\ptj{2}$, and as we add levels of concatenation, the Toffoli gate error gate
+will begin to improve.  Therefore, the presence of Toffoli gates with the same
+physical error rate as other gates causes less than a $5\%$ reduction in the
+threshhold.

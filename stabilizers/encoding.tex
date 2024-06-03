@@ -1,0 +1,403 @@
+\chapter{Encoding and Decoding Stabilizer Codes}
+\label{chap-encoding}
+
+\section{Standard Form for a Stabilizer Code}
+
+To see how to encode a general stabilizer code~\cite{cleve}, it is helpful to
+describe the code in the language of binary vector spaces (see section
+\ref{sec-alternate}).  Note that the specific choice of generators is not
+at all unique.  We can always replace a generator $M_i$ with $M_i M_j$ for
+some other generator $M_j$.  The corresponding effect on the binary matrices
+is to add row $j$ to row $i$ in both matrices.  For simplicity, it is also
+helpful to rearrange qubits in the code.  This has the effect of rearranging
+the corresponding columns in both matrices.  Combining these two operations,
+we can perform Gaussian elimination on the first matrix, putting the code in
+this form:
+\vspace{2.5ex}
+\begin{equation}
+	\begin{array}{r} r\{ \\ n-k-r\{ \end{array} \!\!\!\!
+	\left( \begin{array}{cc|cc}
+		       \raisebox{0ex}[1.5ex]{$\overbrace{I}^r$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{A}^{n-r}$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{B}^r$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{C}^{n-r}$} \\
+		       0 & 0 & D & E
+	\end{array} \right).
+\end{equation}
+Here, $r$ is the rank of the $\X$ portion of the stabilizer generator matrix.
+
+Then we perform another Gaussian elimination on $E$ to get
+\vspace{2.5ex}
+\begin{equation}
+	\begin{array}{r} r\{ \\ n-k-r-s \{ \\ s \{ \end{array} \!\!\!\!
+	\left( \begin{array}{ccc|ccc}
+		       \raisebox{0ex}[1.5ex]{$\overbrace{I}^r$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{A_1}^{n-k-r-s}$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{A_2}^{k+s}$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{B}^r$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{C_1}^{n-k-r-s}$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{C_2}^{k+s}$} \\
+		       0 & 0 & 0 & D_1 & I & E_2 \\
+		       0 & 0 & 0 & D_2 & 0 & 0
+	\end{array} \right).
+\end{equation}
+The rank of $E$ is $n-k-r-s$.  However, the first $r$ generators will not
+commute with the last $s$ generators unless $D_2 = 0$, which really implies
+that $s=0$.  Thus we can always put the code into the standard form
+\vspace{2.5ex}
+\begin{equation}
+	\begin{array}{r} r\{ \\ n-k-r\{ \end{array} \!\!\!\!
+	\left( \begin{array}{ccc|ccc}
+		       \raisebox{0ex}[1.5ex]{$\overbrace{I}^r$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{A_1}^{n-k-r}$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{A_2}^k$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{B}^r$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{C_1}^{n-k-r}$} &
+		       \raisebox{0ex}[1.5ex]{$\overbrace{C_2}^k$} \\
+		       0 & 0 & 0 & D & I & E
+	\end{array} \right).
+	\label{eq-standard-form}
+\end{equation}
+For instance, the standard form for the five-qubit code of
+table~\ref{table-5qubit} is
+\begin{equation}
+	\left( \begin{array}{ccccc|ccccc}
+		       1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
+		       0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 \\
+		       0 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 \\
+		       0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 & 1
+	\end{array} \right).
+\end{equation}
+
+Suppose we have an $\Xbar$ operator which in this language is written
+$(u|v) = (u_1 u_2 u_3| v_1 v_2 v_3)$, where $u_1$ and $v_1$ are
+$r$-dimensional vectors, $u_2$ and $v_2$ are $(n-k-r)$-dimensional
+vectors, and $u_3$ and $v_3$ are $k$-dimensional vectors.  However,
+elements of $N(S)$ are equivalent up to multiplication by elements of $S$.
+Therefore, we can also perform eliminations on $\Xbar$ to force $u_1 = 0$
+and $v_2 = 0$.  Then, because $\Xbar$ is in $N(S)$, we must satisfy
+(\ref{eq-commute-bin}), so
+\begin{eqnarray}
+	\left( \begin{array}{cccccc}
+		       I & A_1 & A_2 & B & C_1 & C_2 \\
+		       0 & 0 & 0 & D & I & E
+	\end{array} \right)
+	\left( \begin{array}{c} v_1^T \\ 0 \\ v_3^T \\ 0 \\ u_2^T \\ u_3^T
+	\end{array} \right)
+	& \!\!\! = & \!\!\! \left( \begin{array}{c}
+		                           v_1^T + A_2 v_3^T + C_1 u_2^T + C_2 u_3^T \\
+		                           u_2^T + E u_3^T
+	\end{array} \right) \nonumber \\
+	& \!\!\! = & \!\!\! \left( \begin{array}{c} 0 \\ 0 \end{array} \right).
+	\label{eq-Xbar-commute}
+\end{eqnarray}
+
+Suppose we want to choose a complete set of $k$ $\Xbar$ operators.  We
+can combine their vectors into two $k \times n$ matrices $(0 U_2 U_3 |
+V_1 0 V_3)$.  We want them to commute with each other, so $U_3 V_3^T +
+V_3 U_3^T = 0$.  Suppose we pick $U_3 = I$.  Then we can take $V_3 = 0$, and
+by equation (\ref{eq-Xbar-commute}), $U_2 = E^T$ and $V_1 = E^T C_1^T + C_2^T$.
+The rest of the construction will assume that this choice has actually been
+made.  Another choice of $U_3$ and $V_3$ will require us to perform some
+operation on the unencoded data to compensate.  For the five-qubit code, the
+standard form of the $\Xbar$ generator would be $(0 0 0 0 1 | 1 0 0 1 0)$.
+We can see that this is equivalent (mod $S$) to the $\Xbar$ given in
+table~\ref{table-5qubit}.
+
+We can also pick a complete set of $k$ $\Zbar$ operators, which act on the
+code as encoded $\Z$ operators.  They are uniquely defined (up to
+multiplication by $S$, as usual) given the $\Xbar$ operators.  $\Zbar_i$ is
+an operator that commutes with $M \in S$, commutes with $\Xbar_j$ for $i
+\neq j$, and anticommutes with $\Xbar_i$.  We can bring it into the
+standard form $(0 U_2' U_3' | V_1' 0 V_3')$.  Then
+\begin{equation}
+	U_3' V_3^T + V_3' U_3^T = I.
+\end{equation}
+When $U_3 = I$ and $V_3 = 0$, $V_3' = I$.  Since equation
+(\ref{eq-Xbar-commute}) holds for the $\Zbar$ operators too, $U_2' = U_3'
+= 0$ and $V_1' = A_2^T$.  For instance, for the five-qubit code, the standard
+form of the $\Zbar$ generator is $(0 0 0 0 0 | 1 1 1 1 1)$, which is exactly
+what is given in table~\ref{table-5qubit}.
+
+\section{Network for Encoding}
+\label{sec-encode-network}
+
+Given a stabilizer in standard form along with the $\Xbar$ operators in
+standard form, it is straightforward to produce a network to encode the
+corresponding code.  The operation of encoding a stabilizer code can be
+written as
+\begin{eqnarray}
+	\ket{c_1 \ldots c_k} & \rightarrow & \left( \Sum_{M \in S} M \right)
+	\Xbar_1^{c_1} \cdots \Xbar_k^{c_k} \ket{0 \ldots 0} \label{eq-encoding}\\
+	& = & (I + M_1) \cdots (I + M_{n-k}) \Xbar_1^{c_1} \cdots \Xbar_k^{c_k}
+	\ket{0\ldots 0}, \label{eq-encoding2}
+\end{eqnarray}
+where $M_1$ through $M_{n-k}$ generate the stabilizer, and $\Xbar_1$
+through $\Xbar_k$ are the encoded $\X$ operators for the $k$ encoded
+qubits.  This is true because, in general, for any $N \in S$,
+\begin{equation}
+	N \left( \Sum_{M \in S} M \right) \ket{\psi} = \left( \Sum_{M \in S} NM
+	\right) \ket{\psi} = \left( \Sum_{M' \in S} M' \right) \ket{\psi},
+\end{equation}
+so $\Sum M \ket{\psi}$ is in the coding space $T$ for any state
+$\ket{\psi}$.  If we define the encoded $0$ as
+\begin{equation}
+	\ket{\overline{0}} = \Sum_{M \in S} M \ket{\overbrace{0 \ldots 0}^{n}},
+\end{equation}
+then by the definition of the $\Xbar$'s, we should encode
+\begin{equation}
+	\ket{c_1 \ldots c_k} \rightarrow \Xbar_1^{c_1} \cdots \Xbar_k^{c_k} \left(
+	\Sum_{M \in S} M \right)  \ket{0 \ldots 0}.
+\end{equation}
+Since $\Xbar_i$ commutes with $M \in S$, this is just (\ref{eq-encoding}).
+Naturally, to encode this, we only need to worry about encoding the basis
+states $\ket{c_1 \ldots c_k}$.
+
+The standard form of $\Xbar_i$ has the form $Z^{(r)} X^{(n-k-r)}
+\Xs{(n-k+i)}$ ($Z^{(r)}$ is the product of $\Z$'s on the first $r$ qubits and
+$X^{(n-k-r)}$ is the product of $\X$'s on the next $n-k-r$ qubits).  Suppose
+we put the $k$th input qubit $\ket{c_k}$ in the $n$th spot,
+following $n-1$ $0$s.  The state $\Xbar_k^{c_k} \ket{0 \ldots 0}$ therefore
+has a $1$ for the $n$th qubit iff $\ket{c_k} = \ket{1}$.  This means we can
+get the state $\Xbar_k^{c_k} \ket{0 \ldots 0}$ by applying $\Xbar_k$
+(without the final $\Xs{n}$) to the input state conditioned on the $n$th
+qubit.  For instance, for the five-qubit code, $\Xbar = Z \otimes I \otimes I
+\otimes Z \otimes X$.  The corresponding operation is illustrated in
+figure~\ref{fig-5qubit-Xbar}.
+\begin{figure}
+	\centering
+	\begin{picture}(60,120)
+
+		\put(20,20){\line(1,0){40}}
+		\put(20,40){\line(1,0){14}}
+		\put(46,40){\line(1,0){14}}
+		\put(20,60){\line(1,0){40}}
+		\put(20,80){\line(1,0){40}}
+		\put(20,100){\line(1,0){14}}
+		\put(46,100){\line(1,0){14}}
+
+		\put(2,14){\makebox(12,12){$c$}}
+		\put(2,34){\makebox(12,12){$0$}}
+		\put(2,54){\makebox(12,12){$0$}}
+		\put(2,74){\makebox(12,12){$0$}}
+		\put(2,94){\makebox(12,12){$0$}}
+
+		\put(40,20){\circle*{4}}
+		\put(40,20){\line(0,1){14}}
+		\put(34,34){\framebox(12,12){$\Z$}}
+		\put(40,46){\line(0,1){48}}
+		\put(34,94){\framebox(12,12){$\Z$}}
+
+	\end{picture}
+	\caption{Creating the state $\Xbar \ket{00000}$ for the five-qubit code.}
+	\label{fig-5qubit-Xbar}
+\end{figure}
+In this case $r=n-k=4$, so there are no bit flips, only controlled $\Z$'s.
+
+In the more general case, we also need to apply $\Xbar_1$ through
+$\Xbar_{k-1}$, depending on $c_1$ through $c_{k-1}$.  Since the form of
+the $\Xbar$'s ensures that each only operates on a single one of the last
+$k$ qubits, we can substitute $\ket{c_i}$ for the $(n-k+i)$th qubit and
+apply $\Xbar_i$ conditioned on it, as with $\ket{c_k}$.  This produces the
+state $\Xbar_1^{c_1} \cdots \Xbar_k^{c_k} \ket{0 \ldots 0}$.
+
+Further, note that the $\Xbar$ operators only act as $\Z$ on the first $r$
+qubits and as $\X$ on the next $n-k-r$ qubits.  Since $\Z$ acts trivially on
+$\ket{0}$, we can just ignore that part of the $\Xbar$'s when implementing
+this part of the encoder, leaving just the controlled NOTs.  The first $r$
+qubits automatically remain in the state $\ket{0}$ after this step of
+encoding.  This means that for the five-qubit code, this step of encoding is
+actually trivial, with no operations.  In general, this step is only necessary
+if $r<n-k$.
+
+For the next step of the encoding, we note that the standard form of the
+first $r$ generators only applies a single bit flip in the first $r$ qubits.
+This means that when we apply $I + M_i$, the resulting state will be the
+sum of a state with $\ket{0}$ for the $i$th qubit and a state with $\ket{1}$
+for the $i$th qubit.  We therefore apply the Hadamard transform
+\begin{equation}
+	R = \frac{1}{\sqrt{2}} \pmqty{1 & \ 1 \\ 1 & -1}
+	\label{eq-hadamard}
+\end{equation}
+to the first $r$ qubits, putting each in the state $\ket{0} + \ket{1}$.  Then
+we apply $M_i$ (for $i = 1, \ldots, r$) conditioned on qubit $i$ (ignoring
+the factor of $\Xs{i}$).  While these operators may perform phase
+operations on the first $r$ qubits, they do not flip them, so there is no risk
+of one operation confusing the performance of another one.  The one
+possible complication is when $M_i$ has a factor of $\Zs{i}$.  In this case,
+$\Zs{i}$ only introduces a minus sign if the qubit is $\ket{1}$ anyway, so we
+do not need to condition it on anything.  Just performing $\Zs{i}$ after the
+Hadamard transform is sufficient.  For the five-qubit code, the full network
+for encoding is given in figure~\ref{fig-5qubit}.
+\begin{figure}
+	\centering
+	\begin{picture}(160,120)
+
+		\put(20,20){\line(1,0){54}}
+		\put(86,20){\line(1,0){48}}
+		\put(146,20){\line(1,0){14}}
+
+		\put(20,40){\line(1,0){14}}
+		\put(46,40){\line(1,0){8}}
+		\put(66,40){\line(1,0){8}}
+		\put(86,40){\line(1,0){8}}
+		\put(106,40){\line(1,0){54}}
+
+		\put(20,60){\line(1,0){14}}
+		\put(46,60){\line(1,0){48}}
+		\put(106,60){\line(1,0){28}}
+		\put(146,60){\line(1,0){14}}
+
+		\put(20,80){\line(1,0){14}}
+		\put(46,80){\line(1,0){28}}
+		\put(86,80){\line(1,0){28}}
+		\put(126,80){\line(1,0){34}}
+
+		\put(20,100){\line(1,0){14}}
+		\put(46,100){\line(1,0){8}}
+		\put(66,100){\line(1,0){48}}
+		\put(126,100){\line(1,0){8}}
+		\put(146,100){\line(1,0){14}}
+
+		\put(4,14){\makebox(12,12){$c$}}
+		\put(4,34){\makebox(12,12){$0$}}
+		\put(4,54){\makebox(12,12){$0$}}
+		\put(4,74){\makebox(12,12){$0$}}
+		\put(4,94){\makebox(12,12){$0$}}
+
+		\put(34,34){\framebox(12,12){$R$}}
+		\put(34,54){\framebox(12,12){$R$}}
+		\put(34,74){\framebox(12,12){$R$}}
+		\put(34,94){\framebox(12,12){$R$}}
+
+		\put(54,34){\framebox(12,12){$\Z$}}
+		\put(54,94){\framebox(12,12){$\Z$}}
+
+		\put(80,100){\circle*{4}}
+		\put(80,100){\line(0,-1){14}}
+		\put(74,74){\framebox(12,12){$\Z$}}
+		\put(80,74){\line(0,-1){28}}
+		\put(74,34){\framebox(12,12){$\Z$}}
+		\put(80,34){\line(0,-1){8}}
+		\put(74,14){\framebox(12,12){$\Y$}}
+
+		\put(100,80){\circle*{4}}
+		\put(100,80){\line(0,-1){14}}
+		\put(94,54){\framebox(12,12){$\Z$}}
+		\put(100,54){\line(0,-1){8}}
+		\put(94,34){\framebox(12,12){$\Z$}}
+		\put(100,34){\line(0,-1){18}}
+		\put(100,20){\circle{8}}
+
+		\put(120,60){\circle*{4}}
+		\put(120,60){\line(0,1){14}}
+		\put(114,74){\framebox(12,12){$\Z$}}
+		\put(120,86){\line(0,1){8}}
+		\put(114,94){\framebox(12,12){$\Z$}}
+		\put(120,60){\line(0,-1){44}}
+		\put(120,20){\circle{8}}
+
+		\put(140,40){\circle*{4}}
+		\put(140,40){\line(0,1){14}}
+		\put(134,54){\framebox(12,12){$\Z$}}
+		\put(140,66){\line(0,1){28}}
+		\put(134,94){\framebox(12,12){$\Z$}}
+		\put(140,40){\line(0,-1){14}}
+		\put(134,14){\framebox(12,12){$\Y$}}
+
+	\end{picture}
+	\caption{Network for encoding the five-qubit code.}
+	\label{fig-5qubit}
+\end{figure}
+
+For more general codes, $r<n-k$, and there are $n-k-r$ generators that are
+formed just of the tensor product of $\Z$'s.  However, we do not need to
+consider such generators to encode.  Let $M$ be such a generator.  Since
+$M$ commutes with all the other generators and every $\Xbar$, we can
+commute $I + M$ through until it acts directly on $\ket{0 \ldots 0}$.
+However, $\Z$ acts trivially on $\ket{0}$, so $I+M$ fixes $\ket{0 \ldots 0}$,
+and in equation~(\ref{eq-encoding2}), we can skip any $M_i$ that is the tensor
+product of $\Z$'s.  The effect of these operators is seen just in
+the form of the $\Xbar$ operators, which must commute with them.
+
+Applying each of the $\Xbar$ operators requires up to $n-k-r$ two-qubit
+operations.  Each of the first $r$ qubits must be prepared with a Hadamard
+transform and possibly a $\Z$, which we can combine with the Hadamard
+transform.  Then applying each of the first $r$ generators requires up to
+$n-1$ two-qubit operations.  The whole encoder therefore requires up to $r$
+one-qubit operations and at most
+\begin{equation}
+	k(n-k-r) + r(n-1) \leq (k+r)(n-k) \leq n(n-k)
+\end{equation}
+two-qubit operations.
+
+\section{Other Methods of Encoding and Decoding}
+
+We can decode a code by performing the above network in reverse.  In
+order to do this, we should first perform an error correction cycle, since
+the network will not necessarily work properly on an encoded state.  Note
+that in principle we can build a decoder that corrects while decoding.  We
+can form a basis for the Hilbert space from the states $A \ket{\psi_i}$,
+where $A \in \G$ and $\ket{\psi_i}$ is a basis state for the coding space
+$T$.  The combined corrector/decoder would map $A \ket{\psi_i}$ to
+$\ket{i} \otimes \ket{f(A)}$, where $f(A)$ is the error syndrome for $A$.
+If $A$ is not a correctable error, $\ket{i}$ will not necessarily be the state
+encoded by $\ket{\psi_i}$, but if $A$ is correctable, it will be.  It is not
+usually worthwhile using a quantum network that does this, since the error
+correction process is usually dealt with more easily using classical
+measurements.  However, some proposed implementations of quantum computation
+cannot be used to measure a single system~\cite{gershenfeld}, so this sort of
+network would be necessary.  The decoding method presented in
+\cite{divincenzo-decoder} can easily be adapted to produce networks that
+simultaneously correct and decode.
+
+One good reason not to decode by running the encoder backwards is that
+most of the work in the encoder went into producing the encoded $0$.
+There is no actual information in that state, so we might be able to save
+time decoding if we could remove the information without dealing with the
+structure of the encoded $0$.  We can do this by using the $\Xbar$ and
+$\Zbar$ operators.  If we want to measure the $i$th encoded qubit
+without decoding, we can do this by measuring the eigenvalue of
+$\Zbar_i$.  If the eigenvalue is $+1$, the $i$th encoded qubit is $\ket{0}$;
+if it is $-1$, the $i$th encoded qubit is $\ket{1}$.  In standard form,
+$\Zbar_i$ is the tensor product of $\Z$'s.  That means it will have
+eigenvalue $(-1)^P$, where $P$ is the parity of the qubits acted on by
+$\Zbar_i$.  Therefore, if we apply a controlled-NOT from each of these
+qubits to an ancilla qubit, we have performed a controlled-NOT from the
+$i$th encoded qubit to the ancilla --- we will flip the ancilla iff the $i$th
+encoded qubit is $\ket{1}$.
+
+If the original state of the code is $\ket{\overline{0}} \ket{\psi} +
+\ket{\overline{1}} \ket{\phi}$ (with the first ket representing the $i$th
+	{\em logical} qubit) and the ancilla begins in the state $\ket{0}$, after
+applying this CNOT operation, we have
+\begin{equation}
+	\ket{\overline{0}} \ket{\psi} \ket{0} + \ket{\overline{1}} \ket{\phi}
+	\ket{1}.
+\end{equation}
+Now we apply $\Xbar_i$ conditioned on the ancilla qubit.  This will flip the
+$i$th encoded qubit iff the ancilla is $\ket{1}$.  This produces the state
+\begin{equation}
+	\ket{\overline{0}} \ket{\psi} \ket{0} + \ket{\overline{0}} \ket{\phi}
+	\ket{1} = \ket{\overline{0}} \left(\ket{\psi} \ket{0} + \ket{\phi} \ket{1}
+	\right).
+\end{equation}
+The $i$th encoded qubit has been set to $0$ and the ancilla holds the state
+that the $i$th encoded qubit used to hold.  The rest of the code has been
+left undisturbed.  We can repeat this operation with each of the encoded
+qubits, transferring them to $k$ ancilla qubits.  Each such operation requires
+at most $2(n-k+1)$ two-qubit operations (since $\Zbar$ requires at most $r + 1$
+operations and $\Xbar$ could require $n-k+1$ operations).  Therefore, the
+full decoder uses at most $2k(n-k+1)$ operations, which is often less than
+is required to encode.  At the end of the decoding, the original $n$ qubits
+holding the code are left in the encoded $0$ state.
+
+We can run this process backwards to encode, but we need an encoded $0$
+state to begin with.  This could be a residue from an earlier decoding
+operation, or could be produced separately.  One way to produce it would
+be to use the network of section~\ref{sec-encode-network}, using
+$\ket{0\ldots 0}$ as the input data.  Alternately, we could produce it by
+performing an error correction cycle on a set of $n$ $\ket{0}$'s for the
+stabilizer generated by $M_1, \ldots M_{n-k}, \Zbar_1, \ldots, \Zbar_k$.
+This stabilizer has $n$ generators, so there is only one joint $+1$
+eigenvector, which is just the encoded $0$ for the original code.

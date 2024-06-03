@@ -1,0 +1,782 @@
+\chapter{Stabilizer Coding}
+\label{chap-stabilizers}
+
+\section{The Nine-Qubit Code Revisited}
+
+Let us look more closely at the procedure we used to correct errors for the
+nine-qubit code.  To detect a bit flip error on one of the first three qubits,
+we compared the first two qubits and the first and third qubits.  This is
+equivalent to measuring the eigenvalues of $\Zs{1} \Zs{2}$ and $\Zs{1} \Zs{3}$.
+If the first two qubits are the same, the eigenvalue of $\Zs{1} \Zs{2}$ is
+$+1$; if they are different, the eigenvalue is $-1$.  Similarly, to detect a
+sign error, we compare the signs of the first and second blocks of three and
+the first and third blocks of three.  This is equivalent to measuring the
+eigenvalues of $\Xs{1} \Xs{2} \Xs{3} \Xs{4} \Xs{5} \Xs{6}$ and $\Xs{1} \Xs{2}
+\Xs{3} \Xs{7} \Xs{8} \Xs{9}$.  Again, if the signs agree, the eigenvalues will
+be $+1$; if they disagree, the eigenvalues will be $-1$.  In order to totally
+correct the code, we must measure the eigenvalues of a total of eight operators.
+They are listed in table~\ref{table-9qubit}.
+\begin{table}
+	\centering
+	\begin{tabular}{c|ccccccccc}
+		$M_1$ & $\Z$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ \\
+		$M_2$ & $\Z$ & $I$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ \\
+		$M_3$ & $I$ & $I$ & $I$ & $\Z$ & $\Z$ & $I$ & $I$ & $I$ & $I$ \\
+		$M_4$ & $I$ & $I$ & $I$ & $\Z$ & $I$ & $\Z$ & $I$ & $I$ & $I$ \\
+		$M_5$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\Z$ & $\Z$ & $I$ \\
+		$M_6$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\Z$ & $I$ & $\Z$ \\
+		$M_7$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $I$ & $I$ & $I$ \\
+		$M_8$ & $\X$ & $\X$ & $\X$ & $I$ & $I$ & $I$ & $\X$ & $\X$ & $\X$
+	\end{tabular}
+	\caption{The stabilizer for Shor's nine-qubit code}
+	\label{table-9qubit}
+\end{table}
+
+The two valid codewords $\ket{\overline{0}}$ and $\ket{\overline{1}}$ in
+Shor's code are eigenvectors of all eight of these operators with eigenvalue
+$+1$.  All the operators in $\G$ that fix both $\ket{\overline{0}}$ and
+$\ket{\overline{1}}$ can be written as the product of these eight operators.
+The set of operators that fix $\ket{\overline{0}}$ and $\ket{\overline{1}}$
+form a group $S$, called the {\em stabilizer} of the code, and $M_1$
+through $M_8$ are the generators of this group.
+
+When we measure the eigenvalue of $M_1$, we determine if a bit flip
+error has occurred on qubit one or two, i.e., if $\Xs{1}$ or $\Xs{2}$ has
+occurred.  Note that both of these errors anticommute with $M_1$, while
+$\Xs{3}$ through $\Xs{9}$, which cannot be detected by just $M_1$, commute
+with it.  Similarly, $M_2$ detects $\Xs{1}$ or $\Xs{3}$, which anticommute
+with it, and $M_7$ detects $\Zs{1}$ through $\Zs{6}$.  In general, if
+$M \in S$, $\{M, E\} = 0$, and $\ket{\psi} \in T$, then
+\begin{equation}
+	M E \ket{\psi} = - E M \ket{\psi} = - E \ket{\psi},
+\end{equation}
+so $E \ket{\psi}$ is an eigenvector of $M$ with eigenvalue $-1$ instead of
+$+1$ and to detect $E$ we need only measure $M$.
+
+The distance of this code is in fact three.  Even a cursory perusal reveals
+that any single-qubit operator $\Xs{i}$, $\Ys{i}$, or $\Zs{i}$ will anticommute
+with one or more of $M_1$ through $M_8$.  Since states with different
+eigenvalues are orthogonal, condition~(\ref{eq-condition}) is satisfied when
+$E_a$ has weight one and $E_b = I$.  We can also check that every two-qubit
+operator $E$ anticommutes with some element of $S$, except for those of
+the form $\Zs{a} \Zs{b}$ where $a$ and $b$ are in the same block of three.
+However, the operators of this form are actually in the stabilizer.  This means
+that $\Zs{a} \Zs{b} \ket{\psi} = \ket{\psi}$ for any codeword $\ket{\psi}$, and
+$\bra{\psi} \Zs{a} \Zs{b} \ket{\psi} = \langle \psi \ket{\psi} = 1$ for all
+codewords $\ket{\psi}$, and these operators also satisfy
+equation~(\ref{eq-condition}).  Since $\Zs{a} \Zs{b}$ is in the stabilizer,
+both $\Zs{a}$ and $\Zs{b}$ act the same way on the codewords, and there is no
+need to distinguish them.  When we get to operators of weight three, we do
+find some for which (\ref{eq-condition}) fails.  For instance, $\Xs{1} \Xs{2}
+\Xs{3}$ commutes with everything in $S$, but
+\begin{eqnarray}
+	\bra{\overline{0}} \Xs{1} \Xs{2} \Xs{3} \ket{\overline{0}} & = & +1 \\
+	\bra{\overline{1}} \Xs{1} \Xs{2} \Xs{3} \ket{\overline{1}} & = & -1.
+\end{eqnarray}
+
+\section{The General Stabilizer Code}
+
+The stabilizer construction applies to many more codes than just the
+nine-qubit one~\cite{gottesman-stab,calderbank-stab}.  In general, the
+stabilizer $S$ is some Abelian subgroup of $\G$ and the coding space $T$ is
+the space of vectors fixed by $S$.  Since $\Y$ has imaginary components,
+while $\X$ and $\Z$ are real, with an even number of $\Y$'s in each element
+of the stabilizer, all the coefficients in the basis codewords can be chosen
+to be real; if there are an odd number of $\Y$'s, they may be imaginary.
+However, Rains has shown that whenever a (possibly complex) code exists, a
+real code exists with the same parameters~\cite{rains-shadow}.  Therefore, I
+will largely restrict my attention to real codes.
+
+For a code to encode $k$ qubits in $n$, $T$ has $2^k$ dimensions and $S$
+has $2^{n-k}$ elements.  $S$ must be an Abelian group, since only
+commuting operators can have simultaneous eigenvectors, but provided it
+is Abelian and neither $i$ nor $-1$ is in $S$, the space $T = \{ \ket{\psi}\
+	{\rm s.t.} \ M \ket{\psi} = \ket{\psi} \ \forall M \in S \}$ does have
+dimension $2^k$.  At this point it will be helpful to note a few properties of
+$\G$.  Since $\X^2 = \Y^2 = \Z^2 = +1$, every element in $\G$ squares to
+$\pm 1$.  Also, $\X$, $\Y$, and $\Z$ on the same qubit anticommute, while
+they commute on different qubits.  Therefore, any two elements of $\G$
+either commute or they anticommute.  $\X$, $\Y$, and $\Z$ are all
+Hermitian, but of course $(iI)^\dagger = -i I$, so elements of $\G$ can be
+either Hermitian or anti-Hermitian.  In either case, if $A \in \G$,
+$A^\dagger \in G$ also.  Similarly, $\X$, $\Y$, and $\Z$ are all unitary, so
+every element of $\G$ is unitary.
+
+As before, if $M \in S$, $\ket{\psi_i} \in T$, and $\{M, E \} = 0$, then
+$M E \ket{\psi_i} =- E \ket{\psi_i}$, so
+\begin{equation}
+	\bra{\psi_i} E \ket{\psi_j} = \bra{\psi_i} M E \ket{\psi_j} = - \bra{\psi_i} E
+	\ket{\psi_j} = 0.
+\end{equation}
+Therefore the code satisfies~(\ref{eq-cond-orthogonal}) whenever $E =
+E_a^\dagger E_b = \pm E_a E_b$ anticommutes with $M$ for some $M \in
+S$.  In fact, in such a case it also satisfies~(\ref{eq-cond-structure}), since
+$\bra{\psi_i} E \ket{\psi_i} = \bra{\psi_j} E \ket{\psi_j} = 0$.  Therefore, if
+$E_a^\dagger E_b$ anticommutes with some element of $S$ for all errors
+$E_a$ and $E_b$ in some set, the code will correct that set of errors.
+
+Of course, strictly speaking, this is unlikely to occur.  Generally, $I$ will
+be an allowed error, and $E = I^\dagger I$ commutes with everything.
+However, $S$ is a group, so $I \in S$.  In general, if $E \in S$,
+\begin{equation}
+	\bra{\psi_i} E \ket{\psi_j} = \langle \psi_i \ket{\psi_j} = \delta_{ij}.
+\end{equation}
+This will satisfy equation~(\ref{eq-condition}) also.
+
+Now, there generally are many elements of $\G$ that commute with
+everything in $S$ but are not actually in $S$.  The set of elements in $\G$
+that commute with all of $S$ is defined as the centralizer $C(S)$ of $S$ in
+$\G$.  Because of the properties of $S$ and $\G$, the centralizer is actually
+equal to the normalizer $N(S)$ of $S$ in $\G$, which is defined as the set of
+elements of $\G$ that fix $S$ under conjugation.  To see this, note that for
+any $A \in \G$, $M \in S$,
+\begin{equation}
+	A^\dagger M A = \pm A^\dagger A M = \pm M.
+\end{equation}
+Since $-1 \notin S$, $A \in N(S)$ iff $A \in C(S)$, so $N(S) = C(S)$.  Note
+that $S \subseteq N(S)$.  In fact, $S$ is a normal subgroup of $N(S)$.
+$N(S)$ contains $4 \cdot 2^{n+k}$ elements.  The factor of four is for the
+overall phase factor.  Since an overall phase has no effect on the physical
+quantum state, often, when considering $N(S)$, I will only really
+consider $N(S)$ without this global phase factor.
+
+If $E \in N(S)-S$, then $E$ rearranges elements of $T$ but does not take
+them out of $T$: if $M \in S$ and $\ket{\psi} \in T$, then
+\begin{equation}
+	M E \ket{\psi} = EM \ket{\psi} = E \ket{\psi},
+\end{equation}
+so $E \ket{\psi} \in T$ also.  Since $E \notin S$, there is some state in $T$
+that is not fixed by $E$.  Unless it differs from an element of $S$ by an
+overall phase, $E$ will therefore be undetectable by this code.
+
+Putting these considerations together, we can say that a quantum code
+with stabilizer $S$ will detect all errors $E$ that are either in $S$ or
+anticommute with some element of $S$.  In other words, $E \in S \cup (\G -
+N(S))$.  This code will correct any set of errors $\{ E_i \}$ iff $E_a E_b \in
+S \cup (\G - N(S)) \ \forall E_a, E_b$ (note that $E_a^\dagger E_b$ commutes
+with $M \in \G$ iff $E_a E_b = \pm E_a^\dagger E_b$ does).  For instance, the
+code will have distance $d$ iff $N(S) - S$ contains no elements of weight less
+than $d$.  If $S$ has elements of weight less than $d$ (except the identity),
+it is a degenerate code; otherwise it is a nondegenerate code.  For instance,
+the nine-qubit code is degenerate, since it has distance three and $\Zs{1}
+\Zs{2} \in S$.  A nondegenerate stabilizer code satisfies
+\begin{equation}
+	\bra{\psi_i} E_a^\dagger E_b \ket{\psi_j} = \delta_{ab} \delta_{ij}.
+\end{equation}
+By convention, an $[n, 0, d]$ code must be nondegenerate.  When $E_a E_b \in S$,
+we say that the errors $E_a$ and $E_b$ are degenerate.  We cannot distinguish
+between $E_a$ and $E_b$, but there is no need to, since they have the same
+effect on the codewords.
+
+It is sometimes useful to define the {\em error syndrome} for a stabilizer
+code.  Let $f_M : \G \rightarrow {\bf Z}_2$,
+\begin{equation}
+	f_M (E) = \left\{ \begin{array}{ll} 0 & \mbox{if $[M, E] = 0$} \\ 1 &
+	\mbox{if $\{M, E\} = 0$} \end{array} \right.
+\end{equation}
+and $f (E) = (f_{M_1} (E), \ldots, f_{M_{n-k}} (E) )$, where $M_1, \ldots,
+M_{n-k}$ are the generators of $S$.  Then $f(E)$ is some $(n-k)$-bit binary
+number which is $0$ iff $E \in N(S)$.  $f(E_a) = f(E_b)$ iff $f(E_a E_b) = 0$,
+so for a nondegenerate code, $f(E)$ is different for each correctable error
+$E$.
+
+In order to perform the error-correction operation for a stabilizer code, all
+we need to do is measure the eigenvalue of each generator of the
+stabilizer.  The eigenvalue of $M_i$ will be $(-1)^{f_{M_i} (E)}$, so this
+process will give us the error syndrome.  The error syndrome in turn tells
+us exactly what error occurred (for a nondegenerate code) or what set of
+degenerate errors occurred (for a degenerate code).  The error will always be
+in $\G$ since the code uses that error basis, and every operator in $\G$ is
+unitary, and therefore invertible.  Then we just apply the error operator (or
+one equivalent to it by multiplication by $S$) to fix the state.  Note that
+even if the original error that occurred is a nontrivial linear combination of
+errors in $\G$, the process of syndrome measurement will project onto one
+of the basis errors.  If the resulting error is not in the correctable set,
+we will end up in the wrong encoded state, but otherwise, we are in the
+correct state.  In chapter~\ref{chap-fault-tolerant}, I describe a few ways
+of measuring the error syndrome that are tolerant of imperfect component gates.
+
+Since the elements of $N(S)$ move codewords around within $T$, they
+have a natural interpretation as encoded operations on the codewords.
+Since $S$ fixes $T$, actually only $N(S) / S$ will act on $T$ nontrivially.  If
+we pick a basis for $T$ consisting of eigenvectors of $n$ commuting elements
+of $N(S)$, we get an automorphism $N(S) / S \rightarrow \G_k$.  $N(S)/S$ can
+therefore be generated by $i$ (which we will by and large ignore) and $2k$
+equivalence classes, which I will write $\Xbar_i$ and $\Zbar_i$ ($i=1
+\ldots k$), where $\Xbar_i$ maps to $\Xs{i}$ in $\G_k$ and $\Zbar_i$
+maps to $\Zs{i}$ in $\G_k$.  They are encoded $\X$ and $\Z$ operators for
+the code.  If $k=1$, I will write $\Xbar_1 = \Xbar$ and $\Zbar_1 = \Zbar$.
+The $\Xbar$ and $\Zbar$ operators satisfy
+\begin{eqnarray}
+[\Xbar_i, \Xbar_j] & = & 0 \\
+{[}\Zbar_i, \Zbar_j] & = & 0 \\
+{[}\Xbar_i, \Zbar_j] & = & 0\ (i \neq j) \\
+\{\Xbar_i, \Zbar_i \} & = & 0.
+\end{eqnarray}
+
+\section{Some Examples}
+\label{sec-stab-examples}
+
+I shall now present a few short codes to use as examples.  The first
+encodes one qubit in five qubits~\cite{bennett-tome,laflamme-5qubit} and is
+given in table~\ref{table-5qubit}.
+\begin{table}
+	\centering
+	\begin{tabular}{c|ccccc}
+		$M_1$ & $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ \\
+		$M_2$ & $I$ & $\X$ & $\Z$ & $\Z$ & $\X$ \\
+		$M_3$ & $\X$ & $I$ & $\X$ & $\Z$ & $\Z$ \\
+		$M_4$ & $\Z$ & $\X$ & $I$ & $\X$ & $\Z$ \\
+		\hline
+		\low{$\Xbar$} & \low{$\X$} & \low{$\X$} & \low{$\X$} & \low{$\X$} & \low{$\X$}
+		\\
+		\low{$\Zbar$} & \low{$\Z$} & \low{$\Z$} & \low{$\Z$} & \low{$\Z$} & \low{$\Z$}
+	\end{tabular}
+	\caption{The stabilizer for the five-qubit code.}
+	\label{table-5qubit}
+\end{table}
+I have also included $\Xbar$ and $\Zbar$, which, along with $M_1$
+through $M_4$, generate $N(S)$.  Note that this code is {\em cyclic} (i.e.,
+the stabilizer and codewords are invariant under cyclic permutations of
+the qubits).  It has distance three (for instance, $\Ys{1} \Zs{2} \Ys{3} \in
+N(S)-S$) and is nondegenerate.  We can take the basis codewords for this code
+to be
+\begin{equation}
+	\ket{\overline{0}} = \Sum_{M \in S} M \ \ket{00000}
+\end{equation}
+and
+\begin{equation}
+	\ket{\overline{1}} = \Xbar \ket{\overline{0}}.
+\end{equation}
+That is,
+\begin{eqnarray}
+	\ket{\overline{0}} & = & \ket{00000} + M_1 \ket{00000} + M_2 \ket{00000} +
+	M_3 \ket{00000} + M_4 \ket{00000} \nonumber \\
+	& & \quad \mbox{} + M_1 M_2 \ket{00000} + M_1 M_3 \ket{00000} +
+	M_1 M_4 \ket{00000} \nonumber \\
+	& & \quad \mbox{} + M_2 M_3 \ket{00000} + M_2 M_4 \ket{00000} +
+	M_3 M_4 \ket{00000} \\
+	& & \quad \mbox{} + M_1 M_2 M_3 \ket{00000} + M_1 M_2 M_4 \ket{00000} +
+	M_1 M_3 M_4 \ket{00000} \nonumber \\
+	& & \quad \mbox{} + M_2 M_3 M_4 \ket{00000} + M_1 M_2 M_3 M_4 \ket{00000}
+	\nonumber \\
+	& = & \ket{00000} + \ket{10010} + \ket{01001} + \ket{10100} \nonumber \\
+	& & \mbox{} + \ket{01010} - \ket{11011} - \ket{00110} - \ket{11000} \nonumber \\
+	& & \mbox{} - \ket{11101} - \ket{00011} - \ket{11110} - \ket{01111} \\
+	& & \mbox{} - \ket{10001} - \ket{01100} - \ket{10111} + \ket{00101}, \nonumber
+\end{eqnarray}
+and
+\begin{eqnarray}
+	\ket{\overline{1}} & = & \Xbar \ket{\overline{0}} \nonumber \\
+	& = & \ket{11111} + \ket{01101} + \ket{10110} + \ket{01011} \nonumber \\
+	& & \mbox{} + \ket{10101} - \ket{00100} - \ket{11001} - \ket{00111} \nonumber \\
+	& & \mbox{} - \ket{00010} - \ket{11100} - \ket{00001} - \ket{10000} \\
+	& & \mbox{} - \ket{01110} - \ket{10011} - \ket{01000} + \ket{11010}. \nonumber
+\end{eqnarray}
+Since multiplying by an element of the stabilizer merely rearranges the
+sum $\Sum M$, these two states are in $T$.  When these are the encoded
+$0$ and $1$, $\Xbar$ is the encoded bit flip operator $\X$ and $\Zbar$ is
+the encoded $\Z$.  This code also has the property that every possible
+error syndrome is used by the single-qubit errors.  It is therefore a {\em
+perfect} code.  There are a number of other perfect
+codes~\cite{gottesman-pasting,calderbank-GF4}, which will be discussed in
+chapter~\ref{chap-examples}.
+
+A code encoding three qubits in eight
+qubits~\cite{gottesman-stab,calderbank-stab,steane-8qubit} appears in
+table~\ref{table-8qubit}.
+\begin{table}
+	\centering
+	\begin{tabular}{c|cccccccc}
+		$M_1$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ \\
+		$M_2$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ \\
+		$M_3$ & $I$ & $\X$ & $I$ & $\X$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ \\
+		$M_4$ & $I$ & $\X$ & $\Z$ & $\Y$ & $I$ & $\X$ & $\Z$ & $\Y$ \\
+		$M_5$ & $I$ & $\Y$ & $\X$ & $\Z$ & $\X$ & $\Z$ & $I$ & $\Y$ \\
+		\hline
+		\low{$\Xbar_1$} & \low{$\X$} & \low{$\X$} & \low{$I$} & \low{$I$} & \low{$I$} &
+		\low{$\Z$} & \low{$I$} & \low{$\Z$} \\
+		\low{$\Xbar_2$} & \low{$\X$} & \low{$I$} & \low{$\X$} & \low{$\Z$} & \low{$I$}
+		& \low{$I$} & \low{$\Z$} & \low{$I$} \\
+		\low{$\Xbar_3$} & \low{$\X$} & \low{$I$} & \low{$I$} & \low{$\Z$} & \low{$\X$}
+		& \low{$\Z$} & \low{$I$} & \low{$I$} \\
+		\low{$\Zbar_1$} & \low{$I$} & \low{$\Z$} & \low{$I$} & \low{$\Z$} & \low{$I$} &
+		\low{$\Z$} & \low{$I$} & \low{$\Z$} \\
+		\low{$\Zbar_2$} & \low{$I$} & \low{$I$} & \low{$\Z$} & \low{$\Z$} & \low{$I$} & \low{$I$} & \low{$\Z$} & \low{$\Z$} \\
+		\low{$\Zbar_3$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$\Z$} &
+		\low{$\Z$} & \low{$\Z$} & \low{$\Z$}
+	\end{tabular}
+	\caption{The stabilizer for the eight-qubit code.}
+	\label{table-8qubit}
+\end{table}
+Again, $M_1$ through $M_5$ generate the stabilizer, and generate $N(S)$ with
+$\Xbar_i$ and $\Zbar_i$.  This is also a nondegenerate distance three
+code.  The codewords are
+\begin{equation}
+	\ket{\overline{c_1 c_2 c_3}} = \Xbar_1^{c_1} \Xbar_2^{c_2} \Xbar_3^{c_3}
+	\Sum_{M \in S} M \ket{00000000}.
+\end{equation}
+The operators $\Xbar_i$ and $\Zbar_i$ are the encoded $\X$ and $\Z$ on
+the $i$th encoded qubit.  This code is one of an infinite family of
+codes~\cite{gottesman-stab,steane-RM}, which I present in
+chapter~\ref{chap-examples}.
+
+A particularly useful class of codes with simple stabilizers is the
+Calderbank-Shor-Steane (or {\em CSS}) class of
+codes~\cite{calderbank-CSS,steane-CSS}.  Suppose we have a classical code
+with parity check matrix $P$.  We can make a quantum code to correct just
+$\X$ errors using a stabilizer with elements corresponding to the rows of
+$P$, with a $\Z$ wherever $P$ has a $1$ and $I$'s elsewhere.  The error
+syndrome $f(E)$ for a product of $\X$ errors $E$ is then equal to the
+classical error syndrome for the same set of classical bit flip errors.  Now
+add in stabilizer generators corresponding to the parity check matrix $Q$
+of a second classical code, only now with $\X$'s instead of $\Z$'s.  These
+generators will identify $\Z$ errors.  Together, they can also identify $\Y$
+errors, which will have a nontrivial error syndrome for both parts.  In
+general, a code formed this way will correct as many $\X$ errors as the code
+for $P$ can correct, and as many $\Z$ errors as the code for $Q$ can correct;
+a $\Y$ error counts as one of each.
+
+We can only combine $P$ and $Q$ into a single stabilizer in the CSS form if
+the generators derived from the two codes commute.  This will be true iff the
+rows of $P$ and $Q$ are orthogonal using the binary dot product.  This
+means that the dual code of each code must be a subset of the other code.
+The minimum distance of the quantum code will be the minimum of the
+distances of $P$ and $Q$.  An example of a code of this sort is given in
+table~\ref{table-7qubit}.  It is based on the classical $[7,4,3]$ Hamming
+code, which is self-dual.
+\begin{table}
+	\centering
+	\begin{tabular}{c|ccccccc}
+		$M_1$ & $\X$ & $\X$ & $\X$ & $\X$ & $I$ & $I$ & $I$ \\
+		$M_2$ & $\X$ & $\X$ & $I$ & $I$ & $\X$ & $\X$ & $I$ \\
+		$M_3$ & $\X$ & $I$ & $\X$ & $I$ & $\X$ & $I$ & $\X$ \\
+		$M_4$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $I$ & $I$ & $I$ \\
+		$M_5$ & $\Z$ & $\Z$ & $I$ & $I$ & $\Z$ & $\Z$ & $I$ \\
+		$M_6$ & $\Z$ & $I$ & $\Z$ & $I$ & $\Z$ & $I$ & $\Z$ \\
+		\hline
+		\low{$\Xbar$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$\X$} &
+		\low{$\X$} & \low{$\X$} \\
+		\low{$\Zbar$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$\Z$} &
+		\low{$\Z$} & \low{$\Z$}
+	\end{tabular}
+	\caption{The seven-qubit CSS code.}
+	\label{table-7qubit}
+\end{table}
+For this code, the codewords are
+\begin{eqnarray}
+	\ket{\overline{0}} & = & \ket{0000000} + \ket{1111000} + \ket{1100110} +
+	\ket{1010101} \nonumber \\
+	& & \mbox{} + \ket{0011110} + \ket{0101101} + \ket{0110011} + \ket{1001011}
+\end{eqnarray}
+and
+\begin{eqnarray}
+	\ket{\overline{1}} & = & \ket{0000111} + \ket{1111111} + \ket{1100001} +
+	\ket{1010010} \nonumber \\
+	& & \mbox{} + \ket{0011001} + \ket{0101010} + \ket{0110100} + \ket{1001100}.
+\end{eqnarray}
+The encoded $\ket{0}$ state is the superposition of the even codewords in
+the Hamming code and the encoded $\ket{1}$ state is the superposition of
+the odd codewords in the Hamming code.  This behavior is characteristic
+of CSS codes; in general, the various quantum codewords are superpositions
+of the words in subcodes of one of the classical codes.
+
+CSS codes are not as efficient as the most general quantum
+code, but they are easy to derive from known classical codes and their
+simple form often makes them ideal for other purposes.  For instance, the
+seven-qubit code is particularly well suited for fault-tolerant computation
+(as I will discuss in chapter~\ref{chap-fault-tolerant}).
+
+\section{Alternate Languages for Stabilizers}
+\label{sec-alternate}
+
+There are number of possible ways of describing the stabilizer of a
+quantum code.   They each have advantages and are useful in different
+circumstances.  The description I have used so far uses the language of
+finite group theory and is particularly useful for making contact with the
+usual language of quantum mechanics.  This is the form presented in
+\cite{gottesman-stab}.
+
+We can instead write the stabilizer using binary vector spaces, as in
+\cite{calderbank-stab}, which emphasizes connections with the classical
+theory of error-correcting codes.  To do this, we write the stabilizer as a
+pair of $(n-k) \times n$ binary matrices (or often one $(n-k) \times 2n$
+matrix with a line separating the two halves).  The rows correspond to the
+different generators of the stabilizer and the columns correspond to
+different qubits.  One matrix has a $1$ whenever the generator has a $\X$
+or a $\Y$ in the appropriate place, the other has a $1$ whenever the
+generator has a $\Y$ or $\Z$.  Overall phase factors get dropped.  For
+instance, the five-qubit code in this form becomes
+\begin{equation}
+	\left( \begin{array}{ccccc|ccccc}
+		       1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+		       0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 \\
+		       1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+		       0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 1
+	\end{array} \right).
+\end{equation}
+Other elements of $\G$ get converted to two $n$-dimensional vectors in the
+same way.  We can convert back to the group theory formalism by writing
+down operators with a $\X$ if the left vector or matrix has a $1$, a $\Z$ if
+the right vector or matrix has a $1$, and a $\Y$ if they are both $1$.  The
+generators formed this way will never have overall phase factors, although
+other elements of the group might.  Multiplication of group elements
+corresponds to addition of the corresponding binary vectors.
+
+In the binary formalism, the condition that two operators commute with
+each other becomes the condition that the following inner product is 0:
+\begin{equation}
+	Q(a|b, c|d) = \Sum_{i=1}^n (a_{i} d_{i} + b_{i} c_{i}) = 0,
+	\label{eq-commute-bin}
+\end{equation}
+using binary arithmetic as usual.  $a_i$, $b_i$, $c_i$, and $d_i$ are the
+$i$th components of the corresponding vectors.    Therefore the condition
+that the stabilizer be Abelian converts to the condition that the stabilizer
+matrix $(A|B)$ satisfy
+\begin{equation}
+	\Sum_{l=1}^n (A_{il} B_{jl} + B_{il} A_{jl}) = 0.
+\end{equation}
+We determine the vectors in $N(S)$ by evaluating the inner product
+(\ref{eq-commute-bin}) with the rows of $(A|B)$.  To get a real code (with
+an even number of $\Y$'s), the code should also satisfy
+\begin{equation}
+	\Sum_{l=1}^n A_{il} B_{il} = 0.
+\end{equation}
+
+Another formalism highlights connections with the classical theory of codes
+over the field GF(4) \cite{calderbank-GF4}.  This is a field of characteristic
+two containing four elements, which can be written
+$\{0, 1, \omega, \omega^2\}$.  Since the field has characteristic two,
+\begin{equation}
+	1 + 1 = \omega + \omega = \omega^2 + \omega^2 = 0.
+\end{equation}
+Also, $\omega^3 = 1$ and $1 + \omega = \omega^2$.  We can rewrite the
+generators as an $n$-dimensional ``vector'' over GF(4) by substituting $1$
+for $\X$, $\omega$ for $\Z$, and $\omega^2$ for $\Y$.  The multiplicative
+structure of $\G$ becomes the additive structure of GF(4).  I put vector in
+quotes because the code need not have the structure of a vector space over
+GF(4).  If it does (that is, the stabilizer is closed under multiplication by
+$\omega$), the code is a {\em linear} code, which is essentially a classical
+code over GF(4).  The most general quantum code is sometimes called an {\em
+additive} code, because the stabilizer is only closed under sums of its elements.  In this formalism, the five-qubit code appears as
+\begin{equation}
+	\left( \begin{array}{ccccc}
+		       1 & \omega & \omega & 1 & 0 \\
+		       0 & 1 & \omega & \omega & 1 \\
+		       1 & 0 & 1 & \omega & \omega \\
+		       \omega & 1 & 0 & 1 & \omega
+	\end{array} \right).
+\end{equation}
+Note that the five-qubit code is a linear quantum code.
+
+Again, there is an additional condition for a quantum code.  Define the
+``trace'' operator by ${\rm Tr}\ \omega = {\rm Tr}\ \omega^2 = 1$, ${\rm
+Tr}\ 1 = {\rm Tr}\ 0 = 0$.  Two operators in $\G$ commute iff their images,
+the vectors $u$ and $v$ over GF(4), satisfy
+\begin{equation}
+{\rm Tr}\ u \cdot \overline{v} = {\rm Tr}\left( \Sum_{j=1}^n u_j
+\overline{v}_j \right) = 0,
+\end{equation}
+where $\overline{v}_j$ is conjugation on the $j$th component of $v$,
+switching $\omega$ and $\omega^2$, and leaving $0$ and $1$ alone.
+
+\section{Making New Codes From Old Codes}
+\label{sec-construction}
+
+Using old codes to find new ones can simplify the task of finding codes,
+which can otherwise be quite a difficult problem.  There are a number of simple
+modifications we can make to existing codes to produce new codes with
+different parameters~\cite{gottesman-pasting,calderbank-GF4}.
+
+One trivial change is to perform a permutation of $\X$, $\Y$, and $\Z$ on
+each qubit.  This leaves the distance and size of the code the same,
+although it may be useful for codes that can correct different numbers of
+$\X$, $\Y$, and $\Z$ errors.  A slightly less trivial manipulation is to add a
+new qubit and a new generator which is $\X$ for the new qubit.  The other
+generators are tensored with the identity on the new qubit to form the
+generators of the new code.  This makes an $[n, k, d]$ code (degenerate or
+nondegenerate) into an $[n+1, k, d]$ degenerate code:  Any operator acting as
+$\Y$ or $\Z$ on the new qubit will anticommute with the new generator, and any
+operator with the form $M \otimes \Xs{(n+1)}$ will be equivalent to the
+operator $M \otimes I$.  Therefore, an operator must have at least weight $d$
+when restricted to the first $n$ qubits to be in $N(S)-S$.
+
+A less trivial manipulation is to remove the last qubit, converting an $[n, k,
+d]$ code into an $[n-1, k+1, d-1]$ code.  To do this, we choose the $n-k$
+generators of $S$ so that $M_1$ ends $\X$, $M_2$ ends $\Z$, and $M_3$
+through $M_{n-k}$ end $I$.  We can always do this when $d>1$ by picking
+the first two and then multiplying by combinations of them to make the
+others end appropriately.\footnote{If the code has been formed by adding
+a single $\X$ (or $\Y$ or $\Z$) generator, as above, we may not be able to
+do this for a given qubit, but there will always be at least one qubit for
+which we can.}  Then the new code has a stabilizer formed from the last
+$n-k-2$ generators, dropping $M_1$ and $M_2$.  Suppose we have an
+operator $A$ on the first $n-1$ qubits of weight $w$ that commutes with
+$M_3$ through $M_{n-k}$.  There are four possibilities, all of which lead to
+an operator of weight at most $w+1$ that commutes with the original
+stabilizer:
+\begin{enumerate}
+	\item $A$ commutes with both $M_1$ and $M_2$.
+	\item $A$ commutes with $M_1$, but not $M_2$.  Then $A \otimes \Xs{n}$
+	commutes with $M_1$ and $M_2$.
+	\item $A$ commutes with $M_2$, but not $M_1$.  Then $A \otimes \Zs{n}$
+	commutes with $M_1$ and $M_2$.
+	\item $A$ anticommutes with both $M_1$ and $M_2$.  Then $A \otimes
+	\Ys{n}$ commutes with $M_1$ and $M_2$.
+\end{enumerate}
+Since the original code had distance $d$, $w$ must be at least $d-1$,
+which is therefore the distance of the new code.  The stabilizer has $n-k-2$
+generators, so the code encodes $(n-1)-(n-k-2) = k+1$ qubits.  The new $\Xbar$
+and $\Zbar$ operators are $M_1$ and $M_2$ (in either order), restricted to
+the first $n-1$ qubits.  An example of this construction is to remove the
+last qubit from the $[5,1,3]$ code of figure~\ref{fig-5qubit} to produce
+a $[4,2,2]$ code: the generators of the new code are $M_1$ and $M_3 M_4$,
+both without the last qubit.  The new stabilizer is given in figure
+\ref{fig-droplast}.  Note that the $\Zbar_1$ operator is equal to
+$M_3 \Zbar$ for the five-qubit code.  I have multiplied by $M_3$ so that
+$\Zbar_1$ anticommutes with $\Xbar_1$.
+\begin{table}
+	\centering
+	\begin{tabular}{c|cccc}
+		$M_1'$ & $\X$ & $\Z$ & $\Z$ & $\X$ \\
+		$M_2'$ & $\Y$ & $\X$ & $\X$ & $\Y$ \\
+		\hline
+		\low{$\Xbar_1$} & \low{$\X$} & \low{$\X$} & \low{$\X$} & \low{$\X$} \\
+		\low{$\Xbar_2$} & \low{$\X$} & \low{$I$} & \low{$\X$} & \low{$\Z$} \\
+		\low{$\Zbar_1$} & \low{$\Y$} & \low{$\Z$} & \low{$\Y$} & \low{$I$} \\
+		\low{$\Zbar_2$} & \low{$I$} & \low{$\X$} & \low{$\Z$} & \low{$\Z$}
+	\end{tabular}
+	\caption{A $[4,2,2]$ code derived from the $[5,1,3]$ code.}
+	\label{fig-droplast}
+\end{table}
+
+Another way to make new codes is by {\em pasting} together old codes.  Suppose
+we have four stabilizers $R_1$, $R_2$, $S_1$, and $S_2$, with $R_1 \subset
+S_1$ and $R_2 \subset S_2$.  Let $R_1$ define an $[n_1, l_1, c_1]$ code,
+$R_2$ be an $[n_2, l_2, c_2]$ code, $S_1$ be an $[n_1, k_1, d_1]$ code, and
+$S_2$ be an $[n_2, k_2, d_2]$ code.  Then $k_i < l_i$ and $c_i \leq d_i$.  We
+require $l_1-k_1 = l_2-k_2$ and for $S_1$ and $S_2$ to be
+nondegenerate.\footnote{We can actually allow $S_1$ and $S_2$ to be degenerate,
+	as long as all the degenerate operators are confined to $R_1$ and $R_2$}  Let
+generators of $R_1$ be $\{M_1, \ldots, M_{n_1 - l_1}\}$, the generators of
+$S_1$ be $\{M_1, \ldots, M_{n_1-k_1}\}$, the generators of $R_2$ be $\{N_1,
+\ldots, N_{n_2-l_2}\}$, and the generators of $S_2$ be $\{N_1, \ldots,
+N_{n_2-k_2}\}$.  We form a new stabilizer $S$ on $n_1 + n_2$ qubits generated
+by
+\begin{eqnarray}
+	& & \{M_1 \otimes I, \ldots, M_{n_1-l_1} \otimes I, I \otimes N_1, \ldots,
+	I \otimes N_{n_2-l_2}, \nonumber \\
+	& & \quad M_{n_1-l_1+1} \otimes N_{n_2-l_2+1}, \ldots,
+	M_{n_1-k_1} \otimes N_{n_2-k_2} \}.
+\end{eqnarray}
+The code has $(n_1-l_1) + (n_2-l_2) + (l_i-k_i)$ generators, and therefore
+encodes $l_1+k_2 = l_2+k_1$ qubits.  For instance, if $S_1$ is the eight-qubit
+code and $S_2$ is the five-qubit code, with $R_1$ generated by $\X \X \X \X
+\X \X \X \X$ and $\Z \Z \Z \Z \Z \Z \Z \Z$ and $R_2$ generated by $\X \Z
+\Z \X I$, we can make the $[13,7,3]$ code given in
+table~\ref{table-13qubit}.
+\begin{table}
+	\centering
+	\begin{tabular}{c|cccccccc|ccccc}
+		$M_1$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $I$
+		& $I$ & $I$ & $I$ & $I$ \\
+		$M_2$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ \\
+		\hline
+		$M_3$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ &
+		$\Z$ & $\X$ & $I$ \\
+		\hline
+		$M_4$ & $I$ & $\X$ & $I$ & $\X$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ & $I$ &
+		$\X$ & $\Z$ & $\Z$ & $\X$ \\
+		$M_5$ & $I$ & $\X$ & $\Z$ & $\Y$ & $I$ & $\X$ & $\Z$ & $\Y$ & $\X$ &
+		$I$ & $\X$ & $\Z$ & $\Z$ \\
+		$M_6$ & $I$ & $\Y$ & $\X$ & $\Z$ & $\X$ & $\Z$ & $I$ & $\Y$ & $\Z$ &
+		$\X$ & $I$ & $\X$ & $\Z$
+	\end{tabular}
+	\caption{The thirteen-qubit code formed by pasting together the five- and
+	eight-qubit codes.}
+	\label{table-13qubit}
+\end{table}
+
+In general, the distance of the new code will be ${\rm min}\{d_1, d_2, c_1
++ c_2 \}$.  This is because an operator acting on just the first $n_1$ qubits
+can only commute with $S$ if it commutes with $S_1$, an operator acting
+on the last $n_2$ qubits can only commute with $S$ if it commutes with
+$S_2$, and an operator acting on both parts must commute with both $R_1
+\otimes I$ and $I \otimes R_2$.
+
+Another very useful way of producing new codes is to {\em concatenate}
+two codes to produce a code of greater total distance.  Suppose we have an
+$[n_1, k, d_1]$ code (stabilizer $S_1$) and we encode each of its $n_1$
+qubits again using an $[n_2, 1, d_2]$ code (stabilizer $S_2$).  The result is
+an $[n_1 n_2, k, d_1 d_2]$ code.  Its stabilizer $S$ is $n_1$ copies of $S_2$,
+acting on the physical qubits in blocks of size $n_2$, plus an additional
+$n_1 - k$ generators corresponding to the generators of $S_1$.  However, these
+generators are encoded to act on the second code.  That is, a $\X$ acting
+on the first code must be replaced by an $\Xbar$ for the second code.  For
+instance, the code resulting from concatenating the five-qubit code with itself
+has the stabilizer given in table~\ref{table-25qubit}.
+\begin{table}
+{\setlength{\tabcolsep}{0.1em}
+	\begin{tabular}{c|ccccc|ccccc|ccccc|ccccc|ccccc}
+		$M_1$ & $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_2$ & $I$ & $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_3$ & $\X$ & $I$ & $\X$ & $\Z$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_4$ & $\Z$ & $\X$ & $I$ & $\X$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_5$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_6$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ & $\Z$ & $\X$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_7$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $I$ & $\X$ & $\Z$ & $\Z$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_8$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\Z$ & $\X$ & $I$ & $\X$ & $\Z$ &
+		$I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_9$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$
+		& $\Z$ & $\Z$ & $\X$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_{10}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_{11}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$\X$ & $I$ & $\X$ & $\Z$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ \\
+		$M_{12}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$\Z$ & $\X$ & $I$ & $\X$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ & $I$ \\
+		$M_{13}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_{14}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ & $\Z$ & $\X$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_{15}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $\X$ & $I$ & $\X$ & $\Z$ & $\Z$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_{16}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $\Z$ & $\X$ & $I$ & $\X$ & $\Z$ & $I$ & $I$ &
+		$I$ & $I$ & $I$ \\
+		$M_{17}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ &
+		$\Z$ & $\X$ & $I$ \\
+		$M_{18}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\Z$
+		& $\Z$ & $\X$ \\
+		$M_{19}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $I$ &
+		$\X$ & $\Z$ & $\Z$ \\
+		$M_{20}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$
+		& $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\Z$ & $\X$ & $I$
+		& $\X$ & $\Z$ \\
+		$M_{21}$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\Z$ & $\Z$ & $\Z$ & $\Z$
+		& $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\X$ & $\X$ & $\X$ & $\X$ &
+		$\X$ & $I$ & $I$ & $I$ & $I$ & $I$ \\
+		$M_{22}$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\X$ & $\X$ & $\X$ &
+		$\X$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ &
+		$\Z$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ \\
+		$M_{23}$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $I$ & $I$ & $I$ & $I$ &
+		$I$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ &
+		$\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ \\
+		$M_{24}$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\X$ & $\X$ & $\X$ & $\X$
+		& $\X$ & $I$ & $I$ & $I$ & $I$ & $I$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$
+		& $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$
+	\end{tabular}
+	\caption{Result of concatenating the five-qubit code with itself.}
+	\label{table-25qubit}}
+\end{table}
+The concatenated code has distance $d_1 d_2$ because operators in $N(S) -
+S$ must have distance at least $d_2$ on at least $d_1$ blocks of $n_2$
+qubits, so have weight at least $d_1 d_2$.  Note that it is not strictly
+necessary to use the same code to encode each qubit of $S_1$.
+
+There are two possible ways to concatenate when $S_2$ encodes multiple
+qubits.  Suppose $S_1$ is an $[n_1, k_1, d_1]$ code and $S_2$ is an $[n_2,
+k_2, d_2]$ code.  Further, suppose $n_1$ is a multiple of $k_2$.  Then we
+can encode blocks of $S_1$ of size $k_2$ using $S_2$.  This will result in a
+code using $n_1 n_2/k_2$ qubits to encode $k_1$ qubits.  It still takes an
+operator of distance at least $d_2$ to cause an error on an $n_2$-qubit
+block, but such an error can cause up to $k_2$ errors on $S_1$, so the
+resulting code need only have distance $\lceil d_1/k_2 \rceil d_2$.
+However, the $k_2$ errors that result are not a general set of $k_2$ errors,
+so the code may actually be better.  Suppose $S_1$ has distance $d_1'$
+($d_1' \geq \lceil d_1/k_2 \rceil$) for blocks of $k_2$ errors, i.e., $d_1'$
+such blocks must have errors before the code fails.  Then the concatenated
+code has distance $d_1' d_2$.
+
+Another way to concatenate codes encoding multiple qubits is to add
+additional blocks of $S_1$ to fill the spaces in $S_2$.  That is, we actually
+encode $k_2$ copies of $S_1$, encoding the $i$th qubit of each copy in the
+same $S_2$ block.  This produces an $[n_1 n_2, k_1 k_2, d_1 d_2]$ code,
+since any failure of an $S_2$ block only produces one error in each $S_1$
+block.
+
+\section{Higher Dimensional States}
+\label{sec-qudits}
+
+So far, we have only considered systems for which the Hilbert space is the
+tensor product of two-state systems.  However, it may turn out that a good
+physical implementation of quantum computation uses three- or four-level
+atoms, or spin-one particles, or some other system where it makes more sense
+to consider it as the tensor product of $d$-dimensional systems, where
+$d > 2$.  I will call the fundamental unit of such a system a {\em qudit}.
+In such a case, we will want to consider error correcting codes where a
+single qudit error can occur with reasonable probability.  For these systems,
+the stabilizer code formalism needs to be modified to deal with the extra
+dimensions.
+
+Fundamental to the success of the stabilizer formalism was the use of the
+Pauli spin matrix basis for possible errors.  The algebraic properties of
+this basis allowed a straightforward characterization of errors depending
+on whether they commuted or anticommuted with elements of an Abelian group.
+Knill~\cite{knill-qudit} has codified the properties necessary for this
+construction to generalize to $d$-dimensional spaces.  Suppose we have a
+set of $d^2$ unitary operators $E_1, \ldots, E_{n^2}$ (including the
+identity) acting on a single qudit such that the $E_i$'s form a basis for all
+possible $d \times d$ complex matrices.  If $E_i E_j = w_{ij} E_{i*j}$ for all
+$i, j$ (where $*$ is some binary group operation), then the $E_i$'s are said to
+form a {\em nice} error basis.  The values $w_{ij}$ will then have modulus one.
+Given a nice error basis, we form the group $\G_n$ for this basis as the tensor
+product of $n$ copies of the error basis, with possible overall phases
+generated by the $w_{ij}$'s.  Then an Abelian subgroup $S$ of $\G_n$ that does
+not contain any nontrivial phase times the identity will have a nontrivial
+set $T$ of states in the Hilbert space in the $+1$ eigenspace of every operator
+in $S$.  The code $T$ can detect any error $E$ for which $E M = c M E$ for some
+$M \in \G_n$ and some $c \neq 1$.
+
+One interesting complication of codes over $d$-dimensional spaces is that
+when $S$ has $n-k$ generators, $T$ need not encode $k$ qudits.  This can
+only occur when $d$ is composite and the order of a generator of $S$ is
+a nontrivial factor of $d$.  It is still true that if $S$ has $r$ elements,
+then $T$ will be $(d^n/r)$-dimensional.  If all the generators of $S$ have
+order $d$, $T$ does encode $k$ qudits.
+
+One particularly convenient error basis for any $d$ is generated by
+$D_\omega$ and $C_n$, where $(D_\omega)_{ij} = \delta_{ij} \omega^i$ and
+$(C_n)_{ij} = \delta_{j, (i+1 \bmod n)}$.  $\omega$ is a primitive $n$th
+root of unity.  For $d=2$, this just reduces to the usual Pauli basis,
+since $C_2 = \X$ and $D_{-1} = \Z$.  For higher $d$, $D_\omega$ maps
+$\ket{i} \rightarrow \omega^i \ket{i}$ and $C_n$ adds one modulo $n$.
+This is a nice error basis, with
+\begin{equation}
+	C_n D_\omega = \omega D_\omega C_n.
+\end{equation}
+The elements of the basis can be written $C_n^a D_\omega^b$, and
+\begin{equation}
+	\left( C_n^a D_\omega^b \right) \left( C_n^c D_\omega^d \right) =
+	\omega^{ad-bc} \left( C_n^c D_\omega^d \right) \left( C_n^a D_\omega^b \right).
+\end{equation}
+
+Codes for higher-dimensional systems have not been as extensively studied as
+those for two-dimensional systems, but some constructions are given in
+\cite{knill-qudit, chau-d^2, chau-5qudit, aharonov, rains-orthogonal}.

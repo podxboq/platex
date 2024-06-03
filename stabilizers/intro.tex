@@ -1,0 +1,30 @@
+\chapter{Introduction and preliminary material}
+\label{ch:chap-intro}
+
+The first quantum error-correcting codes were discovered by Shor~\cite{shor-9qubit} and Steane~\cite{steane-7qubit}.
+For a more complete treatment of quantum mechanics, see~\cite{cohen-tannoudji}, and for classical error-correcting codes, see~\cite{macwilliams-sloane}.
+
+\section{Introduction to Classical Coding Theory}
+\label{sec-classical}
+
+Suppose we wish to encode $k$ bits using $n$ bits.
+The data can be represented as a vector $v\in\Z_2^k$.
+Because we are dealing with binary vectors, all the arithmetic is mod two.
+
+For a linear code, the encoded data is then $G v$ for some matrix $G\in M_{n \times k}(\Z_2)$.
+$G$ is called the {\em generator matrix} for the code.
+Its columns form a basis for the $k$-dimensional coding subspace of the $n$-dimensional binary vector space, and represent basis codewords.
+
+Given a generator matrix $G$, we can calculate the dual matrix $P\in M_{(n-k) \times n}(\Z_2)$, with $PG=0$.
+Since any codeword $s$ has the form $G v$ then $P$ annihilates any codeword.
+The matrix $P$ is called the {\em parity check matrix} for the code.
+
+The {\em dual code} is defined to be the code with generator matrix $P^T$
+and parity matrix $G^T$.
+
+The {\em Hamming distance} between two vectors is the number of diferent bits at the same position, or equivalently, the {\em weight} (the number of 1s in the vector) of their sum.
+
+For a code to correct $t$ single-bit errors, it must have distance at least $2t+1$ between any two codewords.
+A code to encode $k$ bits in $n$ bits with minimum distance $d$ is said to be an $[n, k, d]$ code.
+
+if $s'$ is the error codeword of the original codeword $s$, the $P(s'-s)$ value is called the {\em error syndrome}, since it tells us what the error is.

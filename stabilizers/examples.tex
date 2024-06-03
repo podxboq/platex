@@ -1,0 +1,917 @@
+\chapter{Examples of Stabilizer Codes}
+\label{chap-examples}
+
+There are many known stabilizer codes \cite{shor-9qubit, steane-7qubit,
+	bennett-tome, vaidman, grassl, leung, gottesman-stab, calderbank-stab,
+	laflamme-5qubit, gottesman-pasting, calderbank-GF4, steane-8qubit, steane-RM,
+	calderbank-CSS, steane-CSS, knill-qudit, chau-d^2, chau-5qudit,
+	rains-orthogonal, bennett-EPP}.  I will not attempt to list them all
+here, but will instead concentrate on a few interesting individual codes and
+classes of codes.  In a number of cases, I will not just describe the
+stabilizers of the codes, but will also discuss the normalizers and
+automorphism groups of the stabilizers, since these are important to realizing
+fault-tolerant computation in the most efficient possible way.
+
+\section{Distance Two Codes}
+\label{sec-dist2}
+
+For even $n$, there is always an $[n, n-2, 2]$ code.  The stabilizer $S$ has
+two generators, one the product of all $n$ $\X$'s and one the product of all
+the $\Z$'s.  For even $n$, these commute.  $N(S)$ consists of tensor
+products in $\G$ that contain an even number of $\X$'s, an even number of
+$\Y$'s, and an even number of $\Z$'s.  We can write
+\begin{eqnarray}
+	\Xbar_i & = & \Xs{1} \Xs{(i+1)} \\
+	\Zbar_i & = & \Zs{(i+1)} \Zs{n},
+\end{eqnarray}
+for $i = 1, \ldots, n-2$.
+
+The automorphism group $\A(S)$ contains all possible
+permutations of the qubits and the Hadamard rotation $R$ applied to all
+$n$ qubits at once.  If $n$ is a multiple of four, any single-qubit operation
+in $N(\G)$ applied to all the qubits gives an element of $\A(S)$.  The order of
+$\A(S)$ is thus either $2 n!$ or $6 n!$.  Swapping qubit $i$ with qubit $j$
+switches the $(i-1)$th encoded qubit with the $(j-1)$th encoded qubit (for
+$1 < i, j < n$).  Swapping qubit $1$ with qubit $i+1$ ($i =1, \ldots, n-2$)
+transforms
+\begin{eqnarray}
+	\Xbar_i & \rightarrow & \Xbar_i \nonumber \\
+	\Xbar_j & \rightarrow & \Xbar_i \Xbar_j\ (i \neq j) \nonumber \\
+	\Zbar_i & \rightarrow & \Zbar_1 \Zbar_2 \cdots \Zbar_{n-2} \\
+	\Zbar_j & \rightarrow & \Zbar_j\ (i \neq j). \nonumber
+\end{eqnarray}
+Similarly, swapping qubit $n$ with qubit $i+1$ ($i = 1, \ldots, n-2$)
+transforms
+\begin{eqnarray}
+	\Xbar_i & \rightarrow & \Xbar_1 \Xbar_2 \cdots \Xbar_{n-2} \nonumber \\
+	\Xbar_j & \rightarrow & \Xbar_j\ (i \neq j) \nonumber \\
+	\Zbar_i & \rightarrow & \Zbar_i \\
+	\Zbar_j & \rightarrow & \Zbar_i \Zbar_j\ (i \neq j). \nonumber
+\end{eqnarray}
+Swapping the first qubit with the $n$th qubit performs the transformation
+\begin{eqnarray}
+	\Xbar_i & \rightarrow & \Xbar_1 \cdots \Xbar_{i-1} \Xbar_{i+1} \cdots
+	\Xbar_{n-2} \nonumber \\
+	\Zbar_i & \rightarrow & \Zbar_1 \cdots \Zbar_{i-1} \Zbar_{i+1} \cdots
+	\Zbar_{n-2}.
+\end{eqnarray}
+Performing $R$ on every qubit performs the same transformation as
+swapping the first and $n$th qubits, but also performs $R$ on every
+encoded qubit.  For $n$ a multiple of four, performing $P$ on every qubit
+performs the following operation:
+\begin{eqnarray}
+	\Xbar_i & \rightarrow & - \Xbar_i \Zbar_1 \cdots \Zbar_{i-1} \Zbar_{i+1}
+	\cdots \Zbar_{n-2} \nonumber \\
+	\Zbar_i & \rightarrow & \Zbar_i.
+\end{eqnarray}
+Because these codes are of the CSS form, a CNOT applied to every qubit
+transversally between two blocks is also a valid fault-tolerant operation,
+and performs CNOTs between the corresponding encoded qubits.
+
+The case of $n=4$, the smallest distance two code, is of particular interest.
+The code from figure~\ref{fig-droplast} can be converted into the form of
+the codes currently under consideration using single-qubit rotations,
+although the $\Xbar$ and $\Zbar$ operators will need to redefined.  It
+can be used to detect a single error~\cite{vaidman} or to correct a single
+erasure~\cite{grassl}.  In this case,
+\begin{eqnarray}
+	\Xbar_1 & = & \Xs{1} \Xs{2} \nonumber \\
+	\Xbar_2 & = & \Xs{1} \Xs{3} \nonumber \\
+	\Zbar_1 & = & \Zs{2} \Zs{4} \\
+	\Zbar_2 & = & \Zs{3} \Zs{4}. \nonumber
+\end{eqnarray}
+Switching the second and third qubits or switching the first and fourth qubits
+both swap the two encoded qubits.  Swapping the first and second qubits or the
+third and fourth qubits produces the transformation
+\begin{eqnarray}
+	\Xbar_1 & \rightarrow & \Xbar_1 \nonumber \\
+	\Xbar_2 & \rightarrow & \Xbar_1 \Xbar_2 \nonumber \\
+	\Zbar_1 & \rightarrow & \Zbar_1 \Zbar_2 \\
+	\Zbar_2 & \rightarrow & \Zbar_2. \nonumber
+\end{eqnarray}
+This is just a CNOT from the second encoded qubit to the first encoded
+qubit.  Similarly, swapping the first and third qubits or the second and fourth
+qubits performs a CNOT from the first encoded qubit to the second encoded
+qubit.  The transversal Hadamard rotation in this case performs the
+Hadamard rotations on both qubits and switches them.  Applying $P$ to all
+four qubits performs the gate
+\begin{eqnarray}
+	\Xbar_1 & \rightarrow & - \Xbar_1 \Zbar_2 \nonumber \\
+	\Xbar_2 & \rightarrow & - \Zbar_1 \Xbar_2 \nonumber \\
+	\Zbar_1 & \rightarrow & \Zbar_1 \\
+	\Zbar_2 & \rightarrow & \Zbar_2. \nonumber
+\end{eqnarray}
+We can recognize this as the encoded conditional sign gate followed by an
+encoded $\Zs{1} \Zs{2}$.
+
+A more extensive discussion of the properties of distance two codes (and a
+few codes of greater distances) appears in \cite{rains-dist2}.
+
+\section{The Five-Qubit Code}
+
+The five-qubit code is the shortest possible quantum code to correct one
+error, and is therefore of immense interest~\cite{bennett-tome,
+	laflamme-5qubit}.  Its stabilizer is given in table~\ref{table-5qubit}.  Recall
+that the stabilizer is simply generated by cyclic permutations of $\X
+\otimes \Z \otimes \Z \otimes \X \otimes I$.  There are five cyclic
+permutations of this, but only four produce independent generators.  The
+stabilizer has sixteen elements: the identity, and the $3 \times 5$ cyclic
+permutations of $\X \otimes \Z \otimes \Z \otimes \X \otimes I$, $\Y
+\otimes \X \otimes \X \otimes \Y \otimes I$, and $\Z \otimes \Y \otimes
+\Y \otimes \Z \otimes I$.  $\Xbar$ is just the tensor product of five $\X$'s
+and $\Zbar$ is the tensor product of the five $\Z$'s.
+
+As I noted in section~\ref{sec-alternate}, the five-qubit code is a linear
+GF(4) code.  Therefore, the operation
+\begin{equation}
+	T: \X \rightarrow \Y, \ \Z \rightarrow \X
+\end{equation}
+applied transversally is a valid fault-tolerant operation and performs an
+encoded version of itself.  We can use this operation to derive a valid
+three-qubit operation for the five-qubit code:
+\begin{eqnarray}
+	\X \otimes I \otimes I & \rightarrow & \X \otimes \Y \otimes \Z
+	\nonumber \\
+	I \otimes \X \otimes I & \rightarrow & \Y \otimes \X \otimes \Z
+	\nonumber \\
+	I \otimes I \otimes \X & \rightarrow & \X \otimes \X \otimes \X \\
+	\Z \otimes I \otimes I & \rightarrow & \Z \otimes \X \otimes \Y \nonumber
+	\\
+	I \otimes \Z \otimes I & \rightarrow & \X \otimes \Z \otimes \Y \nonumber
+	\\
+	I \otimes I \otimes \Z & \rightarrow & \Z \otimes \Z \otimes \Z. \nonumber
+\end{eqnarray}
+We can, of course, permute the qubits on the right and apply $T$ or $T^2$
+to any or all of them and still get a valid three-qubit operation.
+
+Using measurements and this three-qubit operation, we can generate
+directly a number of additional one- and two-qubit operations.  We can
+always get such gates using the protocol described in section \ref{sec-4qubit},
+but it may be more efficient to get some gates using this three-qubit
+operation.  Suppose we place the data qubit in the third place and prepare
+the first two qubits in encoded $\ket{0}$ states.  Then apply the
+three-qubit operation and measure $\Y$ on the first two qubits.  The effect is
+to perform a Hadamard rotation $R$ on the data qubit.  Alternatively, prepare
+the first two qubits in $+1$ eigenstates of $\X$, apply the three-qubit gate,
+and measure $\Z$ on the first two qubits.  This performs $P$ on the data qubit.
+By preparing a single ancilla qubit, applying the three-qubit operation, and
+making a single measurement, we can also get a variety of two-qubit operations.
+
+\section{A Class of Distance Three Codes}
+\label{sec-2toj}
+
+The eight-qubit code of table~\ref{table-8qubit} is just one of a class of
+codes with parameters $[2^j, 2^j - j - 2, 3]$~\cite{gottesman-stab}.  Note
+that according the quantum Hamming bound, this is the maximal number
+of encoded qubits for $n=2^j$, $d=3$.  These codes are related to the
+classical Reed-Muller codes~\cite{steane-RM}, but are more efficient than
+CSS codes formed from the classical Reed-Muller codes.  Like the classical
+Reed-Muller codes, the codes described in this section allow us to efficiently
+compute the actual error occuring from the measured error syndrome.
+
+The first two generators of these codes are always the same.  One is the
+product of $2^j$ $\X$'s and the second is the product of $2^j$ $\Z$'s.  We
+will call these generators $M_X$ and $M_Z$, and the remaining $j$
+generators will be $M_1$ through $M_j$.  The stabilizers of these codes
+always include the distance two codes discussed in section~\ref{sec-dist2}.
+This is convenient when correcting errors --- we can measure the first two
+generators and use them to detect whether any error has occurred.  If not,
+we do not need to go any further.
+
+It will be convenient to construct the codes by describing the error
+syndromes of the $3n$ possible one-qubit errors.  I will show that they
+are all distinct and then that the generators that give those error
+syndromes all commute.  For these codes, the error syndrome $f(E)$ for
+error $E$ is a $(j+2)$-bit number.  Recall that each bit corresponds to a
+generator of $S$, and the $i$th bit is $0$ iff $E$ commutes with generator
+$M_i$.  $f(E)$ is a group homomorphism from $\G$ to $\left({\bf Z}_2
+\right)^{j+2}$.
+
+Because of the form of the first two generators, the first two bits of
+$f(\Xs{i})$ are always $01$, the first two bits of $f(\Zs{i})$ are always $10$,
+and the first two bits of $f(\Ys{i})$ are always $11$, as they must be to
+preserve the group structure of $\G$.  For the remaining bits of the error
+syndrome, we will number the qubits from $0$ to $n-1$ and write the number in
+base two.  Then
+\begin{eqnarray}
+	f(\Xs{i}) & = & 01 \oplus i \\
+	f(\Zs{i}) & = & 10 \oplus \sigma (i) \\
+	f(\Ys{i}) & = & 11 \oplus (i + \sigma (i)).
+\end{eqnarray}
+The function $\sigma(i)$ is some as yet undefined additive group
+automorphism on $\left( {\bf Z}_2 \right)^j$.  We will be able to completely
+describe it by defining its action on $0 \ldots 01$, $0 \ldots 010$, \ldots,
+$10 \ldots 0$.
+
+For this to give a distance three code, the error syndrome must have the
+property that $f(E) \neq 0$ for any weight two operator $E \in \G$.  By
+including the stabilizer of a distance two code, we have already insured that
+any weight one operator has non-zero error syndrome.  We can immediately
+see that $f(E) \neq 0$ unless $E$ is the product of two Pauli
+matrices of the same type.  Therefore, we need to consider
+\begin{eqnarray}
+	f(\Xs{l} \Xs{m}) & = & 00 \oplus (l+m) \\
+	f(\Zs{l} \Zs{m}) & = & 00 \oplus \sigma (l+m) \\
+	f(\Ys{l} \Ys{m}) & = & 00 \oplus (l+m) + \sigma (l+m),
+\end{eqnarray}
+for $l \neq m$.  The second and third equations follow because
+$\sigma$ is a group homomorphism.  Since $i = l+m$ can be anything but $0$,
+$\sigma (l+m)$ will not be $0$ either, and we need only choose $\sigma$
+so that $\sigma (i) \neq i$ for any $i \neq 0$.
+
+The actual function $\sigma$ we want to use will depend on whether $j$ is
+even or odd.  For even $j$, consider the following function $\sigma$:
+\begin{eqnarray}
+	\sigma (0 \ldots 0 0 0 1) & = & 1 1 \ldots 1 1  \nonumber \\
+	\sigma (0 \ldots 0 0 1 0) & = & 0 \ldots 0 0 1 \nonumber \\
+	\sigma (0 \ldots 0 1 0 0) & = & 0 \ldots 0 1 0 \label{eq-sigma-even}\\
+	& \vdots & \nonumber \\
+	\sigma (1 0 0 0 \ldots 0) & = & 0 1 0 \ldots 0. \nonumber
+\end{eqnarray}
+Then clearly $\sigma (i) = i/2$ for any nonzero $i$ ending in $0$.  If $i$
+does end in $1$, for $\sigma (i)$ to end in $1$ also, the previous bit must
+have been $0$, which means that the bit before that must have been $1$,
+and so on.  Therefore, the only possible number for which $i = \sigma (i)$
+is $i = 0 1 0 \ldots 1 0 1$.  Because $j$ is even, the first bit must be $0$.
+But $\sigma(l)$ always begins in $1$ for any $l$ ending in $1$, so even for
+this particular $i$, $\sigma (i) \neq i$.  Therefore, the error syndrome
+produces a distance three code.  The smallest case is a $[16,10,3]$ code, which
+is given in table~\ref{table-16qubit}.
+\begin{table}
+	\centering
+	{\setlength{\tabcolsep}{0.4em}
+		\begin{tabular}{c|cccccccccccccccc}
+			$M_X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$
+			& $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ \\
+			$M_Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ &
+			$\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ \\
+			$M_1$ & $I$ & $\X$ & $I$ & $\X$ & $I$ & $\X$ & $I$ & $\X$ & $\Z$ &
+			$\Y$ & $\Z$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ & $\Y$ \\
+			$M_2$ & $I$ & $\X$ & $I$ & $\X$ & $\Z$ & $\Y$ & $\Z$ & $\Y$ & $\X$ &
+			$I$ & $\X$ & $I$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ \\
+			$M_3$ & $I$ & $\X$ & $\Z$ & $\Y$ & $\X$ & $I$ & $\Y$ & $\Z$ & $I$ &
+			$\X$ & $\Z$ & $\Y$ & $\X$ & $I$ & $\Y$ & $\Z$ \\
+			$M_4$ & $I$ & $\Y$ & $\X$ & $\Z$ & $I$ & $\Y$ & $\X$ & $\Z$ & $I$ &
+			$\Y$ & $\X$ & $\Z$ & $I$ & $\Y$ & $\X$ & $\Z$
+		\end{tabular}
+		\caption{The stabilizer for a $[16,10,3]$ code.}
+		\label{table-16qubit}}
+\end{table}
+
+We do still need to verify that it is an actual code by verifying that
+there are commuting generators that give these error syndromes.  The
+first two generators $M_X$ and $M_Z$ will always commute with the
+other $j$ generators, since $f(\Xs{i})$ and $f(\Zs{i})$ each have a $0$ in the
+$r$th position for $n/2$ $i$'s and a $1$ in the $r$th position for $n/2$ $i$'s.
+When the $r$th bit of $f(\Xs{i})$ is $0$  and the $r$th bit of $f(\Zs{i})$ is
+$1$, then the $r$th generator is the tensor product of $\Xs{i}$ with something
+else (thus, this generator commutes with $\Xs{i}$ and anticommutes with
+$\Zs{i}$).  Other combinations will produce $I$, $\Ys{i}$, or $\Zs{i}$, and
+we can determine the complete form of $M_r$ in this way.
+
+We need only check that $M_r$ and $M_s$ commute.  Let $f_r (E)$ be the
+$(r+2)$th bit of $f(E)$, that is, the bit corresponding to $M_r$.  I assume
+without loss of generality that $s > r$.  The binary matrix representation of
+$S$ is closely related to the error syndrome, and $M_r$ and $M_s$
+commute iff
+\begin{equation}
+	\Sum_{i=0}^{n} \left( f_r (\Xs{i}) f_s (\Zs{i}) + f_r (\Zs{i}) f_s (\Xs{i})
+	\right) = 0.
+\end{equation}
+There are a few possible cases to consider:
+\begin{itemize}
+	\item $j > s > r+1 > 2$: In this case, $f_s (\Zs{i})$ is equal to the sum of
+	the $j$th bit of $i$ and the $(s-1)$th bit and $f_r (\Zs{i})$ is the sum of the
+	$j$th bit of $i$ and the $(r-1)$th bit.  On the other hand, $f_r(\Xs{i})$ is
+	just equal to the $r$th bit of $i$ and $f_s(\Zs{i})$ is equal to the $s$th
+	bit of $i$.  The $j$th, $(r-1)$th, and $(s-1)$th bits are distinct from bits
+	$r$ and $s$.  Therefore, the $f_r (\Xs{i}) f_s (\Zs{i})$ term contributes to
+	the sum when the $r$th bit of $i$ is 1 and the $j$th and $(s-1)$th bits of
+	$i$ are different.  This is true for $n/4$ values of $i$.  The $f_r(\Zs{i})
+	f_s (\Xs{i})$ term similarly contributes to the sum for $n/4$ $i$'s.  Since
+	$n/4 + n/4$ is even, $M_r$ and $M_s$ commute.
+
+	\item $j > s > r+1 = 2$: In this case, $f_s (\Zs{i})$ is still equal to the sum
+	of the $j$th bit of $i$ and the $(s-1)$th bit, but $f_r (\Zs{i})$ is just equal
+	to the $j$th bit of $i$.  However, both the $f_r (\Xs{i}) f_s (\Zs{i})$ and the
+	$f_r (\Zs{i}) f_s (\Xs{i})$ terms still contribute to the sum for $n/4$ $i$'s,
+	so $M_r$ and $M_s$ still commute.
+
+	\item $j = s > r+1 > 2$: Both $f_s (\Zs{i})$ and $f_r (\Zs{i})$ are given as in
+	the first case.  $f_r (\Xs{i}) f_s (\Zs{i})$ still contributes to $n/4$ terms
+	in the sum.  Now, however, $f_r (\Zs{i}) f_s (\Xs{i})$ can only contribute when
+	the $j$th bit of $i$ is $1$.  Since we also need $f_r (\Zs{i}) = 1$, this term
+	only contributes when the $j$th bit of $i$ is $1$ and the $(r-1)$th bit is $0$.
+	This still contributes to $n/4$ terms in the sum, so $M_r$ and $M_s$ again
+	commute.
+
+	\item $j > s = r+1 > 2$: Now, the $(s-1)$th bit is equal to the $r$th bit. That
+	means $f_r (\Xs{i}) f_s (\Zs{i})$ only contributes when the $r$th bit of $i$ is
+	$1$ and the $j$th bit of $i$ is $0$.  This contributes to $n/4$ terms in the
+	sum, as does $f_r (\Zs{i}) f_s (\Xs{i})$, so $M_r$ and $M_s$ commute in this
+	case as well.
+
+	\item $j = s = r+1 > 2$: This is a combination of the previous two cases.
+	$f_r (\Xs{i}) f_s (\Zs{i})$ only contributes when the $r$th bit of $i$ is $1$
+	and the $j$th bit of $i$ is $0$ and $f_r (\Zs{i}) f_s (\Xs{i})$ contributes
+	when the $j$th bit of $i$ is $1$ and the $(r-1)$th bit is $0$.  Again, this is
+	an even number of contributing terms, so $M_r$ and $M_s$ commute.
+
+	\item $j > s = r+1 = 2$: $f_r (\Zs{i})$ is again equal to the $j$th bit of
+	$i$.  However, this does not affect $f_r (\Xs{i}) f_s (\Zs{i})$, which
+	contributes to $n/4$ terms in the sum, as in the previous two cases.  It does
+	affect $f_r (\Zs{i}) f_s (\Xs{i})$, but this term still contributes to $n/4$
+	terms, so $M_r$ and $M_s$ commute.
+
+	\item $j = s > r+1 = 2$: As before, $f_r (\Xs{i}) f_s (\Zs{i})$ contributes to
+	$n/4$ terms in the sum.  Now, however, $f_r (\Zs{i}) f_s (\Xs{i})$ contributes
+	whenever the $j$th bit of $i$ is $1$.  This means it contributes to $n/2$
+	terms instead of $n/4$.  Therefore, there are a total of $3n/4$ contributing
+	terms.  However, since $j \geq 3$, $n/4$ is still even, and $M_1$ and
+	$M_j$ commute too.
+
+	\item $j = s = r+1 = 2$: Since $j \geq 3$, this case is impossible.
+\end{itemize}
+
+For the case of odd $j$, we do something very similar.  Now let
+\begin{eqnarray}
+	\sigma (0 \ldots 0 0 0 1) & = & 1 1 \ldots 1 1  \nonumber \\
+	\sigma (0 \ldots 0 0 1 0) & = & 0 \ldots 0 0 1 \nonumber \\
+	\sigma (0 \ldots 0 1 0 0) & = & 0 \ldots 0 1 0 \label{eq-sigma-odd}\\
+	& \vdots & \nonumber \\
+	\sigma (0 1 0 0 \ldots 0) & = & 0 0 1 \ldots 0 \nonumber \\
+	\sigma (1 0 0 0 \ldots 0) & = & 1 0 1 \ldots 1. \nonumber
+\end{eqnarray}
+An example of a code using this $\sigma$ is the $[8,3,3]$ code given in
+table~\ref{table-8qubit}.  In this case, if the first bit is 0, the last bit
+must also be 0 for the first bits of $i$ and $\sigma(i)$ to match.  However,
+$\sigma (i)$ is certainly not equal to $i$ for any $i$ with both first and last
+bits $0$.  If the first bit is $1$, the last bit must be $0$ in order for the
+first bits of $i$ and $\sigma (i)$ to match. Thus, the second bit must be $0$,
+which means the third bit must be $1$, and so on.  However, since $j$ is odd,
+this progression would mean that the $j$th bit would have be $1$, while we
+already know it must be $0$.
+Therefore, there is no $i$ for which $\sigma (i) = i$.  Again, we have a
+distance three code.
+
+We again need to check that the generators commute.  As for even $j$,
+everything immediately commutes with $M_X$ and $M_Z$.  We consider
+similar cases to see if $M_r$ and $M_s$ commute:
+\begin{itemize}
+
+	\item $j > s > r+1 > 3$: Here, $f_r (\Zs{i})$ is the sum of the first, $j$th,
+	and $(r-1)$th bits of $i$, and $f_s (\Zs{i})$ is the sum of the first, $j$th,
+	and $(s-1)$th bits of $i$.  This still leads to both $f_r (\Xs{i}) f_s (\Zs{i})$
+	and $f_r (\Zs{i}) f_s (\Xs{i})$ contributing to $n/4$ terms each in the sum, so
+	$M_r$ and $M_s$ commute.
+
+	\item $j > s > r+1 = 3$: Now $f_r (\Zs{i})$ is just equal to the $j$th bit of
+	$i$, as in the case $j > s > r+1 = 2$ for even $j$.  As then, $M_r$ and $M_s$
+	commute.
+
+	\item $j > s > r+1 = 2$: Now $f_r (\Zs{i})$ is the sum of the first and $j$th
+	bits of $i$, and $f_r (\Xs{i}) f_s (\Zs{i})$ contributes only when the first
+	bit of $i$ is $1$ and the $(s-1)$th and $j$th bits of $i$ agree, but this still
+	contributes to $n/4$ terms in the sum, so $M_r$ and $M_s$ still commute.
+
+	\item $j = s > r+1 > 3$: In this case, $f_r (\Zs{i}) f_s (\Xs{i})$ only
+	contributes when the $j$th bit of $i$ is $1$ and the first and $(r-1)$th bits
+	are the same.  This still occurs for $n/4$ $i$'s, so $M_r$ and $M_s$ commute.
+
+	\item $j > s = r+1 > 3$: Now, $f_r (\Xs{i}) f_s (\Zs{i})$ contributes when the
+	$r$th bit of $i$ is $1$ and the first and $j$th bits are the same.  This
+	occurs for $n/4$ $i$'s, so $M_r$ and $M_s$ commute.
+
+	\item $j = s = r+1 > 3$: $f_r (\Xs{i}) f_s (\Zs{i})$ contributes to $n/4$ terms
+	in the sum, as in the previous case, and $f_r (\Zs{i}) f_s (\Xs{i})$ does too,
+	as in the case before that.  Therefore, $M_r$ and $M_s$ still commute.
+
+	\item $j > s = r+1 = 3$: As with the previous two cases, $f_r (\Xs{i}) f_s
+	(\Zs{i})$ contributes to $n/4$ terms in the sum.  $f_r (\Zs{i})$ is equal to
+	the $j$th bit of $i$, so $f_r (\Zs{i}) f_s (\Xs{i})$ contributes only when the
+	$s$th and $j$th bits of $i$ are both $1$. This is still $n/4$ values of $i$, so
+	$M_r$ and $M_s$ again commute.
+
+	\item $j > s = r+1 = 2$: In this case, $f_s (\Zs{i})$ is the $j$th bit of $i$
+	and $f_r (\Zs{i})$ is the sum of the first and $j$th bits.  That means $f_r
+	(\Xs{i}) f_s (\Zs{i})$ contributes when the first and $j$th bits of $i$ are $1$,
+	and $f_r (\Zs{i}) f_s (\Xs{i})$ contributes when the second bit of $i$ is $1$
+	and the first and $j$th bits are different.  Both of these terms therefore
+	contribute to $n/4$ terms in the sum, so $M_r$ and $M_s$ commute.
+
+	\item $j = s > r+1 = 3$: As usual, $f_r (\Xs{i}) f_s (\Zs{i})$ contributes to
+	$n/4$ terms in the sum.  $f_r (\Zs{i}) f_s (\Xs{i})$ contributes whenever the
+	$j$th bit of $i$ is $1$.  This means it contributes to $n/2$ terms in the sum,
+	for a total of $3n/4$ nonzero terms.  Again, since $j \geq 3$, $3n/4$ is even,
+	so $M_r$ and $M_s$ commute.
+
+	\item $j = s > r+1 = 2$: Now, $f_r (\Xs{i}) f_s (\Zs{i})$ contributes whenever
+	the first bit of $i$ is $1$ and the $j$th and $(j-1)$th bits agree.  This is
+	true for $n/4$ $i$'s. $f_r (\Zs{i}) f_s (\Xs{i})$ contributes when the first
+	bit of $i$ is 0 and the $j$th bit of $i$ is $1$, which is again true for $n/4$
+	$i$'s.  Therefore, $M_r$ and $M_s$ commute.
+
+	\item $j = s = r+1 = 3$: This case only arises for the $[8, 3, 3]$ code, so we
+	can just check it by looking at table~\ref{table-8qubit}.  Again, the case
+	$j = s = r+1 = 2$ does not arise at all.
+
+\end{itemize}
+
+Now I will describe the $\Xbar$ and $\Zbar$ operators for these codes.  I
+will choose all of the $\Xbar$ operators to be of the form $\Xs{a} \Xs{i}$ (for
+some $i \neq a$) times the product of $\Z$'s.  In order to do this, we just
+need to find a set $K$ of $j+1$ $\Z$'s (not including $\Zs{a}$) for which
+$f(\Zs{l})$ over the $\Zs{l} \in K$ form a spanning set of binary vectors in
+$\left({\bf Z}_2 \right)^{j+1}$ (skipping $M_Z$, which $\Z$ will never
+anticommute with).  Then we will be able to pick some operator $E$ that is
+a product of these $\Z$'s so that $\Xbar_i = \Xs{a} \Xs{i'} E$ commutes with
+all the generators of $S$, and another operator $E'$ so that $\Zbar_i =
+\Zs{i'} E'$ also is in $N(S)$. If we choose the possible values of $i'$ so that
+they do not overlap with the qubits $l$ for which $\Zs{l} \in K$, then $\{
+\Xbar_i, \Zbar_i \} = 0$ and $[\Xbar_i, \Zbar_m] = 0$ for $i \neq m$.
+
+For even $j$, $K$ will consist of $\Zs{2^l}$ for $l = 1, \ldots, j-1$, plus
+$\Zs{0}$ and $\Zs{(n-1)}$ (recall the qubits are numbered $0$ to $n-1$).  $f
+(\Zs{0}) = 1 0 \oplus 0 \ldots 0$, $f (\Zs{(n-1)}) = 10 \oplus 1 0 \ldots 0$,
+and $f (\Zs{2^l})$ is $1 0$ followed by the binary representation of $2^{l-1}$.
+This set $K$ has the desired properties.  We pick $a=1$.
+
+For odd $j$, $K$ will again include $\Zs{2^l}$, but only for $l = 1, \ldots j-
+2$.  The remaining elements of $K$ will be $\Zs{0}$, $\Zs{(2^{(j-1)} + 1)}$,
+and $\Zs{(n-2)}$.  Now, $f(\Zs{(2^{(j-1)}+1)}) = 1 0 \oplus 0 1 0 \ldots 0$,
+and $f (\Zs{(n-2)}) = 1 0 \oplus 1 0 \ldots 0$, so again $K$ will have the
+desired property.  We again pick $a=1$.  Note that for the eight-qubit code,
+this will actually give us a different definition of $\Xbar_i$ and $\Zbar_i$
+than in table~\ref{table-8qubit}.
+
+I will conclude this section with a brief discussion of the automorphism
+groups of these codes.  There will not generally be a simple transversal
+operation in $\A(S)$ for one of these codes, but they have a number of
+symmetries when we allow permutations of the qubits.  One simple but
+large class of symmetries switches qubit $i$ with qubit $i + l$, where the
+addition is bitwise binary.  For instance, we might swap the first $n/2$
+qubits with the last $n/2$ qubits, or the first $n/4$ qubits with the second
+$n/4$ and the third $n/4$ with the last $n/4$.  The effect of this swap is
+to add $1$ to any bit $r$ of $f(\Xs{i})$ (for all $i$) where $l$ is $1$ in the
+$r$th bit.  This much is equivalent to multiplying $M_r$ by $M_Z$.  We
+also add $1$ to any bit $r$ of $f(\Zs{i})$ (for all $i$) where $\sigma (l)$ is
+$1$ in the $r$th bit.  This is equivalent to multiplying $M_r$ by $M_X$.
+Whether we multiply by $M_X$, $M_Z$, or both, the product is still in $S$,
+so the operation preserves $S$ and is a valid fault-tolerant operation.
+There may be other symmetries of these codes, as well.
+
+\section{Perfect One-Error-Correcting Codes}
+\label{sec-perfect}
+
+A {\em perfect} quantum code is a nondegenerate code for which the
+inequality of the quantum Hamming bound becomes an equality.  For
+one-error-correcting codes, that means $(1+3n)2^k = 2^n$.  The possibility
+of a perfect code therefore exists whenever $1+3n$ is a power of two (up
+to $2^n$).  For instance, the five-qubit code is a perfect code.  $1+3n$ will
+be a power of two iff $n = (2^{2j} - 1)/3$ for some $j$.  Therefore there could
+be perfect codes for $n=5$, $n=21$, $n=85$, and so on, with parameters
+$[(2^{2j}-1)/3, (2^{2j}-1)/3 - 2j, 3]$.  In fact, perfect codes do exist for
+all these parameters.
+
+One construction of these codes uses the Hamming codes over
+GF(4)~\cite{calderbank-GF4}.  Another construction is to paste together one
+of the codes from the previous section with an earlier perfect code.  The
+stabilizer $S_1$ of any code from section~\ref{sec-2toj} contains the
+stabilizer $R_1 = \{I, M_X, M_Z, M_X M_Z\}$ for a distance two code.  To
+make the perfect code for $j \geq 3$, let $S_1$ be the stabilizer for the
+$[2^{2j - 2}, 2^{2j - 2} - 2j, 3]$ code, and $S_2$ be the stabilizer for the
+perfect code for $j-1$, with parameters $[(2^{2j-2}-1)/3, (2^{2j-2}-1)/3 - 2j +
+2, 3]$.  For $j=2$, $S_2$ is the stabilizer for the five-qubit code.  Then
+using trivial $R_2$ (which still has distance one), the pasting construction of
+section~\ref{sec-construction} gives us a new code of distance three.  The
+total number of qubits used by the code is
+\begin{equation}
+	2^{2j - 2} + (2^{2j-2}-1)/3 = (4\ 2^{2j-2} - 1)/3 = (2^{2j} - 1)/3.
+\end{equation}
+It encodes $(2^{2j}-1)/3 - 2j$ qubits, and therefore is the perfect code for
+$j$.
+
+\section{A Class of Distance Four Codes}
+
+We can extend the stabilizers of the codes from section~\ref{sec-2toj} to
+get distance four codes.  The parameters of these distance four codes will be
+$[2^j, 2^j - 2j - 2, 4]$.  The first two generators of $S$ will again be $M_X$
+and $M_Z$.  The next $j$ generators of $S$ are the generators $M_1$ through
+$M_j$ from section \ref{sec-2toj}, so $S$ includes the stabilizer for a
+distance three code.  The last $j$ generators of $S$ are $N_i = R M_i R$ for
+$i = 1, \ldots, j$, where $R$ is applied to all $2^j$ qubits.  As with the
+codes of section~\ref{sec-2toj}, the error occuring for these codes can
+be efficiently determined from the error syndrome.
+
+We can summarize this by writing the error syndromes for $\Xs{i}$ and
+$\Zs{i}$:
+\begin{eqnarray}
+	f (\Xs{i}) & = & 01 \oplus i \oplus \sigma (i) \\
+	f (\Zs{i}) & = & 10 \oplus \sigma (i) \oplus i.
+\end{eqnarray}
+Since $S$ includes the stabilizer of a distance three code, it automatically
+has distance at least three.  We need to check that $f(E) \neq 0$ for any
+weight three operator $E$.  The only form of an operator $E$ for which the
+first two bits of $f(E)$ could be $00$ is $E = \Xs{a} \Ys{b} \Zs{c}$.  Then
+\begin{eqnarray}
+	f (E) & = & 00 \oplus (a + \sigma (b) + b + \sigma (c) ) \oplus (\sigma (a) +
+	b + \sigma (b) + c) \\
+	& = & 00 \oplus (a+b + \sigma (b+c) ) \oplus (b+c + \sigma (a+b) ).
+\end{eqnarray}
+If $r = a+b$ and $s = b+c$, then $f(E)$ is nonzero as long as $r \neq
+\sigma (s)$ or $s \neq \sigma (r)$.  This means that we need
+\begin{equation}
+	s \neq \sigma (\sigma (s)) = \sigma^2 (s)
+\end{equation}
+for all nonzero $s$ (when $r=s=0$, $E=I$).  To see that this is true, note
+that for even $j$,
+\begin{eqnarray}
+	\sigma^2 (0 \ldots 0 0 0 1) & = & 1 0 \ldots 0 0  \nonumber \\
+	\sigma^2 (0 \ldots 0 0 1 0) & = & 1 1 \ldots 1 1 \nonumber \\
+	\sigma^2 (0 \ldots 0 1 0 0) & = & 0 \ldots 0 0 1 \\
+	& \vdots & \nonumber \\
+	\sigma^2 (1 0 0 0 \ldots 0) & = & 0 0 1 \ldots 0. \nonumber
+\end{eqnarray}
+If $s$ has a $0$ in the next-to-last bit, it cannot have $\sigma^2 (s) = s$
+unless $s=0$.  If $s$ has a $1$ in the next-to-last bit, it must have a $0$ for
+the fourth-from-the-last bit, and so on.  If $j$ is a multiple of four, we find
+that the first bit must be a $0$, which means that the last bit of $s$ must be
+a $1$.  This in turn implies that the third-from-the-last bit is $0$, and so on
+until we reach the second bit of $s$, which must be $0$, so $s = 0 0 1 1 0 0
+\ldots 1 1$.  However, the second bit of $\sigma^2 (s)$ is $1$ because the
+next-to-last bit is.  Therefore, $\sigma(s) \neq s$ in this case.
+If $j$ is even, but not a multiple of four, the first bit
+of $s$ must be $1$, which means that the last bit is $0$.  Again we follow the
+chain of logic back to the second bit of $s$ and again find that it must be
+$0$, again giving a contradiction.  Therefore $\sigma^2 (s) \neq s$ for any
+nonzero $s$ for any even $j$.  An example for even $j$ is the $[16,6,4]$ code
+given in table \ref{table-16qubit-dist4}.
+\begin{table}
+	\centering
+	{\setlength{\tabcolsep}{0.4em}
+		\begin{tabular}{c|cccccccccccccccc}
+			$M_X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$
+			& $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ \\
+			$M_Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ &
+			$\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ \\
+			$M_1$ & $I$ & $\X$ & $I$ & $\X$ & $I$ & $\X$ & $I$ & $\X$ & $\Z$ &
+			$\Y$ & $\Z$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ & $\Y$ \\
+			$M_2$ & $I$ & $\X$ & $I$ & $\X$ & $\Z$ & $\Y$ & $\Z$ & $\Y$ & $\X$ &
+			$I$ & $\X$ & $I$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ \\
+			$M_3$ & $I$ & $\X$ & $\Z$ & $\Y$ & $\X$ & $I$ & $\Y$ & $\Z$ & $I$ &
+			$\X$ & $\Z$ & $\Y$ & $\X$ & $I$ & $\Y$ & $\Z$ \\
+			$M_4$ & $I$ & $\Y$ & $\X$ & $\Z$ & $I$ & $\Y$ & $\X$ & $\Z$ & $I$ &
+			$\Y$ & $\X$ & $\Z$ & $I$ & $\Y$ & $\X$ & $\Z$ \\
+			$N_1$ & $I$ & $\Z$ & $I$ & $\Z$ & $I$ & $\Z$ & $I$ & $\Z$ & $\X$ & $\Y$
+			& $\X$ & $\Y$ & $\X$ & $\Y$ & $\X$ & $\Y$ \\
+			$N_2$ & $I$ & $\Z$ & $I$ & $\Z$ & $\X$ & $\Y$ & $\X$ & $\Y$ & $\Z$ &
+			$I$ & $\Z$ & $I$ & $\Y$ & $\X$ & $\Y$ & $\X$ \\
+			$N_3$ & $I$ & $\Z$ & $\X$ & $\Y$ & $\Z$ & $I$ & $\Y$ & $\X$ & $I$ &
+			$\Z$ & $\X$ & $\Y$ & $\Z$ & $I$ & $\Y$ & $\X$ \\
+			$N_4$ & $I$ & $\Y$ & $\Z$ & $\X$ & $I$ & $\Y$ & $\Z$ & $\X$ & $I$ &
+			$\Y$ & $\Z$ & $\X$ & $I$ & $\Y$ & $\Z$ & $\X$
+		\end{tabular}
+		\caption{The stabilizer for a $[16,6,4]$ code.}
+		\label{table-16qubit-dist4}}
+\end{table}
+
+If $j$ is odd,
+\begin{eqnarray}
+	\sigma^2 (0 \ldots 0 0 0 1) & = & 0 1 1 1 \ldots 1 1  \nonumber \\
+	\sigma^2 (0 \ldots 0 0 1 0) & = & 1 1 1 1 \ldots 1 1 \nonumber \\
+	\sigma^2 (0 \ldots 0 1 0 0) & = & 0 0 0 \ldots 0 0 1 \nonumber \\
+	\sigma^2 (0 \ldots 1 0 0 0) & = & 0 0 0 \ldots 0 1 0 \\
+	& \vdots & \nonumber \\
+	\sigma^2 (0 1 0 \ldots 0 0) & = & 0 0 0 1 \ldots 0 0 \nonumber \\
+	\sigma^2 (1 0 0 0 \ldots 0) & = & 0 1 0 1 \ldots 1 1. \nonumber
+\end{eqnarray}
+In order to have $\sigma^2 (s) = s$, we cannot have the first bit and last
+two bits of $s$ all $0$.  If the first bit of $s$ is $1$, then the next-to-last
+bit of $s$ must also be $1$.  Then if the last bit is $0$, the
+third-from-the-last bit must be $0$ and the fourth-from-the-last bit must
+be $1$.  Also, the second bit is $0$ and the third bit is $1$.  After the third
+bit, they must continue to alternate $0$ and $1$ until the next-to-last bit.
+This means odd numbered bits are $1$ and even numbered bits are $0$.
+However, the fourth-from-the-last bit is an even numbered bit, giving a
+contradiction.  Therefore, if the first bit of $s$ is $1$, the last two bits
+must both be $1$ also.  That means the third-from-the-last and
+fourth-from-the-last bits must both be $0$.  However, it also means that
+the second bit of $s$ is $1$ and the third bit of $s$ is $0$.  The fourth bit
+is $0$ again, but the fifth bit is $1$, and after that they alternate until the
+last two bits.  This contradicts the fact that the third- and
+fourth-from-the-last bits must both be $0$.
+
+That leaves the possibility that the first bit of $s$ is $0$.  Then the
+next-to-last bit is $0$ too, so the last bit must be $1$.  That means the
+third-from-the-last bit is $0$ and the fourth-from-the-last bit is $1$.  Also,
+the second and third bits of $s$ are both $1$.  The next two bits are both
+$0$, and the two after that are both $1$.  The bits pair up to be the same,
+with the pairs alternating between $0$ and $1$.  However, the fourth- and
+third-from-the-last bits form one of these pairs, and they are different,
+giving another contradiction.  Therefore, $\sigma^2 (s) \neq s$ for any
+nonzero $s$ for odd $j$ as well as for even $j$.  An example for odd $j$ is
+the $[8, 0, 4]$ code shown in table~\ref{table-8qubit-dist4}.
+\begin{table}
+	\centering
+	\begin{tabular}{c|cccccccc}
+		$M_X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ \\
+		$M_Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ \\
+		$M_1$ & $I$ & $\X$ & $I$ & $\X$ & $\Y$ & $\Z$ & $\Y$ & $\Z$ \\
+		$M_2$ & $I$ & $\X$ & $\Z$ & $\Y$ & $I$ & $\X$ & $\Z$ & $\Y$ \\
+		$M_3$ & $I$ & $\Y$ & $\X$ & $\Z$ & $\X$ & $\Z$ & $I$ & $\Y$ \\
+		$N_1$ & $I$ & $\Z$ & $I$ & $\Z$ & $\Y$ & $\X$ & $\Y$ & $\X$ \\
+		$N_2$ & $I$ & $\Z$ & $\X$ & $\Y$ & $I$ & $\Z$ & $\X$ & $\Y$ \\
+		$N_3$ & $I$ & $\Y$ & $\Z$ & $\X$ & $\Z$ & $\X$ & $I$ & $\Y$ \\
+	\end{tabular}
+	\caption{The stabilizer for the $[8, 0, 4]$ code.}
+	\label{table-8qubit-dist4}
+\end{table}
+
+To show that this set of generators forms the stabilizer for a code, we still
+have to show that they all commute.  From the fact that $M_r$ and $M_s$
+commute with each other and $M_X$ and $M_Z$, we can immediately
+conclude that $N_r$ and $N_s$ commute with each other and $M_X$ and
+$M_Z$.  Also, $M_r$ and $N_r$ commute, since they get one sign of $-1$
+for each $\X$ or $\Z$ in $M_r$, and there are an even number of $\X$'s and
+$\Z$'s.  We must show that $M_r$ commutes with $N_s$ for $r \neq s$.  Now,
+\begin{equation}
+	f_{M_r} (N_s) = \Sum_{i=0}^{n-1} \left[i^{(r)} i^{(s)} + \sigma(i)^{(r)}
+	\sigma(i)^{(s)} \right].
+\end{equation}
+Here, $x^{(r)}$ is the $r$th bit of $x$.  Now, $\sigma$ is a permutation of
+$0$ through $n-1$, so the second term in the sum is equal to the first term
+in the sum.  Therefore, the sum is automatically zero, and these generators
+do form a stabilizer.
+
+\section{CSS Codes}
+\label{sec-CSS}
+
+As discussed in section~\ref{sec-stab-examples}, a CSS code
+\cite{calderbank-CSS,steane-CSS} is one where
+some of the generators are tensor products of $\X$'s and the rest are tensor
+products of $\Z$'s.  The $\X$ generators and the $\Z$ generators correspond
+to the parity check matrices of two classical codes $C_1$ and $C_2$, with
+$C_1^{\perp} \subseteq C_2$.  For instance, the classical Reed-Muller codes
+can be used to create a number of good quantum codes.  CSS codes cannot be
+as efficient as the most general quantum code, but they can still be quite
+good.  We can set upper and lower bounds using adaptations of the classical
+Hamming bound and Gilbert-Varshamov bound.  This argument shows that the
+rate $k/n$ of a CSS code to correct $t$ arbitrary errors is asymptotically
+limited by
+\begin{equation}
+	1 - 2 H(2t/n) \leq k/n \leq 1 - 2 H(t/n).
+\end{equation}
+
+The CSS codes are a particularly interesting class of codes for two reasons:
+First, they are built using classical codes, which have been more heavily
+studied than quantum codes, so it is fairly easy to construct useful quantum
+codes simply by looking at lists of classical codes.  Second, because of
+the form of the generators, the CSS codes are precisely those for which a
+CNOT applied between every pair of corresponding qubits in two blocks performs
+a valid fault-tolerant operation (see section~\ref{sec-normalizer}).  This
+makes them particularly good candidates for fault-tolerant computation.
+
+In order to get universal fault-tolerant computation for a code, the first
+step is to produce the encoded CNOT for the code.  For the most general
+stabilizer code, this requires performing a four-qubit operation using
+two ancilla qubits and making two measurements.  In a CSS code, this process
+is reduced to a single transversal operation.  Next, in order to produce
+one-qubit operations, we need to use one ancilla qubit, perform a CNOT, and
+make a measurement.  For the most general CSS code, we will still have to
+do this.  However, if the code has the property that $C_1 = C_2$ (so
+$C_1^{\perp} \subseteq C_1$), then the $\X$ generators have the same form
+as the $\Z$ generators, so a transversal Hadamard rotation is also a valid
+fault-tolerant operation.  If we further have the property that the parity
+check matrix of $C_1$ has a multiple of four 1s in each row, then the
+transversal phase $P$ is a valid fault-tolerant operation too.  For a general
+CSS code satisfying these conditions, these operations will perform some
+multiple-qubit gate on the qubits encoded in a single block.  However, if each
+block only encodes a single qubit, we can choose the $\Xbar$ and $\Zbar$
+operators so that transversal Hadamard performs an encoded Hadamard rotation,
+and so that the transversal $P$ performs an encoded $P$ or $P^\dagger$.  In
+particular, when $C_1$ is a punctured doubly-even self-dual classical code,
+all these conditions are satisfied, and we can perform any operation in
+$N(\G)$ by performing a single transversal operation \cite{shor-fault-tol}.
+In order to get universal computation, we will also need the Toffoli gate or
+some other gate outside $N(\G)$, and this will almost always require a more
+complicated construction.
+
+\section{Amplitude Damping Codes}
+
+Suppose we restrict attention to the amplitude damping channel.  In this
+channel, each qubit behaves independently according to one of the following
+matrices:
+\begin{equation}
+	\pmqty{1 & \ 0 \\ 0 & \sqrt{1-\epsilon^2}} {\rm\ or\ }
+	\pmqty{0 & \epsilon \\ 0 & 0}.
+\end{equation}
+It is difficult to create efficient codes that will deal with the exact
+evolution produced by this channel.  However, when $\epsilon$ is fairly small,
+it is sufficient to merely satisfy equation (\ref{eq-condition}) approximately
+\cite{leung}.  If we wish to correct the equivalent of one error, corrections
+of $O(\epsilon^3)$ will not matter, since that would be equivalent to
+distinguishing one error from two errors.  Let us expand
+\begin{equation}
+	\pmqty{1 & \ 0 \\ 0 & \sqrt{1-\epsilon^2}} =
+	I - \frac{1}{4} \epsilon^2 (I - \Z) + O(\epsilon^4).
+\end{equation}
+All of the higher order corrections to this equation will be powers of
+$I - \Z$.  Therefore, if we let
+\begin{equation}
+	A = \X (I - \Z) = \frac{2}{\epsilon} \pmqty{0 & \epsilon \\ 0 & 0},
+\end{equation}
+and
+\begin{equation}
+	B = I - \Z,
+\end{equation}
+we need to consider all terms of the form
+\begin{equation}
+	\bra{\psi_i} E^\dagger F \ket{\psi_j},
+\end{equation}
+where $E$ and $F$ are products of $A$ and $B$.  We get one factor of $\epsilon$
+for each $A$ and one factor of $\epsilon^2$ for each $B$.  We only need to
+consider those terms that have total order less than $\epsilon^d$ to have an
+effectively distance $d$ code.  This corrects $t$ errors where $d= 2t+1$.
+
+One possible way to achieve this is to have a CSS code for which the $\Z$
+generators can {\em correct} $t$ $\X$ errors and the $\X$ generators can
+	{\em detect} $t$ $\Z$ errors.  For instance, the code given in table
+\ref{table-XZcode} will work if we first map $\Z \rightarrow \X$ and $\Y
+\rightarrow \Z$.  For such a code, we are correcting $I$ and $\Z$ rather than
+$B$.  Since $B$ is in the linear span of $\Z$ and the identity, it is handled
+by these codes as well.
+
+We can expand the range of possible codes by taking the actual linear
+combination of $I$ and $\Z$ that appears in $A$ and $B$ into account.  For
+instance, consider the code from table~\ref{table-amplitude} \cite{leung}.
+\begin{table}
+	\centering
+	\begin{tabular}{c|cccc}
+		$M_1$ & $\X$ & $\X$ & $\X$ & $\X$ \\
+		$M_2$ & $\Z$ & $\Z$ & $I$ & $I$ \\
+		$M_3$ & $I$ & $I$ & $\Z$ & $\Z$ \\
+		\hline
+		\low{$\Xbar$} & \low{$\X$} & \low{$\X$} & \low{$I$} & \low{$I$} \\
+		\low{$\Zbar$} & \low{$\Z$} & \low{$I$} & \low{$\Z$} & \low{$I$}
+	\end{tabular}
+	\caption{A four-qubit code for the amplitude damping channel.}
+	\label{table-amplitude}
+\end{table}
+This code can correct one amplitude damping error (i.e., it satisfies
+(\ref{eq-condition}) to $O(\epsilon^3)$).  We can instantly see that
+(\ref{eq-condition}) is satisfied for $E^\dagger F = A_i$ (the subscript
+indicates the affected qubit) or $E^\dagger F = A_i^\dagger A_j$, where
+$(i, j) \neq (1, 2), (3, 4)$.  When $(i, j) = (1,2)$ (or $(3,4)$), something
+interesting and unusual happens:
+\begin{eqnarray}
+	\bra{\psi_i} A_1^\dagger A_2 \ket{\psi_j} & = &
+	\bra{\psi_i} (I - \Zs{1}) \Xs{1} \Xs{2} (I - \Zs{2}) \ket{\psi_j} \\
+	& = & \bra{\psi_i} \Xs{1} \Xs{2} (I + \Zs{1})\,(I - \Zs{2}) \ket{\psi_j}.
+\end{eqnarray}
+Now, $\Zs{1} \Zs{2} \ket{\psi_j} = \ket{\psi_j}$, so
+\begin{eqnarray}
+	\bra{\psi_i} \Xs{1} \Xs{2} (I + \Zs{1})\,(I - \Zs{2}) \ket{\psi_j}
+	& = & \bra{\psi_i} \Xs{1} \Xs{2} (I + \Zs{1})\,(I - \Zs{1}) \ket{\psi_j}
+	\nonumber \\
+	\\
+	& = & 0,
+\end{eqnarray}
+since $(I + \Zs{1})\,(I - \Zs{1}) = 0$.  We also need to consider the terms
+$E^\dagger F = B$ and $E^\dagger F = A_i^\dagger A_i = I - \Zs{i} = B$.  In
+this case, we can again separate $B$ into $I$ and $\Z$, and the latter is
+handled by the generator $M_1$.
+
+By applying similar principles, we can see that Shor's nine-qubit code (table
+\ref{table-9qubit}) can be used to correct two amplitude damping errors.
+We need to consider products of one through four $A$'s and products of one
+or two $B$'s, as well as the product of a $B$ with one or two $A$'s.  Shor's
+code breaks down into three blocks of three.  If for any block of three,
+we have one or two $A$'s acting on that block, $E^\dagger F$ will anticommute
+with one of the $\Z$ generators for that block, and $\bra{\psi_i} E^\dagger
+F \ket{\psi_j} = 0$.  This takes care of all possible operators $E^\dagger F$
+involving one, two, or four $A$'s.  We still need to consider $A_1^\dagger A_2
+A_3$ (and similar terms) and products of one or two $B$'s.  The products of
+$B$'s we again expand into $I$ and $\Z$, producing products of zero, one, and
+two $\Z$'s.  Operators with one $\Z$ or with two $\Z$'s in different blocks of
+three will anticommute with one of the $\X$ operators.  Operators such as
+$\Zs{1} \Zs{2}$ that act on two qubits in the same block of three are in the
+stabilizer and are thus equivalent to the identity.  Finally, operators such as
+$A_1^\dagger A_2 A_3$ are dealt with similarly to $A_1^\dagger A_2$ for the
+four qubit code above:
+\begin{eqnarray}
+	\bra{\psi_i} A_1^\dagger A_2 A_3 \ket{\psi_j} & \!\! = &
+	\!\! \bra{\psi_i} (I - \Zs{1}) \Xs{1} \Xs{2} (I - \Zs{2}) \Xs{3} (I - \Zs{3})
+	\ket{\psi_j} \\
+	& \!\! = & \!\! \bra{\psi_i} \Xs{1} \Xs{2} \Xs{3} (I + \Zs{1})\,(I - \Zs{2})\,
+	(I - \Zs{3}) \ket{\psi_j} \\
+	& \!\! = & \!\! \bra{\psi_i} \Xs{1} \Xs{2} \Xs{3} (I + \Zs{1})\,(I - \Zs{1})\,
+	(I - \Zs{3}) \ket{\psi_j} \\
+	& \!\! = & \!\! 0.
+\end{eqnarray}
+Thus, the nine qubit code can correct two amplitude damping errors.
+
+Fault tolerance for these codes must be handled carefully.  Transversal
+operations of any sort will not respect the form of the error operators, so
+we need to be sure the code will be able to correct the new error operators.
+For instance, the CNOT applied to $I \otimes A$ produces $(I \otimes \X)\,
+(I \otimes I - \Z \otimes \Z)$.  This cannot be written as the tensor product
+of $A$'s and $B$'s.  However, $I \otimes A_i$ is still distinguishable from the
+images of $I \otimes A_j$ (since $(I \otimes I + \Z \otimes \Z)\,(I \otimes I
+- \Z \otimes \Z) = 0$) and $A_j \otimes I$.  Therefore, transversal CNOT is
+a valid fault-tolerant operation for the four-qubit code as long as we correct
+errors taking its effects into account.
+
+\section{Some Miscellaneous Codes}
+
+In this section I present a few more codes that do not fit easily
+into any of the classes I have already discussed.  Figure~\ref{table-11qubit}
+shows an $[11,1,5]$ code, the smallest code to correct two errors
+\cite{calderbank-GF4}.  Figure \ref{table-XZcode} gives a code that can
+correct one $\X$ error or one $\Z$ error, but not a $\Y$ error.  This code is
+better than any possible distance three code, and is another example
+illustrating the utility of stabilizer codes for more general channels than the
+depolarizing channel.  It is based on the classical Hamming code with an
+additional generator to distinguish between $\X$ and $\Z$ errors.  In fact,
+this code also detects if a $\Y$ error has occurred, although it cannot tell us
+where the error occurred.
+
+\begin{table}
+	\centering
+	\begin{tabular}{c|ccccccccccc}
+		$M_1$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $I$ & $I$ & $I$ & $I$ & $I$
+		\\
+		$M_2$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $\X$ & $I$ & $I$ & $I$ & $I$ & $I$
+		\\
+		$M_3$ & $I$ & $I$ & $I$ & $\Z$ & $\X$ & $\Y$ & $\Y$ & $\Y$ & $\Y$ & $\X$ & $\Z$
+		\\
+		$M_4$ & $I$ & $I$ & $I$ & $\X$ & $\Y$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Y$ & $\X$
+		\\
+		$M_5$ & $\Z$ & $\Y$ & $\X$ & $I$ & $I$ & $I$ & $\Z$ & $\Y$ & $\X$ & $I$ & $I$
+		\\
+		$M_6$ & $\X$ & $\Z$ & $\Y$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ & $\Y$ & $I$ & $I$
+		\\
+		$M_7$ & $I$ & $I$ & $I$ & $\Z$ & $\Y$ & $\X$ & $\X$ & $\Y$ & $\Z$ & $I$ & $I$
+		\\
+		$M_8$ & $I$ & $I$ & $I$ & $\X$ & $\Z$ & $\Y$ & $\Z$ & $\X$ & $\Y$ & $I$ & $I$
+		\\
+		$M_9$ & $\Z$ & $\X$ & $\Y$ & $I$ & $I$ & $I$ & $\Z$ & $\Z$ & $\Z$ & $\X$ & $\Y$
+		\\
+		$M_{10}$ & $\Y$ & $\Z$ & $\X$ & $I$ & $I$ & $I$ & $\Y$ & $\Y$ & $\Y$ & $\Z$ &
+		$\X$ \\
+		\hline
+		\low{$\Xbar$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} &
+		\low{$I$} & \low{$\X$} & \low{$\X$} & \low{$\X$} & \low{$\X$} & \low{$\X$} \\
+		\low{$\Zbar$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} &
+		\low{$I$} & \low{$\Z$} & \low{$\Z$} & \low{$\Z$} & \low{$\Z$} & \low{$\Z$}
+	\end{tabular}
+	\caption{The stabilizer for an $[11,1,5]$ code.}
+	\label{table-11qubit}
+\end{table}
+
+\begin{table}
+	\centering
+	\begin{tabular}{c|ccccccc}
+		$M_1$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ & $\Z$ \\
+		$M_2$ & $\Y$ & $\Y$ & $\Y$ & $\Y$ & $I$ & $I$ & $I$ \\
+		$M_3$ & $\Y$ & $\Y$ & $I$ & $I$ & $\Y$ & $\Y$ & $I$ \\
+		$M_4$ & $\Y$ & $I$ & $\Y$ & $I$ & $\Y$ & $I$ & $\Y$ \\
+		\hline
+		\low{$\Xbar_1$} & \low{$\X$} & \low{$\X$} & \low{$I$} & \low{$I$} & \low{$I$} &
+		\low{$I$} & \low{$\Z$} \\
+		\low{$\Xbar_2$} & \low{$\X$} & \low{$I$} & \low{$\X$} & \low{$I$} & \low{$I$} &
+		\low{$\Z$} & \low{$I$} \\
+		\low{$\Xbar_3$} & \low{$\X$} & \low{$I$} & \low{$I$} & \low{$\Z$} & \low{$\X$} &
+		\low{$I$} & \low{$I$} \\
+		\low{$\Zbar_1$} & \low{$I$} & \low{$\Z$} & \low{$I$} & \low{$\Z$} & \low{$I$} &
+		\low{$\Z$} & \low{$I$} \\
+		\low{$\Zbar_2$} & \low{$I$} & \low{$I$} & \low{$\Z$} & \low{$\Z$} & \low{$I$} &
+		\low{$I$} & \low{$\Z$} \\
+		\low{$\Zbar_3$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$I$} & \low{$\Z$} &
+		\low{$\Z$} & \low{$\Z$}
+	\end{tabular}
+	\caption{The stabilizer for a code to correct one $\X$ or $\Z$ error.}
+	\label{table-XZcode}
+\end{table}
+
+The set of all possible codes includes many codes that are not equivalent
+to stabilizer codes.  Currently, however, only one is known that is better
+than any stabilizer code~\cite{rains-nonstab}.  This code has distance two
+and encodes six states using five qubits, whereas any distance two stabilizer
+code could only encode two qubits (four states) with five qubits.  It can be
+given in terms of the projection $P$ onto the subspace of valid codewords:
+\begin{eqnarray}
+	\lefteqn{P = 1/16\ [ 3\ I \otimes I \otimes I \otimes I \otimes I
+	+ (I \otimes \Z \otimes \Y \otimes \Y \otimes \Z)_{\rm cyc}} \nonumber \\
+	& & \mbox{} + (I \otimes \X \otimes \Z \otimes \Z \otimes \X)_{\rm cyc}
+	- (I \otimes \Y \otimes \X \otimes \X \otimes \Y)_{\rm cyc} \\
+	& & \mbox{} + 2\ (\Z \otimes \X \otimes \Y \otimes \Y \otimes \X)_{\rm cyc}
+	- 2\ \Z \otimes \Z \otimes \Z \otimes \Z \otimes \Z ]. \nonumber
+\end{eqnarray}
+The subscript ``cyc'' means that we actually add the five cyclic permutations
+of the indicated term.  Note that this means the projection operator, and
+therefore the code, is itself cyclic.  The trace of $P$ is six, so $P$ projects
+onto a six-dimensional space and the code can therefore be used to encode
+six basis states.  Conjugation of $P$ by $\X$, $\Y$, or $\Z$ on any single
+qubit will produce $P'$ with $P P' = 0$, so the code for this projection
+operator satisfies (\ref{eq-condition}) for a distance two code, with $C_{ab} =
+\delta_{ab}$.

@@ -1,0 +1,1332 @@
+\chapter{Fault-Tolerant Computation}
+\label{chap-fault-tolerant}
+
+\section{Encoded Computation and Fault-Tolerance}
+
+I have shown how to encode qubits in blocks to protect them from
+individual errors.  This, by itself, is useful for transmitting quantum data
+down a noisy communications line, for instance --- we can encode the data
+using the code, send it, correct the errors, and decode it.  Then we can
+process the data normally.  However, the framework so far is insufficient
+for performing computations on a realistic quantum computer.  If we need
+to decode the data in order to perform quantum gates on it, it is vulnerable
+to noise during the time it is decoded.  Even if we know how to perform
+gates on the data while it is still encoded, we must be careful to make sure
+that a single error does not cause us to accidentally perform the wrong
+computation.
+
+For instance, suppose a single qubit has been flipped and we apply a
+con\-trolled-NOT from it to another qubit.  Then the second qubit will flip
+exactly when it is supposed to stay the same.  In consequence, now both
+the first and the second qubits have bit flip errors.  If both qubits are part
+of the same block, we now have two errors in the block instead of one.
+Before very much of this occurs, we will have too many errors in the block
+to correct.  If we correct errors often enough, we can salvage the
+situation~\cite{aharonov}, but in the process we lose a lot of the power of
+the error-correcting code.  Therefore, I will define a fault-tolerant
+operation as one for which a single error introduces at most one error per
+block of the code.  In a large computer, we have many encoded blocks of
+data, and a given operation may introduce one error in a number of them.
+However, each block retains its ability to correct that single error.
+
+In the example above, an error propagated forward from the control qubit
+to the target qubit of the CNOT.  In a quantum computer, errors can also
+propagate backwards.  For instance, suppose we have the state
+\begin{equation}
+(\alpha \ket{0} + \beta \ket{1}) (\ket{0} \pm \ket{1})
+\end{equation}
+and perform a CNOT from the first qubit to the second.  The resulting state
+is
+\begin{equation}
+	\alpha \ket{0} (\ket{0} \pm \ket{1}) + \beta \ket{1} (\pm 1) (\ket{0} \pm
+	\ket{1}) = (\alpha \ket{0} \pm \beta \ket{1}) (\ket{0} \pm \ket{1}).
+\end{equation}
+Initially flipping the sign on the second qubit will result in a sign flip on
+the first qubit after the CNOT.  In a CNOT, amplitude (bit flip) errors
+propagate forwards, and phase errors propagate backwards.
+
+This means that not only must we make sure not to perform operations
+from one qubit to another within a block, we must also be sure not to
+perform multiple CNOTs from a block onto the same target qubit, even if it
+is a disposable ancilla qubit.  Otherwise, a single phase error in the ancilla
+qubit can produce multiple errors within a block.  Operations for which each
+qubit in a block only interacts with the corresponding qubit, either in another
+block or in a specialized ancilla, will be called {\em transversal} operations.
+Any transversal operation is automatically fault-tolerant, although there are
+some fault-tolerant operations which are not transversal.
+
+\section{Measurement and Error Correction}
+\label{sec-error-cor}
+
+Suppose we want to measure the operator $\Zs{1} \Zs{2}$, as with Shor's
+nine-qubit code.  The eigenvalue is $+1$ if both qubits are the same and $-1$
+if they are different.  One natural way to do this is perform a CNOT from
+both qubits to a third ancilla qubit, initially in the state $\ket{0}$.  If
+both qubits are $\ket{0}$, the ancilla is left alone, and if both are
+$\ket{1}$, the ancilla gets flipped twice, returning to the state $\ket{0}$.
+If only one of the two qubits is $\ket{1}$, the ancilla only flips once, ending
+up in the state $\ket{1}$.  Measuring the ancilla will then tell us the
+eigenvalue of $\Zs{1} \Zs{2}$.
+
+However, this procedure is not a transversal operation.  Both qubits
+interact with the same ancilla qubit, and a single phase error on the ancilla
+qubit could produce phase errors in both data qubits, producing two errors
+in the block (actually, this particular example does not have this problem,
+since a phase error on the ancilla qubit is meaningless until after it has
+interacted with the first data qubit; but if we were measuring $\Zs{1} \Zs{2}
+\Zs{3}$ instead, the problem would be a real one).  One possible solution to
+the problem is to use two ancilla qubits, both initially $\ket{0}$, instead of
+one.  Then we perform CNOTs from the first data qubit to the first ancilla
+qubit and from the second data qubit to the second ancilla qubit.  Then we
+measure the ancilla qubits and determine their parity.  This will again tell
+us the eigenvalue of $\Zs{1} \Zs{2}$, and we do not run the risk of introducing
+two phase errors into the data.
+
+However, we have instead done something worse.  By measuring both
+ancilla qubits, we have, in effect, measured the original data qubits, which
+destroys any superposition of the $+1$-eigenstates of $\Zs{1} \Zs{2}$.  To make
+this work, we need to be able to measure the ancilla without finding out
+anything about the data.  Since we are only interested in the parity of the
+data qubits, we could have just as well started the ancilla in the state
+$\ket{11}$ as $\ket{00}$.  If both or neither ancilla qubits are flipped, the
+parity is still even, and if only one is flipped, the parity is odd, as it
+should be.  However, measuring the ancilla still tells us what states the data
+qubits were in.  The state of a data qubit is equal to the reverse of the
+measured state of the corresponding ancilla qubit.
+
+This means if we start the ancilla in the superposition $\ket{00} +
+\ket{11}$ and perform CNOTs from the data qubits to the ancilla qubits,
+measuring the ancilla will again tell us the parity of the data qubits.
+However, we do not know whether the state we measure originally
+corresponded to the ancilla state $\ket{00}$ or $\ket{11}$, which means
+we cannot deduce the state of the data.  The two ancilla states correspond
+to the two possible states of the data qubits with the same parity.  This
+means that measuring the ancilla does not destroy a superposition of these
+two states of the data.  This is what we desired.
+
+Because we interact each data qubit with a separate ancilla qubit, a single
+phase error in the ancilla will only produce a single phase error in the
+data.  Of course, if a single qubit in the ancilla flips so we start in the
+state $\ket{01} + \ket{10}$, we will measure the wrong parity.  We can
+circumvent this problem by simply preparing multiple ancillas in the same
+state, performing the CNOTs to each of them, and measuring each.  If we
+prepare three such ancillas and determine the parity as the majority
+result, the answer will be correct unless two errors have occurred.  If the
+chance of a single error is $\epsilon$, the chance of getting two errors in
+the data or getting the wrong measurement result is $O(\epsilon^2)$.
+
+We can use this trick on products of more than two $\Z$
+operators~\cite{shor-fault-tol} by preparing the ancilla in a state which is
+the sum of all even parity states.  Such a state can be made by preparing a
+``cat'' state $\ket{0 \ldots 0} + \ket{1 \ldots 1}$ (named after
+Schr\"odinger's cat) and performing a Hadamard transform
+(\ref{eq-hadamard}) on each qubit.  Again, we perform a CNOT from the
+data qubits to corresponding qubits in the ancilla and measure the ancilla.
+The result will have even parity iff the selected data qubits have even
+parity, but the measurement does not destroy superpositions of the
+possible data states with that parity.  Again, a single error in the ancilla
+could give the wrong parity, so we should repeat the measurement.  Also,
+the preparation of the ``cat'' state is not at all fault-tolerant, so we could
+easily have multiple bit flip errors in the ``cat'' state, which will result
+in multiple phase errors in the ancilla state.  Since phase errors will feed
+back into the data, we should carefully verify the ``cat'' state to make sure
+that we do not have multiple amplitude errors.
+
+Suppose we want to measure a more general operator in $\G$, such as
+$M_1 = \X \otimes\Z \otimes \Z \otimes \X \otimes I$, the first generator
+for the five-qubit code.  Note that under the Hadamard transform
+\begin{eqnarray}
+	\ket{0} & \leftrightarrow & \ket{0} + \ket{1} \nonumber \\
+	\ket{1} & \leftrightarrow & \ket{0} - \ket{1},
+\end{eqnarray}
+so the eigenvectors of $\Z$ transform to the eigenvectors of $\X$ and
+vice-versa.  This means to measure $M_1$, we should perform the
+Hadamard transform on qubits one and four and instead measure $\Z
+\otimes \Z \otimes \Z \otimes \Z \otimes I$.  We know how to do this from
+the above discussion.  Then we should perform the Hadamard transform
+again to return to the original state (modulo any collapse caused by the
+measurement).  In a similar way, we can rotate $\Y$ into $\Z$ (exactly
+how is discussed in more detail in section~\ref{sec-normalizer}), and
+therefore measure any operator in $\G$.
+
+From the ability to make measurements, we can easily perform error
+correction for any stabilizer code~\cite{divincenzo}.  Recall that to correct
+errors, we measure the eigenvalue of each generator of the stabilizer.  This
+we now know how to do fault-tolerantly.  This tells us the error syndrome,
+which tells us the error (or class of degenerate errors).  This error is some
+operator in $\G$, and to correct it, we just apply the operator to the code.
+Since it is the tensor product of single qubit operators, this is a transversal
+operation, and is therefore fault-tolerant.
+
+Because a full measurement of the error syndrome takes a fair amount of
+time, the possibility of an error in the data while measuring the syndrome
+cannot be ignored.  An error in the data in the middle of the syndrome
+measurement will result in the wrong syndrome, which could correspond
+to a totally different error with nothing in common with the actual error.
+Therefore, we should measure the syndrome multiple times, only stopping
+when we have sufficient confidence that we have determined the correct
+current error syndrome.  Since we are measuring the syndrome multiple
+times, we only need to measure each bit once per overall syndrome
+measurement; repetitions of the syndrome measurement will also protect
+against individual errors in the syndrome bits.  The true error syndrome will
+evolve over the course of repeated measurements.  Eventually, more
+errors will build up in the data than can be corrected by the code,
+producing a real error in the data.  Assuming the basic error rate is low
+enough, this occurance will be very rare, and we can do many error
+correction cycles before it happens.  However, eventually the computation will
+fail.  In chapter~\ref{chap-concatenation}, I will show how to avoid this
+result and do arbitrarily long computations provided the basic error rate is
+sufficiently low.
+
+\section{Transformations of the Stabilizer}
+\label{sec-normalizer}
+
+Now I will begin to discuss how to perform actual operations on encoded
+states.  We already know how to perform encoded $\X$, $\Y$, and $\Z$
+operations on stabilizer codes.  These operations all commute with the
+stabilizer and therefore leave the generators of the stabilizer alone.  A
+more general unitary operation $U$ will not necessarily do this.  If $M \in
+S$, then $\ket{\psi} = M \ket{\psi}$ for $\ket{\psi} \in T$, and
+\begin{equation}
+	U \ket{\psi} = U M \ket{\psi} = UMU^\dagger U \ket{\psi},
+\end{equation}
+so $U M U^\dagger$ fixes $U \ket{\psi}$.  Even if we have an operator $N$
+which is not in $S$, $U$ will take the eigenvectors of $N$ to eigenvectors
+of $U N U^\dagger$, effectively transforming $N \rightarrow U N U^\dagger$.
+Suppose $U M U^\dagger \in \G$.  Then if we want an operation that takes an
+encoded codeword to another valid codeword, we need $U M U^\dagger \in S$.
+If this is true for all $M \in S$, then $U \ket{\psi} \in T$ as well, and $U$
+is a valid encoded operation.  If it is also transversal, we know it will be
+fault-tolerant as well.
+
+The set of $U$ such that $U A U^\dagger \in \G$ for all $A \in \G$ is the
+normalizer $N(\G)$ of $\G$ in $U(n)$.  It turns out that $N(\G)$ is
+generated by the single qubit operations $R$ (the Hadamard transform)
+and
+\begin{equation}
+	P = \pmqty{1 & 0 \\ 0 & i},
+\end{equation}
+and the controlled NOT~\cite{bennett-tome,calderbank-stab}.  The set of
+$U$ such that $U M U^\dagger \in S$ for all $M \in S$ is the normalizer
+$N_{U(n)}(S)$ of $S$ in $U(n)$, which need not be a subset of $N(\G)$.  Any
+transversal operator in $N_{U(n)}(S)$ is a valid fault-tolerant operation.
+However, operators outside of $N(\G)$ are much more difficult to work
+with and analyze.  Therefore, I will restrict my attention to operators in
+the intersection of $N(\G)$ and $N_{U(n)}(S)$.
+
+The operators in $N(\G)$ acting on $\G$ by conjugation permute tensor products
+of $\X$, $\Y$, and $\Z$.  For instance,
+\begin{eqnarray}
+	R \X R^\dagger & = \frac{1}{2} \pmqty{1 & \ 1 \\ 1 & -1} \pmqty{0 &
+	1 \\ 1 & 0} \pmqty{1 & \ 1 \\ 1 & -1} = \pmqty{1 & \ 0 \\ 0 & -1} =
+	& \Z \\
+	R \Z R^\dagger & = \frac{1}{2} \pmqty{1 & \ 1 \\ 1 & -1} \pmqty{1 & \
+		0 \\ 0 & -1} \pmqty{1 & \ 1 \\ 1 & -1} = \pmqty{0 & 1 \\ 1 & 0} = &
+	\X.
+\end{eqnarray}
+Also,
+\begin{equation}
+	R \Y R^\dagger = -i R \X \Z R^\dagger = -i R \X R^\dagger R \Z R^\dagger = -
+	i \Z \X = -\Y.
+\end{equation}
+$R$ switches $\X$ and $\Z$.  Similarly,
+\begin{eqnarray}
+	P \X P^\dagger & = \pmqty{1 & 0 \\ 0 & i} \pmqty{0 & 1 \\ 1 & 0}
+	\pmqty{1 & \ 0 \\ 0 & -i} = \pmqty{0 & -i \\ i & \ 0} = & \Y \\
+	P \Z P^\dagger & = \pmqty{1 & 0 \\ 0 & i} \pmqty{1 & \ 0 \\ 0 &
+	-1} \pmqty{1 & \ 0 \\ 0 & -i} = \pmqty{1 & \ 0 \\ 0 & -1} = & \Z.
+\end{eqnarray}
+$P$ switches $\X$ and $\Y$.  These two operations generate all possible
+permutations of $\X$, $\Y$, and $\Z$.  Operators in $N(\G_1)$ can be
+viewed as transformations of the Bloch sphere which permute the coordinate
+axes.
+
+The third generator of $N(\G)$ is the controlled NOT.  It acts on two qubits,
+and therefore permutes the elements of $\G_2$.  Its action is as follows:
+\begin{eqnarray}
+	\X \otimes I & \rightarrow & \X \otimes \X \nonumber \\
+	I \otimes \X & \rightarrow & I \otimes \X \\
+	\Z \otimes I & \rightarrow & \Z \otimes I \nonumber \\
+	I \otimes \Z & \rightarrow & \Z \otimes \Z \nonumber.
+\end{eqnarray}
+Amplitudes are copied forwards and phases are copied backwards, as I
+described before.  In the same way, any element of $N(\G)$ gives a
+permutation of $\G$.  These permutations of $\G$ always preserve the
+group structure of $\G$, so are actually automorphisms of $\G$.
+
+Given an automorphism of $\G$, we can always find an element of $N(\G)$
+that produces that automorphism~\cite{gottesman-fault-tol}, modulo the
+automorphism $iI \rightarrow -iI$.  We can find the matrix of a given
+transformation $U$ corresponding to some automorphism by determining
+the action of $U$ on basis states.  $\ket{0}$ is an eigenvector of $\Z$, so it
+is mapped to an eigenvector of $U \Z U^\dagger$.  $\ket{1} = \X \ket{0}$,
+so it becomes $(U \X U^\dagger) U \ket{0}$.  For instance, the
+automorphism $T: \X \rightarrow \Y,\ \Z \rightarrow \X$ maps $\ket{0}
+\rightarrow (1 / \sqrt{2})\,(\ket{0} + \ket{1})$ and $\ket{1}
+\rightarrow \Y T \ket{0} = -(i / \sqrt{2})\,(\ket{0} - \ket{1})$.  Thus,
+the matrix of $T$ is
+\begin{equation}
+	T = \frac{1}{\sqrt{2}} \pmqty{ 1 & -i \\ 1 & \ i }.
+\end{equation}
+
+Another useful operation is to swap two qubits in a block.  This is not a
+transversal operation, and it is not fault-tolerant by itself.  An error during
+the swap gate can produce errors in the two qubits to be swapped,
+producing two errors in the same block.  However, we do not need to
+worry about error propagation because the swap gate swaps the errors
+along with the correct states.  Therefore, to get a fault-tolerant swap gate,
+we only need to produce a circuit to swap qubits that does not directly
+interact them.  Such a circuit is given in figure~\ref{fig-swap}.
+\begin{figure}
+	\centering
+	\begin{picture}(270,80)
+
+		\put(0,14){\makebox(20,12){$\ket{\gamma}$}}
+		\put(0,34){\makebox(20,12){$\ket{\beta}$}}
+		\put(0,54){\makebox(20,12){$\ket{\alpha}$}}
+
+		\put(20,20){\line(1,0){80}}
+		\put(20,40){\line(1,0){80}}
+		\put(20,60){\line(1,0){80}}
+
+		\put(100,14){\makebox(20,12){$\ket{\gamma}$}}
+		\put(100,34){\makebox(20,12){$\ket{\alpha}$}}
+		\put(100,54){\makebox(20,12){$\ket{\beta}$}}
+
+		\put(40,16){\line(0,1){48}}
+		\put(40,20){\circle{8}}
+		\put(40,60){\circle{8}}
+
+		\put(60,36){\line(0,1){28}}
+		\put(60,40){\circle{8}}
+		\put(60,60){\circle{8}}
+
+		\put(80,16){\line(0,1){28}}
+		\put(80,20){\circle{8}}
+		\put(80,40){\circle{8}}
+
+		\put(180,30){\line(1,0){20}}
+		\put(180,50){\line(1,0){20}}
+		\put(190,30){\circle{8}}
+		\put(190,50){\circle{8}}
+		\put(190,26){\line(0,1){28}}
+		\put(200,34){\makebox(40,12){swap}}
+
+	\end{picture}
+	\caption{Network to swap $\ket{\alpha}$ and $\ket{\beta}$ using ancilla
+		$\ket{\gamma}$.}
+	\label{fig-swap}
+\end{figure}
+
+In order to produce a valid fault-tolerant encoded operation, we may
+combine swap operations within a block of an error-correcting code and
+transversal operations on the block to get something that permutes the
+elements of the stabilizer.  The set of such operations is the automorphism
+group $\A (S)$ of $S$.  Codes with a large automorphism group are
+therefore better suited for performing fault-tolerant operations.  For
+instance, the seven-qubit code of table~\ref{table-7qubit} is invariant
+under any single-qubit operation in $N(\G)$ performed bitwise.  There are
+also a number of permutations of its qubits in the automorphism group,
+although they turn out to be unimportant in this case.  The five-qubit code
+of table~\ref{table-5qubit} has fewer automorphisms.  The only
+transversal operations in its automorphism group are
+\begin{equation}
+	T: \X \rightarrow \Y, \ \Z \rightarrow \X
+\end{equation}
+and $T^2$.  Note that in the language of GF(4) codes, the operation $T$
+corresponds to multiplication by $\omega^2$.  Therefore it is a valid
+transversal operation for any linear quantum code.  The five-qubit code is
+also invariant under cyclic permutations of the five component qubits,
+although these operations turn out to leave the encoded data unchanged,
+so are not very useful.
+
+Once we have a possible encoded operation $U$, we must discover what it
+actually does to the encoded states.  We can do this by analyzing the
+behavior of $N(S)/S$ under the operation.  Because $U$ is in $N(\G) \cap
+N_{U(n)} (S)$, it also has a natural action on $N(S)/S \cong \G_k$.  This
+action on $\G_k$ is equivalent to some operation in $N(\G_k)$.  This is the
+operation that is performed on the $k$ encoded qubits.  For instance, the
+Hadamard transform $R$ applied bitwise to the seven-qubit code switches $\Xbar
+= \Xs{5} \Xs{6} \Xs{7}$ and $\Zbar = \Zs{5} \Zs{6} \Zs{7}$.  This is just $R$
+applied to the $\G_1$ group for the single encoded qubit.  In the same way, $P$
+bitwise for the seven-qubit code converts $\Xbar$ into $-\Ybar$ ($\Ybar$ is the
+encoded $\Y$), and thus performs an encoded $P^\dagger$.  The minus sign
+for $\Ybar$ occurs because $\Ybar = -i \Xbar \Zbar = -i (i^3) \Ys{5} \Ys{6}
+\Ys{7} = - \Ys{5} \Ys{6} \Ys{7}$.
+
+For the five-qubit code,
+$\Xbar = \Xs{1} \Xs{2} \Xs{3} \Xs{4} \Xs{5}$ and $\Zbar = \Zs{1} \Zs{2} \Zs{3}
+\Zs{4} \Zs{5}$, so $T$ bitwise transforms $\Xbar$ to $\Ybar$ and $\Zbar$ to
+$\Xbar$, and therefore acts as an encoded $T$ operation.  For both the
+five- and seven-qubit codes, the qubit permutations in $\A(S)$ produce
+the identity operation on the encoded qubits.  For a block encoding $k$
+qubits, an operation in the automorphism group might perform any
+multiple-qubit operation in $N(\G_k)$.
+
+We can also do multiple-qubit operations interacting two blocks by
+applying multiple-qubit operations transversally between the blocks.  For
+instance, we can apply a CNOT from the $i$th qubit in the first block to the
+$i$th qubit in the second block.  We can interact $r$ blocks by applying
+transversally any operation in $N(\G_r)$.  We can even apply different
+operations to different qubits within a block.  However, we should not also
+apply swaps within a block unless we can perform error correction
+afterwards, since otherwise errors could spread from one qubit in a block
+to the corresponding qubit in a different block, then back to a different
+qubit in the first block, producing two errors in the first block.
+
+The stabilizer of two blocks of a code is just $S \times S$.  Therefore, the
+operation, to be valid, must permute the elements of this group.  For
+instance, bitwise CNOT applied between two blocks of the seven-qubit code
+is a valid operation, because
+\begin{eqnarray}
+	M_i \otimes I & \rightarrow & M_i \otimes M_i \ (i = 1, 2, 3) \nonumber \\
+	M_i \otimes I & \rightarrow & M_i \otimes I \ (i = 4, 5, 6) \\
+	I \otimes M_i & \rightarrow & I \otimes M_i \ (i = 1, 2, 3) \nonumber \\
+	I \otimes M_i & \rightarrow & M_i \otimes M_i \ (i = 4, 5, 6). \nonumber
+\end{eqnarray}
+Since this also takes
+\begin{eqnarray}
+	\Xbar \otimes I & \rightarrow & \Xbar \otimes \Xbar \nonumber \\
+	I \otimes \Xbar & \rightarrow & I \otimes \Xbar \\
+	\Zbar \otimes I & \rightarrow & \Zbar \otimes I \nonumber \\
+	I \otimes \Zbar & \rightarrow & \Zbar \otimes \Zbar, \nonumber
+\end{eqnarray}
+it acts as a CNOT on the encoded qubits.  On the other hand, bitwise CNOT
+applied to the five-qubit code is not a valid operation, because, for instance,
+$M_1 = \X \otimes \Z \otimes \Z \otimes \X \otimes I$, so $M_1 \otimes I
+\rightarrow M_1 \otimes (\X \otimes I \otimes I \otimes \X \otimes I)$
+and $\X \otimes I \otimes I \otimes \X \otimes I$ is not in $S$.
+
+The CSS codes are those for which the stabilizer is the direct product of a
+part where the elements are tensor products of $\Xs{i}$'s and a part where
+the elements are tensor products of $\Zs{i}$'s.  We can also pick the $\Xbar$
+and $\Zbar$ operators to be tensor products of $\Xs{i}$'s and $\Zs{i}$'s,
+respectively.  This means that just as with the seven-qubit code, bitwise CNOT
+will be a valid operation for any CSS codes, and will perform the CNOT between
+corresponding encoded qubits in the two blocks.
+
+Conversely, if bitwise CNOT is a valid operation for a code, that means it is
+a CSS code: Let $M = X Y$ be an arbitrary element of the stabilizer $S$,
+where $X$ is the tensor product of $\Xs{i}$'s and $Z$ is the tensor product of
+$\Zs{i}$'s.  Then, under CNOT, $M \otimes I \rightarrow M \otimes X$ and
+$I \otimes M \rightarrow Z \otimes M$.  Thus, $X$ and $Z$ are themselves
+elements of $S$.  The stabilizer therefore breaks up into a $\X$ part and a
+$\Z$ part, which means it is a CSS code.
+
+\section{The Effects of Measurements}
+\label{sec-measurements}
+
+We are not strictly limited to unitary operations in a quantum
+computation.  We can also make measurements, which correspond to
+randomly applying one of a set of complete projection operators, usually
+labeled by eigenvalues of a Hermitian operator.  Based on the classical
+measurement result, we can then apply one of a number of possible
+operators to the resulting quantum state.  This process can be converted
+into a purely quantum process, but in the idealization where classical
+computation is error-free while quantum computation is not, there is a
+distinct advantage in converting as much as possible to classical
+information.  Even in a more realistic situation, classical computation is
+likely to be much more reliable than quantum computation and classical
+error-correction methods are simpler than quantum ones.  In addition, we
+may know how to perform operations conditioned on classical information
+fault-tolerantly even when we do not know how to perform the
+corresponding quantum operations fault-tolerantly.  As we shall see,
+ancilla preparation and measurement are powerful tools for expanding the
+available set of fault-tolerant quantum operations.
+
+Suppose we wish to measure operator $A$, with $A^2 = I$.  Measuring $A$
+for a state $\ket{\psi}$ will typically give one of two results $\ket{\psi_+}$
+or $\ket{\psi_-}$, corresponding to the two eigenvalues $\pm 1$ of $A$.
+In order to keep the description of our algorithm under control, we would
+like a way to convert $\ket{\psi_-}$ to $\ket{\psi_+}$ for any possible
+input state $\ket{\psi}$.  This will not be possible unless we know
+something more about the possible states $\ket{\psi}$.  Suppose we know
+that there is a unitary operator $M$, with $M \ket{\psi} = \ket{\psi}$ and
+$\{M, A\} = 0$.  Then
+\begin{eqnarray}
+	M^\dagger \ket{\psi_-} & = & M^\dagger \, \frac{1}{2} (I - A) \ket{\psi} =
+	M^\dagger \, \frac{1}{2} (I - A) M \ket{\psi} \nonumber \\
+	& = & M^\dagger M \, \frac{1}{2} (I + A) \ket{\psi} =
+	\frac{1}{2} (I + A) \ket{\psi} \\
+	& = & \ket{\psi_+}. \nonumber
+\end{eqnarray}
+If we make the measurement, then apply $M^\dagger$ if the result is $-1$
+and do nothing if the result is $+1$, then we have applied the nonunitary
+operator $P_+ = \frac{1}{2} (I + A)$.  We can then continue the computation
+with the assurance that the computer is in the state $\ket{\psi_+}$.  In
+order to perform this nonunitary operator, we have taken advantage of the
+fact that $\ket{\psi}$ is a $+1$-eigenstate of $M$.  This trick cannot
+be used if we do not know anything about the state of $\ket{\psi}$.
+
+We know how to measure operators in $\G$ fault-tolerantly.  If we prepare an
+ancilla in a known state and apply a known set of operations in $N(\G)$,
+the resulting state can be at least partially described by a stabilizer $S$.
+This stabilizer is not the stabilizer of a quantum error-correcting code,
+but simply a way of describing the information we have about the state.  In
+many of the applications below, there will be one stabilizer for the
+error-correcting code, and another which describes the restricted state of
+the data due to our preparation of the ancilla in a known state.  We can
+fault-tolerantly measure (fault-tolerant with respect to the error-correcting
+code) an operator $A \in \G$ that anticommutes with some $M \in S$ (the
+stabilizer describing the data) and correct the result as above to
+perform the operation $P_+$.  Any operators in $S$ that commute with $A$
+will still fix the state of the system after the measurement and correction.
+Hereafter, in the context of performing operations on encoded states, I will
+usually speak of ``measuring'' $A$ when I mean applying $P_+$ for $A$.
+
+If $A \in S$, there is no need to measure $A$ to perform $P_+$, since the
+state is already an eigenstate of $A$ with eigenvalue $+1$.  If $A$
+commutes with everything in $S$ but is not in $S$ itself, then measuring
+$A$ will give us information about which state we had that was fixed by $S$.
+However, we do not have an $M$ that anticommutes with $A$, so we
+cannot fix $P_-$ to $P_+$.  If $A$ anticommutes with some element of $S$, say
+$M_1$, then we can choose the remaining $n-k-1$ generators of $S$ to
+commute with $A$ (if $M_i$ anticommutes with $A$, $M_1 M_i$ will
+commute with $A$).  The stabilizer $S'$ after applying $P_+$ will then be
+generated by $A$ and $M_2, \ldots, M_{n-k}$.
+
+We can better understand the operator $P_+$ by looking at the
+transformation it induces from $N(S)/S$ to $N(S')/S'$.  Half of the
+representatives of each coset in $N(S)/S$ will commute with $A$ and half
+will anticommute, since of $N$ and $M_1 N$, one will commute and one
+will anticommute.  If $N \in N(S)$ commutes with $A$, its eigenvectors and
+eigenvalues are left unchanged by measuring $A$.  Therefore the coset
+represented by $N$ in $N(S')/S'$ will act on $P_+ \ket{\psi}$ in the same
+way as the coset in $N(S)/S$ acted on $\ket{\psi}$.  Any representative of
+the same coset in $N(S)/S$ will produce the same coset in $N(S')/S'$ as long
+as it commutes with $A$.  We therefore have a map from $N(S)/S \cong
+\G$ to $N(S')/S' \cong \G$, which is an operation in $N(\G)$.  Using selected
+ancilla preparation and existing tranversal operations, we can use this
+process to create new transversal operations.
+
+A nice example of this formalism, which can be applied independently of
+quantum error correction, is a description of quantum
+teleportation~\cite{bennett-teleport}.  We start with three qubits, the first
+in an arbitrary state $\ket{\psi}$, the other two in the Bell state $\ket{00}
++ \ket{11}$.  This state can be described by the stabilizer $S_1$ generated
+by $I \otimes \X \otimes \X$ and $I \otimes \Z \otimes \Z$.  The cosets of
+$N(S_1)/S_1$ can be represented by $\Xbar = \X \otimes I \otimes I$ and
+$\Zbar = \Z \otimes I \otimes I$.  The third qubit is far away, so we cannot
+perform any quantum gates interacting it with the other two qubits.
+However, we can make measurements on the first two qubits and send the
+information to be used to perform conditional quantum gates just on the
+third qubit.
+
+First, we apply a CNOT from the first qubit to the second qubit.  This
+produces stabilizer $S_2$ generated by $I \otimes \X \otimes \X$ and $\Z
+\otimes \Z \otimes \Z$, with $\Xbar = \X \otimes \X \otimes I$ and $\Zbar
+= \Z \otimes I \otimes I$.  Now measure $\X$ for the first qubit.  This
+produces stabilizer $S_3$ generated by $\X \otimes I \otimes I$ and $I
+\otimes \X \otimes \X$.  The coset representative $\X \otimes \X \otimes
+I$ commutes with the measured operator, so it still represents the new
+coset.  Multiplying by the first generator of $S_3$ still gives a coset
+representative of $\Xbar$ in $N(S_3)/S_3$, so $\Xbar = I \otimes \X
+\otimes I$.  $\Z \otimes I \otimes I$ does not commute with the measured
+operator, but $(\Z \otimes \Z \otimes \Z) (\Z \otimes I \otimes I) = I
+\otimes \Z \otimes \Z$ represents the same coset in $N(S_2)/S_2$ and
+does commute with the measured operator, so it represents the $\Zbar$
+coset in $N(S_3)/S_3$.  The measurement potentially requires an application
+of $\Z \otimes \Z \otimes \Z$ if it is necessary to correct $P_-$.  This
+provides one of the sets of conditional operations used in quantum
+teleportation.
+
+Now we measure $\Z$ for the second qubit.  This produces the stabilizer
+$S_4$ generated by $\X \otimes I \otimes I$ and $I \otimes \Z \otimes I$.
+This time, the representative of $\Zbar$ commutes with the measured
+operator, so $\Zbar$ for $N(S_4)/S_4$ is $I \otimes \Z \otimes \Z \cong I
+\otimes I \otimes \Z$.  $I \otimes \X \otimes I$ does not commute, but $(I
+\otimes \X \otimes \X) (I \otimes \X \otimes I) = I \otimes I \otimes \X$
+does, so in $N(S_4)/S_4$, $\Xbar = I \otimes I \otimes \X$.  The operation
+to correct $P_-$ this time is $I \otimes \X \otimes \X$.  This provides the
+second set of conditional operations in teleportation.
+
+Note that $S_4$ completely determines the state of the first two qubits and
+does not restrict the state of the third qubit at all.  In fact, the $\Xbar$
+operator in $N(S_1)/S_1$, which started as $\X$ for the first qubit, has
+been transformed into $\X$ for the third qubit, and $\Zbar$, which began
+as $\Z$ for the first qubit, has become $\Z$ for the third qubit.  This means
+the final state is $(\ket{0} + \ket{1}) \otimes \ket{0} \otimes \ket{\psi}$,
+and we have teleported the state as desired.
+
+After we measure $\X$, $\Y$, or $\Z$ for a qubit, we have completely
+determined the state of that qubit, so its contribution to the stabilizer will
+just be the operator just measured, and it will not contribute to standard
+representatives of the cosets in $N(S')/S'$ at all.  Therefore, when
+describing how to produce new transversal operations, I will drop qubits
+from the notation after they have been measured.
+
+\section{Producing New Operations in $N(\G)$}
+\label{sec-4qubit}
+
+The group $N(\G)$ can be generated by just the operations $R$, $P$, and
+CNOT applied to arbitrary qubits and pairs of qubits.  I will now show that,
+by using measurements, we can, in fact, generate $N(\G)$ using just CNOT.
+Then I will demonstrate that for most known codes, we can apply an
+encoded CNOT transversally.
+
+First, note that by preparing an ancilla in an arbitrary state and measuring
+$\X$, $\Y$, or $\Z$, we can always prepare that ancilla qubit in the $+1$
+eigenstate of any of these three operators.  Also, there are only six
+interesting operators in $N(\G_1)$: $I$, $R$, $P$ (and $P^\dagger$), $Q$ (and
+$Q^\dagger$), $T$, and $T^2$ (and $T^\dagger$ and $(T^2)^\dagger$), where
+$Q = P^\dagger RP$ switches $\Y$ and $\Z$, and $T = RP^\dagger$ is the cyclic
+permutation of $\X$, $\Y$, and $\Z$.  I have only counted this as six
+operators, since the adjoints produce the same permutations, but with
+different signs distributed among $\X$, $\Y$, and $\Z$.  This effect can also
+be produced by applying $\X$, $\Y$ and $\Z$ themselves.  Any two
+non-identity operators in this set, other than $T$ and $T^2$, will suffice to
+generate all of them.
+
+Suppose we have an arbitrary single-qubit state $\ket{\psi}$.  Let us
+prepare an ancilla qubit in the $+1$ eigenstate of $\Z$, then apply a CNOT
+from the data qubit to the ancilla qubit.  This produces the stabilizer $\Z
+\otimes \Z$, with $\Xbar = \X \otimes \X$ and $\Zbar = \Z \otimes I$.
+Now measure $\Y$ for the ancilla qubit and discard the ancilla.  This leaves
+the first qubit with $\Xbar = -\Y$ and $\Zbar = \Z$, which means we have
+applied $P^\dagger$.
+
+Now prepare the ancilla in the $+1$ eigenstate of $\X$ and apply a CNOT
+from the ancilla qubit to the data qubit.  This produces stabilizer $\X
+\otimes \X$, with $\Xbar = \X \otimes I$ and $\Zbar = \Z \otimes \Z$.
+Measure $\Y$ for the ancilla and discard it, leaving $\Xbar = \X$ and
+$\Zbar = -\Y$.  We have applied $Q^\dagger$.  Along with $P$ from above, this
+suffices to generate $N(\G_1)$ and therefore $N(\G_n)$ for any $n$.
+
+We can also produce $T$ directly by preparing the ancilla in the $+1$
+eigenstate of $\Y$ and applying a CNOT from the ancilla qubit to the data
+qubit.  This produces a stabilizer of $\X \otimes \Y$, with $\Xbar = \X
+\otimes I$ and $\Zbar = \Z \otimes \Z$.  Measure $\Y$ for the {\em data}
+qubit and discard it, leaving $\Xbar = \Y$ and $\Zbar = \X$, both on the
+former ancilla qubit.   The net result is to apply $T$, but to move the
+data from the data qubit to what began as the ancilla qubit.
+
+Now let us turn our attention to transversal operations on quantum
+error-correcting stabilizer codes.  Consider the following four-qubit
+transformation:
+\begin{eqnarray}
+	\X \otimes I \otimes I \otimes I & \rightarrow & \X \otimes \X \otimes \X
+	\otimes I \nonumber \\
+	I \otimes \X \otimes I \otimes I & \rightarrow & I \otimes \X \otimes \X
+	\otimes \X \nonumber \\
+	I \otimes I \otimes \X \otimes I & \rightarrow & \X \otimes I \otimes \X
+	\otimes \X \nonumber \\
+	I \otimes I \otimes I \otimes \X & \rightarrow & \X \otimes \X \otimes I
+	\otimes \X \label{eq-4qubit} \\
+	\Z \otimes I \otimes I \otimes I & \rightarrow & \Z \otimes \Z \otimes \Z
+	\otimes I \nonumber \\
+	I \otimes \Z \otimes I \otimes I & \rightarrow & I \otimes \Z \otimes \Z
+	\otimes \Z \nonumber \\
+	I \otimes I \otimes \Z \otimes I & \rightarrow & \Z \otimes I \otimes \Z
+	\otimes \Z \nonumber \\
+	I \otimes I \otimes I \otimes \Z & \rightarrow & \Z \otimes \Z \otimes I
+	\otimes \Z. \nonumber
+\end{eqnarray}
+Given an element $M$ of an arbitrary stabilizer, this operation applied
+bitwise maps
+\begin{eqnarray}
+	M \otimes I \otimes I \otimes I & \rightarrow & M \otimes M \otimes M
+	\otimes I \nonumber \\
+	I \otimes M \otimes I \otimes I & \rightarrow & I \otimes M \otimes M
+	\otimes M \label{eq-4qubit-effect} \\
+	I \otimes I \otimes M \otimes I & \rightarrow & M \otimes I \otimes M
+	\otimes M \nonumber \\
+	I \otimes I \otimes I \otimes M & \rightarrow & M \otimes M \otimes I
+	\otimes M. \nonumber
+\end{eqnarray}
+Each of these images is in the group $S \times S \times S \times S$, so this
+is a valid transversal operation for {\em any} stabilizer code.  Because of
+(\ref{eq-4qubit-effect}), this operation just applies itself to the encoded
+qubits.  When the code has multiple qubits per block, (\ref{eq-4qubit})
+applies itself to all of the corresponding sets of encoded qubits.
+
+This is very useful, since if we have two logical qubits and prepare two more
+ancilla logical qubits each in the $+1$ eigenstate of $\Z$, and then apply
+(\ref{eq-4qubit}) to these four qubits, we get a stabilizer with generators
+$\Z \otimes I \otimes \Z \otimes \Z$ and $\Z \otimes \Z \otimes I \otimes
+\Z$, and
+\begin{eqnarray}
+	\Xbar_1 & = & \X \otimes \X \otimes \X \otimes I \nonumber \\
+	\Xbar_2 & = & I \otimes \X \otimes \X \otimes \X \\
+	\Zbar_1 & = & \Z \otimes \Z \otimes \Z \otimes I \nonumber \\
+	\Zbar_2 & = & I \otimes \Z \otimes \Z \otimes \Z. \nonumber
+\end{eqnarray}
+Measure $\X$ for both ancilla qubits and discard them.  This leaves us
+with
+\begin{eqnarray}
+	\Xbar_1 & = & \X \otimes \X \nonumber \\
+	\Xbar_2 & = & I \otimes \X \\
+	\Zbar_1 & = & \Z \otimes I \nonumber \\
+	\Zbar_2 & = & \Z \otimes \Z. \nonumber
+\end{eqnarray}
+This we can recognize as the CNOT from the first data qubit to the second
+data qubit.  As the CNOT suffices to get every operation in $N(\G)$, we can
+therefore perform any such operation transversally for any stabilizer code
+encoding a single qubit.
+
+There are other operations like (\ref{eq-4qubit}) that work for any
+stabilizer code.  The condition they must satisfy~\cite{rains-orthogonal} is
+for $\X$ tensor any number of copies of the identity to map to the tensor
+product of some number of copies of $\X$ and $I$, and $\Z$ in the same
+position must map to the same tensor product of $\Z$ and $I$.  This means
+any such automorphism can be fully described by an $n \times n$ binary
+matrix (for an $n$-qubit operation).  The image of $\Xs{i}$ must commute
+with the image of $\Zs{j}$ for $i \neq j$.  This means that the binary dot
+product of two different rows of the matrix must be $0$.  Also, the image
+of $\Xs{i}$ must anticommute with the image of $\Zs{i}$.  This means that
+the binary dot product of any row with itself must be $1$.  These two
+conditions combine to say that the matrix must be an element of $O(n,
+	{\bf Z}_2)$, the orthogonal group over ${\bf Z}_2$.  The smallest $n$ for
+which this group has an element other than a permutation is $n=4$.  If we
+were working with $d$-dimensional states instead of qubits, we would instead
+need a matrix in $O(n, {\bf Z}_d)$.  Note that the straightforward
+generalization of (\ref{eq-4qubit-effect}) is in $O(n, {\bf Z}_d)$ for
+$n=d+2$.
+
+Codes which have single-qubit tranversal operations other than the
+identity will in general have a larger available space of multiple-qubit
+operations.  Any $n$-qubit automorphism that maps $\X$ to the tensor
+product of $I$ with $U_i (\X)$ and $\Z$ to the same tensor product of $I$
+with $U_i (\Z)$ will be an automorphism of $n$ copies of $S$ if $U_i$ is an
+automorphism of $S$ for all $i$.  Note that $U_i$ may be the identity.  It
+may also be possible for $U_i$ to not be an automorphism of $\G_1$ at all,
+although this will depend on the code.  For instance, for a CSS code, we can
+have $U_i (\X) = \X$, $U_i (\Z) = I$ or $U_i (\X) = I$, $U_i (\Z) = \Z$.
+
+\section{Codes With Multiple Encoded Qubits}
+\label{sec-multiple}
+
+For codes encoding more than one qubit per block, we have more work to
+do.  We only know how to perform (\ref{eq-4qubit}) between
+corresponding qubits in different blocks, and furthermore, we must
+perform the operation between {\em all} the encoded qubits in both
+blocks.
+
+The solution to the second problem is straightforward.  If we prepare an
+ancilla qubit in the $+1$ eigenstate of $\X$ and apply a CNOT from the
+ancilla to a single data qubit, we get the stabilizer $\X \otimes \X$, with
+$\Xbar = \X \otimes I$ and $\Zbar = \Z \otimes \Z$.  Then if we measure
+$\Z$ for the data qubit, we are left with $\Xbar = \X$ and $\Zbar = \Z$,
+both for the ancilla qubit.  We have transferred the data qubit to the
+ancilla qubit without changing it.  On the other hand, if we had prepared
+the ancilla qubit in the $+1$ eigenstate of $\Z$ and applied the CNOT,
+nothing in the data qubit would have changed.
+
+We can use this fact to switch individual encoded qubits out of a storage
+block into a temporary holding block.  Prepare the holding block with all
+the encoded qubits in the $+1$ eigenstate of $\Z$, except the $j$th encoded
+qubit, which is in the $+1$ eigenstate of $\X$.  Then use (\ref{eq-4qubit})
+to apply a CNOT from the holding block to the storage block and measure $\Z$
+for the $j$th encoded qubit in the storage block.  This switches the $j$th
+encoded qubit from the storage block to the holding block while leaving the
+other qubits in the storage block undisturbed.  The $j$th encoded qubit in the
+storage block is left in the state $\ket{0}$, as are all the encoded
+qubits in the holding block but the $j$th one.
+
+To perform operations between just the $j$th encoded qubits in two (or
+more) different blocks while leaving the other qubits in those blocks alone,
+we can switch both $j$th qubits into new, empty blocks, as above.  Then
+we interact them.  If necessary, we again clear all but the $j$th encoded
+qubit in each temporary block by measuring $\Z$.  Then we can switch the
+qubits back into the initial blocks by applying a CNOT from the holding
+block to the appropriate storage block and measuring $\Xbar_j$ for the
+holding block.
+
+This leaves the questions of interacting the $j$th encoded qubit in one block
+with the $i$th encoded qubit in another block, and of interacting two encoded
+qubits in the same block.  We can partially solve either problem by switching
+the two qubits to be interacted into separate holding blocks.  If we know how
+to swap the $j$th encoded qubit with the first encoded qubit, we can then
+swap both qubits into the first position, interact them as desired, then
+swap them back to their initial positions and switch them back to their
+storage block or blocks.
+
+One way to swap qubits within a block is to perform some nontrivial action
+on a single block.  For a code with trivial automorphism group, this will not
+exist.  However, almost any automorphism will suffice to swap encoded
+qubits as desired.  This is because there are so few two-qubit operations in
+$N(\G)$.  Any automorphism of the code will produce some element of
+$N(\G_k)$ on the $k$ encoded qubits, typically (although certainly not
+always) interacting all of them.  If we perform some measurement on all of
+the encoded qubits in the block except the first and the $j$th, we are left
+with a two-qubit operation between those two encoded qubits.
+
+We can always perform single-qubit operations on any encoded qubit in a
+block by switching the qubit into a fresh block, applying the operation to
+every encoded qubit in the new block, clearing unneccesary qubits and
+switching the qubit back to the first block.  Using this freedom, any
+operation in $N(\G_2)$ can be transformed to map $\X \otimes I$ to one of
+$\X \otimes I$, $\X \otimes \X$, and $I \otimes \X$.  There is still a
+remaining freedom to switch $\Y$ and $\Z$ on either qubit, and we may
+also switch either with $\X$ for any qubit where the image of $\X \otimes
+I$ acts as the identity.  We treat the three possibilities as separate cases:
+\begin{itemize}
+	\item $\X \otimes I \rightarrow \X \otimes I$
+
+	The operation preserves the group structure of $\G_2$, so the image of $I
+	\otimes \X$ must commute with $\X \otimes I$.  Up to single-qubit
+	operations, the possibilities are
+
+	\begin{enumerate}
+		\item $I \otimes \X$: The image of $\Z \otimes I$ must be either $\Z
+		\otimes I$ or $\Z \otimes \X$.  In the first case, the image of $I \otimes
+		\Z$ is $I \otimes \Z$ and the operation is the identity.  In the second case,
+		the image of $I \otimes \Z$ must be $\X \otimes \Z$.  If we apply $R$ to
+		the first qubit before the operation and again after it, this produces a CNOT
+		from the first qubit to the second qubit.
+
+		\item $\X \otimes \X$: The image of $\Z \otimes I$ must be $\Z \otimes
+		\Z$ and the image of $I \otimes \Z$ may be either $I \otimes \Z$ or $\X
+		\otimes \Y$.  If it is $I \otimes \Z$, the operation is exactly CNOT from the
+		second qubit to the first.  If it is $\X \otimes \Y$, we can again get CNOT
+		from the second qubit to the first by simply applying $Q$ to the second
+		qubit, followed by the operation.
+	\end{enumerate}
+
+	\item $\X \otimes I \rightarrow I \otimes \X$
+
+	This case is related to the first one by simply swapping the two qubits.
+	Therefore, the possibilities can be reduced to a simple swap, and a CNOT
+	either way followed by a swap.
+
+	\item $\X \otimes I \rightarrow \X \otimes \X$
+
+	Now there are three possibilities for the image of $I \otimes \X$: $I
+	\otimes \X$ again, $\X \otimes I$, or $\Z \otimes \Z$.
+
+	\begin{enumerate}
+		\item $I \otimes \X$: The image of $I \otimes \Z$ must be $\Z \otimes \Z$.
+		The image of $\Z \otimes I$ may be either $\Z \otimes I$ or $\Y \otimes
+		\X$.  As with case two above, if it is $\Z \otimes I$, this is a CNOT from the
+		first qubit to the second; if it is $\Y \otimes \X$, we can apply $Q$ to the
+		first qubit and then this operation to get a CNOT from the first qubit to the
+		second.
+
+		\item $\X \otimes I$: This case can be produced from the previous one by
+		swapping the two qubits.  Thus, the operation can be converted into a
+		CNOT from the first qubit to the second followed by a swap.
+
+		\item $\Z \otimes \Z$: In this case, the image of $\Z \otimes I$ can be $\Z
+		\otimes I$, $I \otimes \Z$, $\Y \otimes \X$, or $\X \otimes \Y$.  If the
+		image of $\Z \otimes I$ is $\Z \otimes I$, the image of $I \otimes \Z$ must
+		be $I \otimes \X$ or $\Z \otimes \Y$.  If it is $I \otimes \X$ and we apply
+		$R$ to the second qubit and then this operation, it performs a CNOT from the
+		first qubit to the second.  If it is $\Z \otimes \Y$, we can apply $T \Z$
+		to the second qubit, followed by the operation in order to get a CNOT
+		from the first qubit to the second.  If the image of $\Z \otimes I$ is $I
+		\otimes \Z$, we can get it from last case by swapping the qubits, so it can be
+		reduced to a CNOT from the first qubit to the second followed by a swap.
+
+		If the image of $\Z \otimes I$ is $\Y \otimes \X$, then the image of $I
+		\otimes \Z$ may again be either $I \otimes \X$ or $\Z \otimes \Y$.  If it is $I
+		\otimes \X$, we can perform $Q$ on the first qubit and $R$ on the second
+		qubit, followed by the two-qubit operation.  This produces a CNOT from the
+		first qubit to the second one.  If it is $\Z \otimes \Y$, we can perform $Q$
+		on the first qubit and $T \Z$ on the second qubit, followed by the
+		two-qubit operation.  This again produces a CNOT from the first qubit to
+		the second qubit.
+
+		Finally, if the image of $\Z \otimes I$ is $\X \otimes \Y$, we can produce
+		the previous case by applying a swap, so the two-qubit operation can be
+		converted to a CNOT from the first qubit to the second qubit followed by a
+		swap.
+	\end{enumerate}
+\end{itemize}
+
+Also, note that $R$ applied to both qubits, followed by a CNOT in one
+direction, followed by $R$ on both qubits, produces a CNOT in the other
+direction.  Therefore, up to application of single-qubit operations, the only
+possible two-qubit operations in $N(\G)$ are the identity, a CNOT, a swap,
+or a CNOT followed by a swap.  We can make a swap out of three CNOTs
+using the simple network from figure~\ref{fig-CNOTtoswap}.
+\begin{figure}
+	\centering
+	\begin{picture}(160,60)
+
+		\put(0,14){\makebox(20,12){$\ket{\beta}$}}
+		\put(0,34){\makebox(20,12){$\ket{\alpha}$}}
+		\put(120,14){\makebox(20,12){$\ket{\alpha}$}}
+		\put(120,34){\makebox(20,12){$\ket{\beta}$}}
+
+		\put(30,20){\line(1,0){80}}
+		\put(30,40){\line(1,0){80}}
+
+		\put(50,20){\circle*{4}}
+		\put(50,20){\line(0,1){24}}
+		\put(50,40){\circle{8}}
+
+		\put(70,40){\circle*{4}}
+		\put(70,40){\line(0,-1){24}}
+		\put(70,20){\circle{8}}
+
+		\put(90,20){\circle*{4}}
+		\put(90,20){\line(0,1){24}}
+		\put(90,40){\circle{8}}
+
+	\end{picture}
+	\caption{Network to swap two qubits using CNOT.}
+	\label{fig-CNOTtoswap}
+\end{figure}
+
+We cannot make a general swap out of CNOT followed by swap.  However,
+if the control qubit of the CNOT begins in the state $\ket{0}$, the operation
+does swap the two qubits.  This is all that is necessary to get all of $N(\G)$,
+since we only need to move a single data qubit around within an otherwise
+empty block.
+
+Even if we have no automorphism to switch the $j$th qubit and the first
+qubit, we can still do it using quantum teleportation~\cite{bennett-teleport}.
+To do this, we will need an EPR pair entangled between the first and $j$th
+encoded qubits.  We can make an unencoded EPR pair and then encode it
+normally.  However, a single error during the encoding can destroy the
+pair.  Therefore, we will need to make a number of EPR pairs and purify
+good ones using an entanglement purification protocol (EPP)
+\cite{bennett-tome,bennett-EPP}.  We can interact corresponding qubits in
+the EPR pair using operations in $N(\G)$, which is all that is necessary.  For
+instance, we could make five EPR pairs and use the one-way EPP derived
+from the five-qubit code to purify a single good EPR pair.  It would take
+two independent errors to get an error in this pair.  An easier way to make
+the EPR pair is to start with the $+1$ eigenstate of both $\Zbar_1$ and
+$\Zbar_j$, then to measure $\Xbar_1 \Xbar_j$, which is an operator in $N(S)$
+just like any other.  This leaves the ancilla block in the $+1$ eigenstate
+of $\Zbar_1 \Zbar_j$ and $\Xbar_1 \Xbar_j$, which is just an EPR pair.
+
+Once we have a reliable EPR pair, the teleportation process requires only
+operations in $N(\G)$ between corresponding encoded qubits.  This allows us to
+move the $j$th encoded qubit in one otherwise empty block to the first encoded
+qubit in the block that previously held the EPR pair.  This allows us to do
+	{\em any} operation in $N(\G)$ for {\em any} stabilizer code.  Essentially
+the same procedures will work when the basic unit is the qudit instead of
+the qubit \cite{gottesman-qudit}.
+
+\section{The Toffoli Gate}
+\label{sec-toffoli}
+
+The group $N(\G)$ is insufficient to allow universal quantum computation.
+In fact, Knill~\cite{knill-normalizer} has shown that a quantum computer
+using only elements from $N(\G)$ and measurements can be simulated
+efficiently on a classical computer.  The argument follows easily from the
+results of the preceding sections.  If we begin with a state initialized to
+$\ket{0\cdots0}$, the stabilizer is $\Zs{1}, \Zs{2}, \ldots$.  Each operation
+in $N(\G)$ produces a well-defined transformation of the stabilizer, which
+can be classically tracked efficiently.  Any measurement will also
+transform the stabilizer in a well-defined way, which is again easy to keep
+track of on a classical computer.  Therefore, we can store and evolve
+complete information on the state of the quantum computer with only
+polynomial classical overhead.
+
+In order to perform truly universal quantum computation, even a single
+gate outside of $N(\G)$ can be sufficient.  For instance, the Toffoli gate (a
+three-qubit gate which flips the third qubit iff both of the first two qubits
+are $\ket{1}$) along with $N(\G)$ suffices for universal computation.  Shor
+gave an implementation of the Toffoli gate~\cite{shor-fault-tol} which can
+be easily adapted to any code allowing $N(\G)$.  Since this is any stabilizer
+code, we can do universal computation for any stabilizer code.  Note that
+there are a number of other gates outside $N(\G)$ that we could add to get
+a universal set of gates (such as the single-qubit $\pi/8$ rotation), and
+for some codes, it may be easier to perform these gates than the Toffoli
+gate \cite{knill-concatenate2}.  However, I will just discuss the
+implementation of the Toffoli gate.
+
+The Toffoli gate can be expanded using $\G$ as a basis as follows:
+\begin{equation}
+	\frac{1}{4} \left( 3 I + \Zs{1} + \Zs{2} - \Zs{1} \Zs{2} + (I - \Zs{1}) (I -
+	\Zs{2}) \Xs{3}
+	\right).
+\end{equation}
+Applying the Toffoli gate to a state therefore produces the following
+transformation on the elements of $\G_3$:
+\begin{eqnarray}
+	\Xs{1} & \rightarrow & \frac{1}{16} \left( 3 I + \Zs{1} + \Zs{2} - \Zs{1} \Zs{2}
+	+ (I - \Zs{1}) (I - \Zs{2}) \Xs{3} \right) \nonumber \\
+	& & \mbox{} \times \left( 3 I - \Zs{1} + \Zs{2} + \Zs{1}
+	\Zs{2} + (I + \Zs{1}) (I - \Zs{2}) \Xs{3} \right) \Xs{1} \nonumber \\
+	& = & \frac{1}{2} \left(I + \Zs{2} + (I - \Zs{2}) \Xs{3} \right) \Xs{1}
+	\nonumber \\
+	\Xs{2} & \rightarrow & \frac{1}{2} \left(I + \Zs{1} + (I - \Zs{1}) \Xs{3}
+	\right) \Xs{2} \nonumber \\
+	\Xs{3} & \rightarrow & \Xs{3} \label{eq-toffoli} \\
+	\Zs{1} & \rightarrow & \Zs{1} \nonumber \\
+	\Zs{2} & \rightarrow & \Zs{2} \nonumber \\
+	\Zs{3} & \rightarrow & \frac{1}{16} \left( 3 I + \Zs{1} + \Zs{2} - \Zs{1} \Zs{2}
+	+ (I - \Zs{1}) (I - \Zs{2}) \Xs{3} \right) \nonumber \\
+	& & \mbox{} \times \left( 3 I + \Zs{1} + \Zs{2} - \Zs{1}
+	\Zs{2} - (I - \Zs{1}) (I - \Zs{2}) \Xs{3} \right) \Zs{3} \nonumber \\
+	& = & \frac{1}{2} \left(I + \Zs{1} + (I - \Zs{1}) \Zs{2} \right) \Zs{3}.
+	\nonumber
+\end{eqnarray}
+This means $\Zs{1}$, $\Zs{2}$, and $\Xs{3}$ stay the same, $\Xs{1}$ becomes
+$\Xs{1}$ tensor a CNOT from qubit two to qubit three, $\Xs{2}$ becomes $\Xs{2}$
+tensor a CNOT from qubit one to qubit three, and $\Zs{3}$ becomes $\Zs{3}$
+tensor a conditional sign for qubits one and two.
+
+Suppose we can make the ancilla
+\begin{equation}
+	\ket{A} = \frac{1}{2} (\ket{000} + \ket{010} + \ket{100} + \ket{111}).
+\end{equation}
+This state is fixed by the three operators
+\begin{eqnarray}
+	M_1 & = & \frac{1}{2} \left(I + \Zs{2} + (I - \Zs{2}) \Xs{3} \right) \Xs{1}
+	\nonumber \\
+	M_2 & = & \frac{1}{2} \left(I + \Zs{1} + (I - \Zs{1}) \Xs{3} \right) \Xs{2}
+	\label{eq-Toffoli-ev} \\
+	M_3 & = & \frac{1}{2} \left(I + \Zs{1} + (I - \Zs{1}) \Zs{2} \right) \Zs{3}.
+	\nonumber
+\end{eqnarray}
+Now suppose we have three data qubits (numbers four, five, and six) that we
+wish to perform a Toffoli gate on.  We simply apply CNOTs from qubit one to
+qubit four, qubit two to qubit five, and from qubit six to qubit three.  This
+produces the following ``stabilizer'':
+\begin{eqnarray}
+	M_1' & = & \frac{1}{2} \left(I + \Zs{2} + (I - \Zs{2}) \Xs{3} \right) \Xs{1}
+	\Xs{4} \nonumber \\
+	M_2' & = & \frac{1}{2} \left(I + \Zs{1} + (I - \Zs{1}) \Xs{3} \right) \Xs{2}
+	\Xs{5} \\
+	M_3' & = & \frac{1}{2} \left(I + \Zs{1} + (I - \Zs{1}) \Zs{2} \right) \Zs{3}
+	\Zs{6}. \nonumber
+\end{eqnarray}
+Then measure $\Zs{4}$, $\Zs{5}$, and $\Xs{6}$ and discard qubits 4--6.  As we
+can see, this produces the transformation (\ref{eq-toffoli}) on the three
+data qubits while moving them to what were formerly the ancilla qubits.
+Note that correcting for measured eigenvalues of $-1$ will require
+applying $M_1$, $M_2$, or $M_3$, which are not elements of $\G$.  They
+are, however, elements of $N(\G)$.
+
+Therefore, in order to perform the Toffoli gate on encoded states, we must
+produce an encoded version of the ancilla $\ket{A}$.  Then we need only
+perform measurements and encoded operations in $N(\G)$ to produce the
+effect of a Toffoli gate.  Below, I will assume $\G$ only encoded one qubit
+per block.  If it encodes more, we can still do the same thing by moving the
+qubits to be interacted into the first encoded qubit in otherwise empty
+blocks.  The $\Xbar$ and $\Zbar$ operators used to create the ancilla are
+just $\Xbar_1$ and $\Zbar_1$.
+
+To produce the encoded ancilla $\ket{A}$, we start with the encoded
+version of the state $\ket{A} + \ket{B}$, where
+\begin{equation}
+	\ket{B} = \frac{1}{2} (\ket{001} + \ket{011} + \ket{101} + \ket{110}).
+\end{equation}
+Note that $\ket{B}$ is related to $\ket{A}$ by applying $\X$ to the third
+qubit.  Since
+\begin{equation}
+	\ket{A} + \ket{B} = \Sum_{a=000}^{111} \ket{a} = (\ket{0} + \ket{1})^3,
+\end{equation}
+we can easily prepare it by measuring $\Xbar$ for each block.
+Henceforth, $\ket{A}$ and $\ket{B}$ will denote the encoded versions of
+themselves.  Now we take an ancilla in a ``cat'' state $\ket{0 \ldots 0} +
+\ket{1 \ldots 1}$, where the number of qubits in the cat state is equal to
+the number of qubits in a single block of the code.  Then we will perform
+an operation that takes
+\begin{eqnarray}
+	\ket{0 \ldots 0} \ket{A} & \rightarrow & \ket{0 \ldots 0} \ket{A}
+	\nonumber \\
+	\ket{1 \ldots 1} \ket{A} & \rightarrow & \ket{1 \ldots 1} \ket{A}
+	\label{eq-Toffoli-anc} \\
+	\ket{0 \ldots 0} \ket{B} & \rightarrow & \ket{0 \ldots 0} \ket{B}
+	\nonumber \\
+	\ket{1 \ldots 1} \ket{B} & \rightarrow & \!\!\! - \ket{1 \ldots 1} \ket{B}.
+	\nonumber
+\end{eqnarray}
+Then under (\ref{eq-Toffoli-anc}),
+\begin{equation}
+(\ket{0 \ldots 0} + \ket{1 \ldots 1}) (\ket{A} + \ket{B}) \rightarrow (\ket{0
+\ldots 0} + \ket{1 \ldots 1}) \ket{A} + (\ket{0 \ldots 0} - \ket{1 \ldots 1})
+\ket{B}.
+\end{equation}
+If we measure $\X \otimes \cdots \otimes \X$ for the cat state, if we get
+$+1$, the rest of the ancilla is in the state $\ket{A}$.  If we get $-1$, the
+rest of the ancilla is in the state $\ket{B}$.  One complication is that a
+single qubit error in the cat state can cause this measurement result to be
+wrong.  Luckily,
+\begin{eqnarray}
+(\ket{0 \ldots 0} + \ket{1 \ldots 1}) \ket{A} & \rightarrow & (\ket{0 \ldots
+0} + \ket{1 \ldots 1}) \ket{A} \\
+(\ket{0 \ldots 0} + \ket{1 \ldots 1}) \ket{B} & \rightarrow & (\ket{0 \ldots
+0} - \ket{1 \ldots 1}) \ket{B}.
+\end{eqnarray}
+Therefore, if we prepare another cat state and apply (\ref{eq-Toffoli-anc})
+again, we should again get $+1$ if the ancilla was actually in the state
+$\ket{A}$ after the first measurement and $-1$ if it was actually in the
+state $\ket{B}$.  We can therefore get any desired level of reliability for
+the ancilla state by repeating (\ref{eq-Toffoli-anc}) a number of times.
+Finally, once we are confident we have either $\ket{A}$ or $\ket{B}$, we
+apply $\Xbar$ to the third ancilla qubit if it is $\ket{B}$.  This
+means we will always have prepared the state $\ket{A}$.
+
+To perform (\ref{eq-Toffoli-anc}), we will have to perform the operation
+$\ket{A} \rightarrow \ket{A}$ and $\ket{B} \rightarrow - \ket{B}$ if and
+only if the
+qubits of the cat state are $\ket{1 \ldots 1}$.  If the qubits of the cat state
+are $\ket{0 \ldots 0}$, then we do nothing to the rest of the ancilla.  I will
+show that we can apply $\ket{A} \rightarrow \ket{A}$ and $\ket{B}
+\rightarrow - \ket{B}$ using a series of transversal operations and
+measurements.  If we apply these operations and measurements
+conditioned on the corresponding qubit from the cat state being $\ket{1}$,
+then we have actually performed (\ref{eq-Toffoli-anc}).  Conditioning the
+operations on the cat state bit will generally involve using Toffoli gates and
+possibly other gates outside $N(\G)$, but they are all gates on {\em single}
+qubits rather than blocks.  We assume we know how to perform universal
+computation on individual qubits, so these gates are available to us.
+
+The state $\ket{A}$ is a $+1$-eigenvector of $M_3$, from equation
+(\ref{eq-Toffoli-ev}).  $\ket{B}$ is a $-1$-eigenvector of the same $M_3$,
+so applying $M_3$ does, in fact, transform $\ket{A} \rightarrow \ket{A}$
+and $\ket{B} \rightarrow - \ket{B}$.  $M_3$ is just a conditional sign on
+the first two qubits (i.e.\ an overall sign of $-1$ iff both qubits are
+$\ket{1}$) times $\Z$ on the third qubit.  Therefore it is in $N(\G)$ and
+can be performed transversally for any stabilizer code.  Therefore, we can
+perform universal computation using any stabilizer code.
+
+\section{Construction of Gates in $N(\G)$}
+
+In order to use the general fault-tolerant protocols, we need to apply
+three- or four-qubit gates.  Suppose our basic gates are limited to one- and
+two-qubit gates.  These gates are sufficient to give us any gates in $N(\G)$.
+I will now give a construction for any gate in $N(\G)$ using one- and
+two-qubit gates.
+
+The construction will be inductive.  In section~\ref{sec-multiple}, I showed
+that any one- or two-qubit gate could be made using $R$, $P$, and CNOT.
+Suppose we can construct any $n$-qubit gate using one- and two-qubit
+gates, and let $U$ be an $(n+1)$-qubit gate.  Using swaps and one-qubit
+gates, we can guarantee that
+\begin{equation}
+	M = U \Zs{1} U^\dagger = \Xs{1} \otimes M'
+\end{equation}
+and
+\begin{equation}
+	N = U \Xs{1} U^\dagger = I \otimes N'\ {\rm or}\ \Zs{1} \otimes N'.
+\end{equation}
+Note that $\{M, N\} = 0$.  Suppose
+\begin{equation}
+	U (\ket{0} \otimes \ket{\psi}) = \ket{0} \otimes \ket{\psi_1} + \ket{1}
+	\otimes \ket{\psi_2},
+\end{equation}
+where $\ket{\psi}$, $\ket{\psi_1}$, and $\ket{\psi_2}$ are states of the
+last $n$ qubits.  The results of section~\ref{sec-measurements} tell us that
+if we measure $\Z$ for the first qubit after applying $U$ and apply
+$M^\dagger$ (which anticommutes with $\Zs{1}$) if the result is $-1$, we
+will get $\ket{0} \otimes \ket{\psi_1}$.  This means that $\ket{\psi_2} =
+M' \ket{\psi_1}$.  Define $U'$ by $U' \ket{\psi} = \ket{\psi_1}$.  Then
+\begin{equation}
+	U \ket{0} \otimes \ket{\psi} = (I + M) (\ket{0} \otimes U' \ket{\psi}).
+\end{equation}
+
+Now,
+\begin{eqnarray}
+	U (\ket{1} \otimes \ket{\psi}) & = & U \left[ (\X \ket{0}) \otimes
+	\ket{\psi} \right] \\
+	& = & N U (\ket{0} \otimes \ket{\psi}) \\
+	& = & N (I + M) (\ket{0} \otimes U' \ket{\psi}) \\
+	& = & (I - M) N (\ket{0} \otimes U' \ket{\psi}) \\
+	& = & (I- M) (\ket{0} \otimes N' U' \ket{\psi}).
+\end{eqnarray}
+
+Therefore, if we first apply $U'$ to the last $n$ qubits, followed by applying
+$N'$ to the last $n$ qubits conditioned on the first qubit, followed by a
+Hadamard transform $R$ on the first qubit, followed by $M'$ on the last $n$
+qubits conditioned on the first qubit, we have applied $U$:
+\begin{eqnarray}
+	\ket{0} \otimes \ket{\psi} + \ket{1} \otimes \ket{\phi}
+	& \rightarrow & \ket{0} \otimes U' \ket{\psi} + \ket{1} \otimes U'
+	\ket{\phi} \\
+	& \rightarrow & \ket{0} \otimes U' \ket{\psi} + \ket{1} \otimes N' U'
+	\ket{\phi} \\
+	& \rightarrow & (\ket{0} + \ket{1}) \otimes U' \ket{\psi} + (\ket{0} -
+	\ket{1}) \otimes N' U' \ket{\phi} \nonumber \\ \\
+	& \rightarrow & (\ket{0} \otimes U' \ket{\psi} + \ket{1} \otimes M' U'
+	\ket{\psi}) \nonumber \\
+	& & \mbox{} + (\ket{0} \otimes N' U' \ket{\phi} - \ket{1} \otimes M' N' U'
+	\ket{\phi}) \\
+	& = & \left[ \ket{0} \otimes U' \ket{\psi} + M (\ket{0} \otimes U'
+	\ket{\psi}) \right] \nonumber \\
+	& & \mbox{} + \left[ \ket{0} \otimes N' U' \ket{\phi} - M (\ket{0}
+	\otimes N' U' \ket{\phi}) \right] \\
+	& = & (I + M) (\ket{0} \otimes U' \ket{\psi}) \nonumber \\
+	& & \mbox{} + (I - M) (\ket{0} \otimes N' U' \ket{\phi}) \\
+	& = & U (\ket{0} \otimes \ket{\psi}) + U (\ket{1} \otimes \ket{\phi}) \\
+	& = & U (\ket{0} \otimes \ket{\psi} + \ket{1} \otimes \ket{\phi}).
+\end{eqnarray}
+$U'$ is an $n$-qubit gate in $N(\G)$, which, by the inductive hypothesis, we
+can perform using one- and two-qubit gates.  Both $M'$ and $N'$ are in $\G$, so
+applying them conditioned on the first qubit requires only two-qubit gates
+in $N(\G)$.  Therefore, this construction allows us to perform any $U$ in
+$N(\G)$ using only one- and two-qubit gates.  The construction is summarized
+in figure~\ref{fig-normalizer}.
+\begin{figure}
+	\centering
+	\begin{picture}(160,100)
+
+		\put(0,20){\line(1,0){10}}
+		\put(0,30){\makebox(10,20){$\vdots$}}
+		\put(0,50){\line(1,0){10}}
+		\put(0,60){\line(1,0){10}}
+
+		\put(10,10){\framebox(40,60){{\LARGE $U'$}}}
+
+		\put(50,20){\line(1,0){10}}
+		\put(50,30){\makebox(10,20){$\vdots$}}
+		\put(50,50){\line(1,0){10}}
+		\put(50,60){\line(1,0){10}}
+
+		\put(0,80){\line(1,0){99}}
+		\put(99,74){\framebox(12,12){$R$}}
+		\put(111,80){\line(1,0){49}}
+
+		\put(75,80){\circle*{4}}
+		\put(75,80){\line(0,-1){10}}
+		\put(60,10){\framebox(30,60){{\LARGE $N'$}}}
+
+		\put(90,20){\line(1,0){30}}
+		\put(90,30){\makebox(30,20){$\vdots$}}
+		\put(90,50){\line(1,0){30}}
+		\put(90,60){\line(1,0){30}}
+
+		\put(135,80){\circle*{4}}
+		\put(135,80){\line(0,-1){10}}
+		\put(120,10){\framebox(30,60){{\LARGE $M'$}}}
+
+		\put(150,20){\line(1,0){10}}
+		\put(150,30){\makebox(10,20){$\vdots$}}
+		\put(150,50){\line(1,0){10}}
+		\put(150,60){\line(1,0){10}}
+
+	\end{picture}
+	\caption{Recursive construction of gates in $N(\G)$.}
+	\label{fig-normalizer}
+\end{figure}
+
+To get $M$ and $N$ in the correct form requires only identifying a single
+qubit on which $M$ does not act as the identity and $N$ acts differently
+from $M$.  From there, a single one-qubit gate and a swap between that
+qubit and the first puts $M$ and $N$ in the desired form.  It is not really
+necessary for the construction that the selected qubit be in the first
+position, so we can actually put $M$ and $N$ in the right form using just
+one one-qubit gate.  We also need to perform $R$ on that qubit in the
+middle of the operation.  Applying $M'$ and $N'$ conditioned on the
+selected qubit uses up to $2n$ two-qubit gates.  Therefore, this
+construction of $U$ uses the gates in $U'$ plus up to two one-qubit gates
+and $2n$ two-qubit gates.  Thus, by induction, an $(n+1)$-qubit gate ($n
+\geq 2$) can use up to $2(n-2)$ one-qubit gates and
+\begin{equation}
+	1 + \Sum_{j=3}^{n+1} 2(j-1) = 1 + (n+2) (n-1) = n^2 + n - 1
+\end{equation}
+two-qubit gates.
+
+Note that this construction can also be used for encoding data into a
+stabilizer code.  The map $U$ will map $\Xs{i} \rightarrow \Xbar_i$ and
+$\Zs{i} \rightarrow \Zbar_i$ ($i = 1, \ldots, k$) for the $k$ data qubits.  The
+remaining $n-k$ qubits start out as $\ket{0}$, so for $i=k+1, \ldots, n$, we
+map $\Zs{i} \rightarrow M_{i-k}$, where $M_j$ ($j = 1, \ldots, n-k$) are
+generators of $S$.  Any remaining freedom for the choice of the image of
+$\Xs{i}$ for $i = k+1, \ldots, n$ is unimportant.  This produces an encoding
+for any stabilizer code using any $\Xbar$ and $\Zbar$ operators in
+$N(\G)$.  In some cases, it may be more efficient than the construction
+given in chapter \ref{chap-encoding}, but the upper bound for efficiency is
+higher.
+
+\section{Refining the Error Correction Algorithm}
+
+Since errors occur while we are measuring the error syndrome, we are
+inevitably led to a race between the errors that are constantly occuring
+and our ability to correct them.  Therefore it is desireable to be able to
+perform error correction as efficiently as possible.  In this section, I will
+discuss a few ways of speeding up error correction.
+
+One significant improvement is to do classical error correction on the
+syndrome bits~\cite{evslin}.  The most basic form of error correction
+described in section~\ref{sec-error-cor} measures the eigenvalues of the
+$n-k$ generators of $S$.  If we treat these as classical bits, we can encode
+them using a classical $[m, n-k, d']$ linear code.  The bits of the classical
+codeword will be linear combinations of the original syndrome bits, which
+means they will correspond to eigenvalues of products of the generators of
+the stabilizer.  This means we need only measure these $m$ new elements
+of the stabilizer.  Then we can do classical error correction on the result to
+extract the actual $(n-k)$-bit syndrome.  If there were less than $d'$
+errors on the measured syndrome bits, we can still determine the real
+syndrome.  This protects very well against ancilla errors that produce the
+wrong measurement result for a single syndrome bit.  It protects less well
+against data errors that cause the syndrome to change in the middle of
+measurement, but there is a good chance it will warn us when such an
+error has occurred.  If no errors are detected using the classical code, it is
+quite likely we have measured the correct syndrome.  There is still a
+chance that we have not, so we may want to repeat the measurement, but
+we will not have to do it as many times to produce the same level of
+confidence in the result.
+
+Another possible improvement is to reduce the number of qubits needed
+to perform error correction.  Below, I present a method due to
+Steane~\cite{steane-correction}.  This method puts more effort into
+preparing the ancilla, allowing a reduction in the number of operations
+performed on the data.  In some situations, this results in an improvement
+in error tolerance; in other situations, the effort spent in preparing the
+ancilla is too large, and this results in worse tolerance for errors.
+
+Steane's ancilla state uses $2n$ qubits, which are prepared in the sum of
+the states of a classical code.  The specific classical code is formed by
+taking the two matrices in the binary vector space representation of $S$
+(section~\ref{sec-alternate}) and tacking them together into a single $(n-k)
+\times 2n$ matrix.  The matrix for the $\Z$'s is first.  This is the parity
+check matrix of the classical code.  The ancilla state can be described by a
+stabilizer $S_A$ on $2n$ qubits.  The first $n-k$ generators of the stabilizer
+are the rows of the parity check matrix with $\Z$'s for the $1$s.  The remaining
+$n+k$ generators of the stabilizer are the $n+k$ independent tensor
+products of $\X$'s that commute with the first $n-k$ generators.  Note that
+the fact that $S$ is Abelian means that $n-k$ of the new generators will
+also be formed directly from the generators of the stabilizer, this time by
+combining the $\X$ and $\Z$ matrices with the $\X$ one first and
+replacing $1$s with $\X$'s.  There is only a single state in the Hilbert space
+fixed by all $2n$ of these generators, and that is the desired ancilla
+state.
+
+For instance, if the original code is a CSS code such as the seven-qubit code,
+the resulting ancilla state is the tensor product of two ancilla states, each
+in the superposition of all the states in one of the two classical codes that
+make up the CSS code.  For the seven-qubit code, that means two copies of
+$\ket{\overline{0}} + \ket{\overline{1}}$, where $\ket{\overline{0}}$ and
+$\ket{\overline{1}}$ are the encoded $0$ and $1$ states for the seven-qubit
+code.  In general, the classical code will be able to identify as many errors
+as the quantum code can, counting errors in both bits $j$ and $j+n$ (for $j
+\leq n$) as a single error.
+
+Once we have this ancilla, we should again verify it, as we did for the ``cat''
+states in sections~\ref{sec-error-cor} and \ref{sec-toffoli}.  Then we apply
+a CNOT from data qubit~$i$ to ancilla qubit~$i$, followed by a Hadamard
+transform $R$ on the data qubit and a CNOT from the $i$th data qubit to
+the $(n+i)$th ancilla qubit, followed by a final Hadamard transform on the
+data qubit.  Assuming no phase errors in the ancilla, the data qubit ends
+up in its original state.  We can see this by looking at the stabilizer of the
+ancilla.  The last $n+k$ generators $M$ of $S_A$ are all tensor products of
+$\X$'s, so the CNOTs simply map $I \otimes M \rightarrow I \otimes M$,
+which is obviously still in $S \times S_A$.  The first $n-k$ generators are
+tensor products of $\Z$'s, say $M_1 \otimes M_2$ (with $M_1$ and $M_2$
+$n$-qubit operators).  The CNOTs then map
+\begin{equation}
+	I \otimes (M_1 \otimes M_2) \rightarrow M_1 (R M_2 R^\dagger) \otimes
+	(M_1 \otimes M_2).
+\end{equation}
+But $M_1$ has a $\Z$ anywhere some element $M \in S$ does and $R M_2
+R^\dagger$ has a $\X$ anywhere the same $M$ does, so $M_1 (R M_2
+R^\dagger) = M$, and $M_1 (R M_2 R^\dagger) \otimes (M_1 \otimes
+M_2)$ is in $S \times S_A$.
+
+The effect of the CNOTs on the generators $M$ of $S$ is to copy the $\X$'s
+forward into the first $n$ qubits of the ancilla and the $\Z$'s forward into
+$\X$'s in the last $n$ qubits of the ancilla.  That is, $M \otimes I
+\rightarrow M \otimes (M_1 \otimes M_2)$, where $M_1$ and $M_2$ are
+the product of $\X$'s, and $M_1 \otimes M_2$ is one of the second set of
+$n-k$ generators of $S_A$.  Therefore a correct codeword will have no
+effect on the ancilla.
+
+Measuring $\Z$ on each of the $2n$ ancilla qubits will therefore give us a
+random codeword from the classical code without disturbing the data or
+the quantum code.  A bit flip error in the $j$th qubit of the quantum code
+will carry forward to a bit flip error in the $j$th qubit of the ancilla, and a
+phase error in the $j$th qubit of the quantum code will produce a bit flip
+error in the $(n+j)$th qubit of the ancilla.  Therefore, errors in the quantum
+code will produce bit flip errors in the measured classical codeword.  The
+actual codeword tells us nothing, but the error syndrome will identify the
+error in the quantum code.  As with the cat state method, an incorrect
+ancilla qubit can result in the wrong error syndrome, but repeating the
+error syndrome measurement can give an arbitrarily high confidence level
+to the result.  Single-qubit phase errors in the ancilla will just feed back to
+single-qubit phase or bit flip errors in the data.
