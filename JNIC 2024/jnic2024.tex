@@ -1,0 +1,579 @@
+%%% Ejemplo de Paper para JNIC 2024
+
+\newcommand{\CLASSINPUTinnersidemargin}{18mm}
+\newcommand{\CLASSINPUToutersidemargin}{12mm}
+\newcommand{\CLASSINPUTtoptextmargin}{20mm}
+\newcommand{\CLASSINPUTbottomtextmargin}{25mm}
+\documentclass[10pt,conference,a4paper]{IEEEtran}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Tildes y demás caracteres en castellano...
+%\usepackage[latin1]{inputenc}
+% o bien
+\usepackage[utf8]{inputenc}
+\usepackage{caption}
+\usepackage{color,soul}
+
+%%% Fuente Times...
+\usepackage{times}
+
+%%% Hipervínculos
+\usepackage{float}
+\usepackage[pdftex,
+  colorlinks=true,
+  pdfstartview=FitV,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black]{hyperref}
+
+%%% Environments
+\newtheorem{notacion}{Notación}[subsection]
+\newtheorem{ejemplo}{Ejemplo}
+\newtheorem{prop}{Proposición}[section]
+
+%%% Macros
+\providecommand{\abs}[1]{\lvert#1\rvert}
+
+%%% Figuras en formato .png, .ps, pdf o eps
+\usepackage{graphicx}
+\usepackage{subfigure}
+\DeclareGraphicsExtensions{.png,.eps,.ps,.pdf}
+\usepackage{tikz}
+\usetikzlibrary{quantikz2}
+
+%%% Formato y tipografía de URL, direcciones de correo...
+\usepackage{url}
+%\usepackage{hyperref}
+
+%%% Sección para definir explícitamente la separación de sílabas al final de una línea:
+\hyphenation{si-guien-do}
+
+%%% Secciones etc. en castellano
+\usepackage[spanish,es-tabla]{babel}
+
+\sloppy
+
+\begin{document}
+
+%%% Título
+%\title{Optimización de Circuitos Cuánticos Mediante Técnicas Algebraicas}
+\title{Optimización de Circuitos Cuánticos para la Implementación de Criptología Cuántica}
+
+%%% Autores
+\author{\IEEEauthorblockN{Jorge Garcia-Diaz}
+\IEEEauthorblockA{Universidad de La Laguna\\
+Tenerife, Spain\\
+jorgegardiaz@gmail.com}
+\and
+\IEEEauthorblockN{Francisco Costa-Cano }
+\IEEEauthorblockA{Universidad Internacional de La Rioja\\
+Logroño, Spain\\
+podxboq@gmail.com}
+\and
+\IEEEauthorblockN{Pino Caballero-Gil}
+\IEEEauthorblockA{Universidad de La Laguna\\
+Tenerife, Spain\\
+pcaballe@ull.edu.es}
+\and
+\IEEEauthorblockN{Daniel Escanez-Exposito}
+\IEEEauthorblockA{Universidad de La Laguna\\
+Tenerife, Spain\\
+jescanez@ull.edu.es}}
+
+
+\maketitle
+
+
+%%% Resumen
+\begin{abstract}
+  Actualmente la computación cuántica es uno de los temas de investigación que más atención está captando en diversas  instituciones. Esto se debe a que constituye un novedoso modo de computación que tiene el potencial de resolver varios problemas complejos, algunos de los cuales son intratables con ordenadores clásicos. Este potencial supone un gran peligro para la criptografía actual, pero a la vez también abre la posibilidad de definir una nueva base para los futuros algoritmos criptográficos. Este trabajo explora la aplicación de técnicas algebraicas para optimizar los circuitos cuánticos, con el objetivo de mejorar su eficiencia, reducir las tasas de error y allanar el camino para el desarrollo de nuevos sistemas cuánticos que permitan la implementación de algoritmos, tanto para proteger la información como para romper algunos cifrados actuales.
+\end{abstract}
+
+
+%%% Palabras clave
+\begin{IEEEkeywords}
+Computación cuántica, Circuitos cuánticos, Criptología, Criptografía cuántica, Ciberseguridad
+\end{IEEEkeywords}
+
+
+%%% Tipo de contribución: seleccione lo que proceda, eliminando el resto del texto
+{\bf Tipo de contribución:}  {\it Investigación en desarrollo}
+
+
+%%% Consejos generales 
+\section{Introducción}
+La computación cuántica contempla un candente paradigma de cómputo que ofrece ventajas bastantes notorias con respecto a la computación clásica para ciertos problemas. Entre otras, una de estas ventajas es su potencial para romper algunos algoritmos criptográficos actuales, como el sistema RSA \cite{Shor} \cite{RSA}. Sin embargo, no se debe considerar solo una amenaza sino también una aliada para el futuro de la ciberseguridad, pues permite sentar las bases para nuevos y revolucionarios algoritmos criptográficos cuánticos \cite{BB84} \cite{BB2014} \cite{E91}. 
+
+La realización de computadoras cuánticas escalables y tolerantes a fallos sigue siendo un desafío debido sobre todo a dos motivos: que los circuitos cuánticos,  bloques fundamentales de los algoritmos cuánticos, son susceptibles a errores e ineficiencias que obstaculizan la implementación práctica de estos algoritmos \cite{error_correction}; y que el hardware cuántico actual no está lo suficientemente desarrollado como para poder implementar dichos circuitos \cite{IBM_hardware}. Por ello, no sólo se debe investigar en   hardware y  algoritmos cuánticos, sino también en cómo hacer posible de la mejor manera la implementación de dichos algoritmos cuánticos con el hardware actual. En este trabajo se presenta una  alternativa a este problema desde un novedoso punto de vista, que es la optimización de los circuitos cuánticos mediante técnicas algebraicas. Las técnicas algebraicas proporcionan un marco poderoso para analizar y manipular los circuitos cuánticos y por tanto los algoritmos cuánticos, ofreciendo un enfoque sistemático para identificar redundancias, explotar simetrías y simplificar las computaciones cuánticas. Esto ayudará en la optimización crucial de los circuitos cuánticos para superar las limitaciones inherentes del hardware cuántico actual. Por tanto, el objetivo de este trabajo es mostrar una nueva notación algebraica y demostrar varios resultados que puedan ayudar a optimizar los circuitos cuánticos con objeto de hacer posible la implementación de distintos algoritmos cuánticos. Además, se han creado diagramas de diferentes circuitos cuánticos a partir de la librería \textit{Quantikz} \cite{quantikz}.\\
+Este artículo sigue la siguiente estructura. En la Sección \ref{seccion:2} se introducen los diagramas de circuitos cuánticos y su respectiva notación tradicional, además de dos ejemplos para entender las debilidades de esta notación tradicional. En la Sección \ref{seccion:3} se muestra la nueva notación algebraica junto con varios ejemplos para entenderla de mejor manera. En la Sección \ref{seccion:4} se reflexiona sobre tres circuitos cuánticos a modo de ejemplos para poder comparar la nueva notación con la notación tradicional. En la Sección \ref{seccion:5} se exponen y demuestran distintos resultados obtenidos utilizando la nueva notación. Para finalizar, en la Sección \ref{seccion:6} se culmina este artículo con algunas conclusiones y trabajos futuros.
+\section{Notación tradicional}
+\label{seccion:2}
+La forma más extendida y usada de describir la computación cuántica es mediante los circuitos cuánticos \cite{Deutsch}. Dichos circuitos cuánticos tienen dos formas principales de representarse, mediante diagramas de los circuitos o mediante la notación tradicional para circuitos cuánticos \cite{Nielsen_Chuang}. Los diagramas tienen la ventaja de ser muy gráficos, por lo que ayudan a entender y visualizar el funcionamiento del circuito. Sin embargo, esta forma de representación tiene también grandes inconvenientes como el hecho de manipular los estados de los cúbits a lo largo del circuito. La notación tradicional sí que permite manejar de mejor manera los estados de los cúbits a lo largo del circuito, pero aún así es bastante mejorable pues no es nada cómoda de usar. Además tiene la gran desventaja de que se lee de forma inversa que los circuitos cuánticos. Una buena manera de entender estos problemas es mediante ejemplos, como los incluidos en la figura \ref{Fig1}, donde se muestran dos circuitos cuánticos%: Circuito \hyperlink{fig:ejemplos}{1} y Circuito \hyperlink{fig:ejemplos}{2}
+, representados con sus respectivos diagramas.
+
+\hypertarget{fig:ejemplos}{
+\begin{figure}[htb!]
+    \centering
+    \subfigure[Circuito 1]{
+        \begin{quantikz}
+            \lstick{$\ket{0}$}& \gate{X} &\\
+            \lstick{$\ket{0}$}& \ctrl{-1} &\\ 
+        \end{quantikz}}
+    \subfigure[Circuito 2]{
+        \begin{quantikz}
+            \lstick{$\ket{0}$}& \ctrl{1} &\\
+            \lstick{$\ket{0}$}& \gate{X} &\\ 
+        \end{quantikz}}
+        \caption{Ejemplos de circuitos}
+        \label{Fig1}
+\end{figure}}
+\newpage
+ En la figura \ref{Fig2} se exponen las notaciones tradicionales correspondientes a los circuitos mostrados en la figura  \ref{Fig1}.
+ 
+ 
+\begin{figure}[htb!]
+\begin{center}
+    Circuito 1: \boxed{CX\ket{0}^{\otimes 2}}\\
+    \vspace{1.5mm}
+    Circuito 2: \boxed{CX\ket{0}^{\otimes 2}}\\
+    \end{center}
+    \caption{Ejemplos de notaciones tradicionales}
+        \label{Fig2}
+\end{figure}
+
+Como se puede observar, las notaciones de ambos circuitos son idénticas. De hecho, en la literatura, dependiendo del autor, la notación tradicional expuesta en la figura \ref{Fig2} se emplea para hacer referencia tanto al Circuito 1 como al Circuito 2, aunque dichos circuitos sean distintos. Esto puede llevar fácilmente a confusiones y errores. Esto es un ejemplo muy básico de uno de los mayores defectos de la notación tradicional: las puertas cuánticas de varios cúbits no están bien definidas en la mayoría de los casos. Esto es un fallo de la notación tradicional, ya que para saber de qué forma y en qué cúbits actúa una puerta cuántica de varios cúbits, hace falta siempre comparar con el diagrama del circuito. En otras palabras, la notación tradicional no es autosuficiente, pues en la mayoría de los casos es necesario leer el diagrama junto con la notación tradicional para poder entender el efecto de las puertas sobre los kets o simplemente para saber la forma de la matriz asociada a la puerta cuántica en cuestión.\\
+Para mostrar más inconvenientes de la notación tradicional, se introduce en la figura \ref{Fig3} un nuevo ejemplo algo más complejo.\\
+
+\hypertarget{fig:deutsch-jozsa}{
+\begin{figure}[htb!]
+\begin{center}
+    \begin{quantikz}
+        \lstick{$\ket{0}$}& & \gate{H} & \gate[4]{U_f} & \gate{H} & \meter{} & \setwiretype{c}\\
+        \lstick{\vdots}\hspace*{1.5mm}\\
+        \lstick{$\ket{0}$}& & \gate{H} &  & \gate{H} & \meter{} & \setwiretype{c}\\
+        \lstick{$\ket{0}$}& \gate{X} & \gate{H} &  &  &  & \qw \\ 
+    \end{quantikz}
+\end{center}
+\caption{Circuito de Deutsch-Jozsa}
+        \label{Fig3} 
+\end{figure}}
+
+ La notación tradicional correspondiente al circuito de Deutsch-Jozsa de la  figura \ref{Fig3}  se muestra en la figura \ref{Fig4}.
+ 
+ \begin{figure}[htb!]
+$$\boxed{(I \otimes M^{\otimes n-1}) (I \otimes H^{\otimes n - 1}) U_f H^{\otimes n} (X \otimes I^{\otimes n - 1}) |0\rangle^{\otimes n}}$$
+\caption{Notación tradicional del circuito de Deutsch-Jozsa}
+        \label{Fig4} 
+\end{figure}
+
+El circuito y notación tradicional mostrados en las figura \ref{Fig3} y \ref{Fig4} es el perteneciente al algoritmo de Deutsch-Jozsa \cite{Deutsch-Jozsa}, uno de los primeros algoritmos que se ve cuando se empieza a estudiar  computación cuántica. Como se puede observar, la notación tradicional no es para nada fácil de entender ni de leer. Para empezar, el diagrama del circuito se lee de izquierda a derecha y de arriba abajo (el primer cúbit es el cúbit superior), mientras que la notación tradicional se lee de derecha a izquierda y el primer cúbit es el que está más a la derecha. Estas diferencias entre los métodos actuales de representación hacen que no sea cómodo trabajar con ellos y pueden conducir a cometer varios errores. Por ello, como se mencionó anteriormente, en este trabajo se introduce una nueva notación algebraica que elimina estas desventajas y además añade algunas ventajas. Además, en este trabajo se demuestran varios resultados interesantes que pueden ser utilizados para reducir el número de cúbits y puertas cuánticas necesarias y por tanto optimizar distintos algoritmos cuánticos.
+
+
+%%% Consejos generales de formato y estilo
+\section{Notación Optimizada}
+\label{seccion:3}
+A continuación se introduce la  notación optimizada  utilizada en este trabajo tanto para cúbits como para puertas cuánticas. Se añaden varios ejemplos a lo largo de la explicación para entender mejor cómo se utiliza  la notación introducida.
+
+%%% Consejos acerca de figuras y tablas
+\subsection{Cúbits}
+La forma más extendida de representar los cúbits es la notación bra-ket, también conocida como notación de Dirac \cite{Nielsen_Chuang}. Para esta nueva notación se utiliza la notación bra-ket.
+\begin{notacion}
+    Sea $\ket{a}=\ket{a_1\ldots a_n}$ un estado producto de $n$ cúbits, entonces se escribe:
+    \begin{align}
+    \begin{split}
+                \ket{a}&=\alpha_{k0}\ket{a_1\ldots a_{k-1}0a_{k+1}\ldots a_n}\\
+                &+\alpha_{k1}\ket{a_1\ldots a_{k-1}1a_{k+1}\ldots a_n}
+    \end{split}
+    \end{align}
+    \label{not:1}
+\end{notacion}
+
+\begin{ejemplo}
+    Sean $\ket{a_1a_2}$ dos cúbits en estado producto, entonces aplicando la notación mencionada se obtiene:
+    \begin{align*}
+        \ket{a_1a_2}&=\alpha_{10}\ket{0a_2}+\alpha_{11}\ket{1a_2}\\
+        &=\alpha_{10}\alpha_{20}\ket{00}+\alpha_{10}\alpha_{21}\ket{01}\\
+        &+\alpha_{11}\alpha_{20}\ket{10}+\alpha_{11}\alpha_{21}\ket{11}
+    \end{align*}
+\end{ejemplo}
+
+\begin{notacion}
+    Fijados $n$ cúbits $\ket{a}=\ket{a_1\ldots a_n}$ en estado producto, se utilizará la siguiente notación:
+    \begin{equation}
+        \ket{a}_j^k=\ket{a_1\ldots a_{k-1}ja_{k+1}\ldots a_n};\ k\in\{1,\ldots, n\}
+        \label{not:2}
+    \end{equation}
+\end{notacion}
+
+\begin{ejemplo}
+    Sea $\ket{a}=\ket{a_1\ldots a_n}$ y $k\in\{1,\ldots,n\}$, entonces se tiene:
+    $$\ket{a}=\alpha_{k0}\ket{a}_0^k+\alpha_{k1}\ket{a}_1^k$$
+\end{ejemplo}
+
+
+\subsection{Puertas Cuánticas}
+
+\begin{notacion}
+    Sea $A$ una puerta cuántica con cúbit objetivo $\ket{a_j}$, entonces se usa la siguiente notación:
+    \begin{equation}
+        \ket{a_1\ldots a_{j-1}}\otimes A\ket{a_j}\otimes \ket{a_{j+1}\ldots a_n}=\ket{a_1\ldots a_{j}Aa_{j+1}\ldots a_n}
+        \label{not:3}
+    \end{equation}
+\end{notacion}
+
+\begin{notacion}
+    Si $A$ es una puerta cuántica con cúbit objetivo $\ket{a_k}$, donde $k\in\{1,\ldots, n\}$, entonces se escribe:
+    \begin{equation}
+        \ket{a_1\ldots a_k A a_{k+1}\ldots a_n}=\ket{a}A_k=\ket{a}_A^k
+        \label{not:4}
+    \end{equation}
+\end{notacion}
+
+\begin{ejemplo}
+\begin{align*}
+    \ket{101}H_2&=\ket{10H1}=\ket{101}_H^2\\
+    &=\ket{1}\otimes H\ket{0}\otimes\ket{1}\\
+    &=\ket{1}\otimes\left(\dfrac{\ket{0}+\ket{1}}{\sqrt{2}}\right)\otimes\ket{1}\\
+    &=\dfrac{\ket{101}+\ket{111}}{\sqrt{2}}
+\end{align*}
+Se denotan $\ket{+}=\dfrac{\ket{0}+\ket{1}}{\sqrt{2}}$ y $\ket{-}=\dfrac{\ket{0}-\ket{1}}{\sqrt{2}}$.
+\end{ejemplo}
+\vspace{3mm}
+\begin{notacion}
+    Sea $R\subseteq \{1,\ldots,n\}$ y $A$ una puerta cuántica cualquiera con un cúbit objetivo, entonces se denota:
+    \begin{equation}
+        A_R=\displaystyle\prod_{k\in R}A_k
+        \label{not:5}
+    \end{equation}
+\end{notacion}
+Para que esta notación tenga sentido, hay que probar que $\ket{a}A_iA_k=\ket{a}A_kA_i$ para cualquier estado $\ket{a}=\ket{a_1\ldots a_n}$ y $i,k\in\{1,\ldots,n\}$ con $i\neq k$. Supongamos sin pérdida de generalidad que $i<k$:\\
+\begin{align*}
+    \ket{a}A_iA_k&=\ket{a_1\ldots a_n}A_iA_k\\
+    &=\ket{a_1\ldots a_iA\ldots a_kA \ldots a_n}\\
+    &=\ket{a_1\ldots a_iA \ldots a_n}A_k\\
+    &=\ket{a_1\ldots a_n}A_k A_i\\
+    &=\ket{a}A_kA_i
+\end{align*}
+\vspace{1.5mm}
+\begin{notacion}
+    El conjunto $\{j,j+1,\ldots,k\}$, donde $j,k\in\{1,\ldots,n\}$ y $j<k$ se escribirá como:
+    \begin{equation}
+        j:k= \{j,j+1,\ldots,k\}
+        \label{not:6}
+    \end{equation}
+\end{notacion}
+
+\begin{ejemplo}
+    \begin{align*}
+        \ket{100011}X_{1:3}=\ket{011011}
+    \end{align*}
+\end{ejemplo} 
+\vspace{0.15cm}
+\subsection{Puertas Cuánticas Controladas}
+
+\begin{notacion}
+    Sean $\ket{a}$ un estado de $n$ cúbits y $A$ una puerta cuántica con cúbit de control $\ket{a_k}$ y cúbit objetivo $\ket{a_j}$, entonces se utiliza la siguiente notación:
+    \begin{equation}
+        \ket{a}A_j^k
+    \end{equation}
+\end{notacion}
+
+\begin{ejemplo}
+\begin{align*}
+    \dfrac{\ket{00}+\ket{10}}{\sqrt{2}}X_2^1=\dfrac{\ket{10}+\ket{10}_X^2}{\sqrt{2}}=\dfrac{\ket{00}+\ket{11}}{\sqrt{2}}
+\end{align*}
+\end{ejemplo}
+\vspace{0.35cm}
+\section{Ejemplos de Circuitos}
+\label{seccion:4}
+En esta sección se muestran diversos ejemplos de circuitos cuánticos con su respectiva notación algebraica optimizada.
+\subsection{Algoritmo de Deutsch-Jozsa}
+Reconsiderando el circuito de Deutsch-Jozsa  del Ejemplo \hyperlink{fig:deutsch-jozsa}{3} mostrado en la figura \ref{Fig3}, se puede comparar la notación tradicional mostrada en la figura \ref{Fig4} con la nueva notación   optimizada mostrada en la figura \ref{Fig5}. Dicho circuito permite averiguar si una función es constante o balanceada con un coste menor que cualquier algoritmo clásico.
+
+ \begin{figure}[htb!]
+$$\boxed{\ket{0}^{\otimes n}X_nH_{1:n}(U_{f})_{1:n}H_{1:n-1}M_{1:n-1}}$$
+\caption{Notación  optimizada del circuito de Deutsch-Jozsa}
+        \label{Fig5} 
+\end{figure}
+
+
+Como se puede observar en la figura \ref{Fig5} con respecto al circuito de la figura \ref{Fig3}, la nueva notación algebraica optimizada se lee de derecha a izquierda, al igual que el diagrama del circuito. Además, el primer cúbit es el cúbit superior del diagrama. Adicionalmente, esta nueva notación consume mucho menos espacio, y por tanto es más fácil de manejar.
+
+\subsection{Teleportación Cuántica}
+En esta sección se considera el ejemplo de la teleportación cuántica entre dos cúbits \cite{teleportation} para mostrar el potencial de la nueva notación algebraica optimizada introducida. 
+
+En el circuito de la figura \ref{fig:teleportacion}, cuyas notaciones tradicional y optimizada  se muestran en las  figura \ref{Fig7}  y \ref{Fig8}, se parte  de un estado cualquiera $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, mientras se entrelazan otros dos cúbits inicializados ambos en el estado $\ket{0}$. Al ejecutar este circuito, se logra transferir  el estado de $\ket{\psi}$ al tercer cúbit sin conocer exactamente el estado de $\ket{\psi}$.
+
+\begin{figure}[htb!]
+\begin{center}
+    \begin{quantikz}
+        \lstick{$\ket{\psi}$}&       &          & \ctrl{2} & \gate{H} &                        & \meter{}              \\
+        \\
+        \lstick{$\ket{0}$}& \gate{H} & \ctrl{1} & \gate{X}  &          & \meter{}\\
+        \lstick{$\ket{0}$}&          & \gate{X} &           &          & \gate{X}\wire[u][1]{c} & \gate{Z}\wire[u][3]{c} & \rstick{$\ket{\psi}$}\\ 
+    \end{quantikz}
+    \caption{Circuito para la teleportación cuántica} \label{fig:teleportacion}
+\end{center}
+\end{figure}
+
+\begin{figure}[htb!]
+\begin{equation*}
+    \boxed{
+    \begin{aligned}
+            (CZ\otimes I)&(CX\otimes I)(I \otimes M^{\otimes 2})(I^{\otimes 2}\otimes H)(I\otimes CX)\\
+            &(CX\otimes I)(I\otimes H \otimes I)\left(\ket{0}^{\otimes 2}\otimes\ket{\psi}\right)
+    \end{aligned}}
+\end{equation*}
+\caption{Notación tradicional  de la teleportación cuántica}
+        \label{Fig7} 
+\end{figure}
+\begin{figure}[htb!]
+$$\boxed{\left(\ket{\psi}\otimes\ket{0}^{\otimes 2}\right)H_2X_3^2X_2^1H_1M_{1:2}X_3^2 Z_3^1}$$
+\caption{Notación optimizada de la teleportación cuántica}
+        \label{Fig8} 
+\end{figure}
+
+Como se aprecia en la figura \ref{Fig2}, la notación tradicional   no resulta muy adecuada para  representar los cúbits de control y objetivo de las puertas controladas. En cambio, como   se ha mencionado, en concreto en la {\it Notación~(\ref{not:1})}, con la nueva notación optimizada sí que es posible.%, y además de una forma bastante cómoda y entendible.
+
+\subsection{Algoritmo de Shor}
+En esta sección se muestra como ejemplo de aplicación de la notación optimizada introducida, uno de los algoritmos más  importantes de la computación cuántica, el algoritmo de Shor \cite{Shor}. Este algoritmo debe su fama a que permite resolver el problema de la factorización del producto de dos números enteros  $N=p\cdot q$, siendo $p$ y $q$  números primos, con un coste polinomial. 
+Obsérvese que hoy en día con la computación clásica, la resolución de este problema tiene un coste sub-exponencial pero super-polinomial (algoritmo GFNS \cite{GNFS} \cite{GNFS_book}). 
+El algoritmo de Shor puede llegar a representar un grave peligro para la criptografía actual, ya que por ejemplo permite romper el sistema criptográfico RSA \cite{attack_RSA}. Por culpa de algoritmos como el de Shor, se hace cada vez más urgente invertir esfuerzos  en desarrollar nuevos protocolos seguros para las comunicaciones dado que hay que sustituir los criptosistemas como el RSA. Aún así, el algoritmo de Shor está todavía lejos de poder ser implementado en un ordenador cuántico real para los tamaños de clave utilizados actualmente \cite{schnorr} \cite{integer-factoring} \cite{Shor_PD} \cite{Shor_21}. 
+El algoritmo de Shor se basa esencialmente en el circuito de estimación de fase, cuyo circuito y notaciones tradicional y optimizada se muestran en las figuras \ref{fig:shor}, \ref{Fig10} y \ref{Fig11}.
+
+\begin{figure}[htb!]
+\begin{center}
+\begin{tikzpicture}
+\node[scale=0.75]{
+    \begin{quantikz}[scale=0.5]
+        \lstick{$\ket{0}$}& \gate{H} &  & & & \ctrl{6} & \gate[4]{QFT^{\dagger}} & \meter{} &\setwiretype{c} \rstick[4]{$2n$}\\
+        \lstick{\vdots}\hspace*{1.5mm}\\
+        \lstick{$\ket{0}$}& \gate{H} &  & \ctrl{2} & & & & \meter{}  &\setwiretype{c} \\
+        \lstick{$\ket{0}$}& \gate{H} & \ctrl{1} & & & & & \meter{} &\setwiretype{c}\\
+        \lstick{$\ket{0}$}&  & \gate[3]{U_{a^{2^0}}} & \gate[3]{U_{a^{2^1}}} &\ \ldots \ & \gate[3]{U_{a^{2^{2n-1}}}} & &  & \rstick[3]{$n$}\\
+        \lstick{\vdots}\hspace*{1.5mm}\\
+        \lstick{$\ket{0}$}& \gate{X} &  &  &\ \ldots \ & & &  &\\
+    \end{quantikz}};
+\end{tikzpicture}
+    \caption{Circuito de la estimación de fase} \label{fig:shor}
+\end{center}
+\end{figure}
+
+\begin{figure}[htb!]
+\begin{equation*}
+    \boxed{
+    \begin{aligned}
+            &\hspace{23mm}(I^{\otimes n}\otimes M^{\otimes 2n})(I^{\otimes n}\otimes QFT^{\dagger})\\
+            &\left(\displaystyle\prod_{i=0}^{2n-1}(CU_{a^{2n-1-i}}\otimes I^{\otimes 2n-1})\right)(X\otimes I^{\otimes n-1}\otimes H^{\otimes 2n})\ket{0}^{\otimes 3n}
+    \end{aligned}}
+\end{equation*}
+\caption{Notación tradicional  de la estimación de fase}
+        \label{Fig10} 
+\end{figure}
+
+\begin{figure}[htb!]
+$$\boxed{\ket{0}^{\otimes 3n}H_{1:2n}X_{3n}\displaystyle\prod_{i=0}^{2n-1}(U_{a^{2^i}})_{2n+1:3n}^{2n-i}(QFT^{\dagger})_{1:2n}M_{1:2n}}$$
+\caption{Notación optimizada de la estimación de fase}
+        \label{Fig11} 
+\end{figure}
+
+
+En el ejemplo de la estimación de fase se pueden observar los mismos problemas que los mencionados en el circuito de la teleportación cuántica  mostrado en la figura \ref{fig:teleportacion}. Además, en este ejemplo se observa también lo complicada y confusa que se puede volver la notación tradicional y la gran cantidad de espacio que puede llegar a consumir. En cambio, la  notación  optimizada consume menos espacio.%, lo cual la hace mucho más cómoda.% para trabajar con ella.
+
+\section{Resultados}
+\label{seccion:5}
+En esta sección se introducen algunas propiedades y relaciones entre algunas puertas cuánticas y ciertos estados de cúbits. Se utiliza  la notación $(j)_2$ para expresar la notación binaria de $j$.% con $n$ bits.
+
+Se comienza con un resultado que caracteriza el efecto que tiene el aplicar una puerta $H$ a todos los cúbits de un estado cualquiera $\ket{x_{1}\ldots x_{n}}$.
+
+\vspace{1.5mm}
+\begin{prop}
+    \begin{equation}
+        \ket{x_{1}\ldots x_{n}} H_{1:n} = \dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{y=1}^{2^n-1}(-1)^{x\cdot y}\ket{(y)_2}
+\end{equation}
+\label{prop:1}
+donde $x\cdot y$ representa el producto módulo 2 de $x$ e $y$ bit a bit, es decir, $x\cdot y = x_{1}y_{1}+\ldots + x_n y_n$, siendo $(y)_2=y_{1}y_2\ldots y_n$ con $y_r,x_r\in\{0,1\}\ \land \ r\in\{1,\ldots,n\}$.
+\end{prop}
+\begin{proof}
+    $$\ket{x_{1}\ldots x_n}H_{1:n} = (H\ket{x_{1}})\otimes\ldots\otimes ( H\ket{x_n})$$
+$$=\left(\dfrac{1}{\sqrt{2}}\displaystyle\sum_{y_{1}\in\{0,1\}}(-1)^{x_{1}y_{1}}\ket{y_{1}}\right )\otimes\cdots$$
+$$\otimes \left(\dfrac{1}{\sqrt{2}}\displaystyle\sum_{y_{n}\in\{0,1\}}(-1)^{x_{n}y_{n}}\ket{y_{n}}\right )$$
+$$=\dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{y_{1}\ldots y_n\in\{0,1\}^n}(-1)^{x_{1}y_{1}+\ldots + x_n y_n}\ket{y_{1}\ldots y_n}$$
+$$=\dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{y=1}^{2^n-1}(-1)^{x\cdot y}\ket{(y)_2}$$
+\end{proof}
+\vspace{1.5mm}
+ A continuación, se demuestra una caracterización del efecto que tiene el aplicar una puerta $H$ a todos los cúbits del estado 
+ $\ket{1}^{\otimes n}$.
+\vspace{1.5mm}
+\begin{prop}
+    \begin{equation}
+        \ket{0}^{\otimes n}X_{1:n}H_{1:n} = \ket{-}^{\otimes n}= \displaystyle \dfrac{1}{\sqrt{2^n}}\sum_{j=1}^{2^n-1}(-1)^{w((j)_2))}\ket{(j)_2}
+\end{equation}
+\label{prop:2}
+donde el Peso de Hamming de $(j)_2$ se denota como: 
+$$w((j)_2)=\displaystyle\sum_{r=0}^{n-1}j_r$$
+\end{prop}
+\begin{proof}
+     $$\ket{0}^{\otimes n}X_{1:n}H_{1:n} =\ket{1}^{\otimes n} H_{1:n}$$
+     Aplicando \textit{Proposición \ref{prop:1}} para:\\ 
+     $$(x)_2=(2^n-1)_2=\underbrace{1\ldots 1}_n$$ y sabiendo que:\\
+     $$\ket{1}^{\otimes n} H_{1:n}=\ket{-}^{\otimes n}$$
+     se obtiene lo siguiente:
+     \begin{align*}
+         \ket{-}^{\otimes n} &= \dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{j=0}^{2^n-1}(-1)^{\displaystyle\sum_{r=0}^{n-1}j_r}\ket{(j)_2}\\
+         &=\dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{j=0}^{2^n-1}(-1)^{w((j)_2)}\ket{(j)_2}
+     \end{align*}
+\end{proof}
+\vspace{1.5mm}
+Como consecuencia del resultado anterior se obtiene el siguiente resultado que caracteriza el efecto que tiene el aplicar una puerta $H$ a todos los cúbits del estado $\ket{0}^{\otimes n}$.
+\vspace{1.5mm}
+\begin{prop}
+    \begin{equation}
+        \ket{0}^{\otimes n} H_{1:n}=\ket{+}^{\otimes n}=\dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{j=0}^{2^n-1}\ket{(j)_2}
+    \end{equation}
+    \label{prop:3}
+\end{prop}
+\begin{proof}
+\begin{align*}
+    \ket{0}^{\otimes n}H_{1:n}&=\ket{+}^{\otimes n}\\
+    &=\dfrac{1}{\sqrt{2}}(\ket{0}+\ket{1})\otimes\ldots\otimes\dfrac{1}{\sqrt{2}}(\ket{0}+\ket{1})\\
+    &=\dfrac{1}{\sqrt{2^n}}(\ket{0}+\ket{1})\otimes\ldots\otimes(\ket{0}+\ket{1})\\
+    &=\dfrac{1}{\sqrt{2^n}}\displaystyle\sum_{j=0}^{2^n-1}\ket{(j)_2}
+\end{align*}    
+\end{proof}
+\vspace{1.5mm}
+El siguiente resultado describe el efecto que tiene el aplicar una puerta cuántica $A_R$ sobre un autovector con autovalor asociado $\lambda_i$.
+\vspace{1.5mm}
+\begin{prop}
+    Sea $A$ una puerta cuántica y $\ket{a}$ un estado de $n$ cúbits tal que:
+    $$\ket{a}A_i=\lambda_i\ket{a},\ \forall i\in \{1,\ldots, n\}$$
+    es decir, que $\ket{a}$ sea un autovector de $A_i$ con autovalor asociado $\lambda_i$ para todo $i\in \{1,\ldots, n\}$. Entonces si 
+    $R\subseteq\{1,\ldots, n\}$:
+    \begin{equation}
+        \ket{a}A_R=\displaystyle\left(\prod_{i\in R}\lambda_i\right)\ket{a}
+    \end{equation}
+    \label{prop:3.5}
+\end{prop}
+\begin{proof}
+    \begin{align*}
+         \ket{a}A_R&=\ket{a}\displaystyle\prod_{i\in R}A_i\\
+         &=\displaystyle\prod_{i\in R}\ket{a}A_i\\
+         &=\displaystyle\left(\prod_{i\in R}\lambda_i\right)\ket{a}
+    \end{align*}
+\end{proof}
+\vspace{1.5mm}
+Como consecuencia directa de la proposición anterior, se demuestra un resultado que explica el comportamiento de una puerta con respecto a un autovector cuando su autovalor asociado es $-1$.
+\vspace{1.5mm}
+\begin{prop}
+    Sea $A$ una puerta cuántica y $\ket{a}$ un estado de $n$ cúbits tal que:
+    $$\ket{a}A_i=-\ket{a},\ \forall i\in \{1,\ldots, n\}$$
+    es decir, que $\ket{a}$ sea un autovector de $A_i$ con autovalor asociado $-1$ para todo $i\in \{1,\ldots, n\}$. Entonces si \\
+    $R,S\subseteq\{1,\ldots, n\}$:
+    \begin{equation}
+        \ket{a}A_R=(-1)^{\abs{R}-\abs{S}}\ket{a}A_S
+    \end{equation}
+    \label{prop:4}
+    donde $\abs{R}$ y $\abs{S}$ representan el cardinal de $R$ y $S$ respectivamente.
+\end{prop}
+\begin{proof}\\
+    Aplicando la \textit{Proposición} (\ref{prop:3.5}) para $\lambda_i=-1,\ \forall \lambda_i$
+        
+    $$\ket{a}A_S=\ket{a}\displaystyle\prod_{k\in S}A_k=(-1)^{\abs{S}}\ket{a}$$
+    $$\Longrightarrow \ket{a}=(-1)^{-\abs{S}}\ket{a}A_S$$
+    Además: 
+    \begin{align*}
+    \ket{a}A_R =& (-1)^{\abs{R}}\ket{a}\\
+    \Longrightarrow&\ket{a}A_R=(-1)^{\abs{R}}\cdot(-1)^{-\abs{S}}\ket{a}A_S\\
+    \Longrightarrow &\ket{a}A_R=(-1)^{\abs{R}-\abs{S}}\ket{a}A_S
+\end{align*}
+    \end{proof}
+\vspace{1.5mm}
+A continuación, se demuestra que el resultado anterior se puede aplicar a la puerta $X$.
+\vspace{1.5mm}
+\begin{prop}
+    Sean $R, S\subseteq \{1,\ldots, n\}$, entonces:
+    \begin{equation}
+       \ket{-}^{\otimes n} X_R=(-1)^{\abs{R}-\abs{S}}\ket{-}^{\otimes n}X_S
+    \end{equation}
+    \label{prop:5} 
+\end{prop}
+\begin{proof}
+    La demostración de este resultado se basa en demostrar lo siguiente:
+    $$ \ket{-}^{\otimes n} X_i =  -\ket{-}^{\otimes n},\:\forall i\in \{1,\ldots, n\}$$
+    Para ello demostraremos que $\ket{-}X=-\ket{-}$:
+    \begin{align*}
+        \ket{-}X&=\dfrac{1}{\sqrt{2}}\left(\ket{0}-\ket{1}\right)X\\
+        &=\dfrac{1}{\sqrt{2}}\left(\ket{1}-\ket{0}\right)X\\
+        &=-\ket{-}
+    \end{align*}
+    
+Una vez obtenido esto se consigue:
+\begin{align*}
+    \ket{-}^{\otimes n}X_i&=\ket{-}^{\otimes i-1}\otimes X\ket{-}\otimes\ket{-}^{\otimes n-i}\\
+    &=\ket{-}^{\otimes i-1}\otimes -\ket{-}\otimes\ket{-}^{\otimes n-i}\\
+    &=-\ket{-}^{\otimes n}
+\end{align*}
+Aquí se está suponiendo que $i\neq 1$ y $i\neq n$. Estos casos se demuestran de manera análoga:
+\vspace{2mm}
+\begin{itemize}
+    \item $\ket{-}^{\otimes n}X_1=-\ket{-}\otimes\ket{-}^{\otimes n-1}=-\ket{-}^{\otimes n}$
+    \vspace{2mm}
+    \item $\ket{-}^{\otimes n}X_n=\ket{-}^{\otimes n-1}\otimes-\ket{-}=-\ket{-}^{\otimes n}$
+\end{itemize}
+\vspace{2mm}
+Ahora basta aplicar la \textit{Proposición} (\ref{prop:4}) para $A=X$ y \\
+$\ket{a}=\ket{-}^{\otimes n}$:
+$$\Longrightarrow  \ket{-}^{\otimes n} X_R=(-1)^{\abs{R}-\abs{S}}\ket{-}^{\otimes n}X_S$$
+\end{proof}
+\vspace{1.5mm}
+De manera análoga, se demuestra el siguiente resultado.
+\vspace{1.5mm}
+\begin{prop}
+\begin{equation}
+   \ket{+}^{\otimes n} X_R=\ket{+}^{\otimes n};\; \forall R\subseteq \{1,\ldots,n\} 
+\end{equation}
+    \label{prop:6}
+\end{prop}
+\begin{proof}
+    La demostración resulta trivial teniendo en cuenta que:
+    \begin{align*}
+        \ket{+}X&=\dfrac{1}{\sqrt{2}}\left(\ket{0}+\ket{1}\right)X\\
+        &=\dfrac{1}{\sqrt{2}}\left(\ket{1}+\ket{0}\right)\\
+        &=\ket{+}
+    \end{align*}
+    pues aplicando las ideas desarrolladas en la demostración de la \textit{Proposición} (\ref{prop:5}) y la \textit{Proposición} (\ref{prop:3.5}) para $\lambda_i=1,\ \forall i$ se obtiene la prueba del resultado.
+\end{proof}
+\section{Conclusiones}
+\label{seccion:6}
+La necesidad de nuevos algoritmos criptográficos post-cuánticos para hacer frente a las amenazas de los ordenadores cuánticos, como el algoritmo de Shor, está clara. Sin embargo, la solución puede estar también en la computación cuántica. En este  trabajo se propone una optimización de los algoritmos cuánticos que permite investigar con mayor facilidad e implementar con la mayor eficiencia no solo los algoritmos cuánticos que permiten romper muchos de nuestros actuales cifrados, sino también nuevos algoritmos de cifrado cuántico. Diversos ejemplos y resultados permiten demostrar que la notación optimizada introducida mejora considerablemente la notación tradicional usada en combinación con los circuitos cuánticos. Esta nueva notación algebraica no sólo hace más entendible los circuitos y elimina los diversos problemas mencionados de la notación tradicional, sino que también ayuda en gran medida a encontrar patrones entre las puertas cuánticas y los estados de los cúbits, lo que puede llevar a optimizaciones de distintos circuitos cuánticos y por tanto a la posibilidad de implementar algoritmos cuánticos en los ordenadores cuánticos actuales. Para trabajos futuros se buscará la aplicación de estos nuevos resultados a distintos circuitos para reducir el numero de puertas o cúbits necesarios, así como hallar y demostrar nuevos resultados.
+%%% Consejos acerca de la conclusiones
+
+\section*{Agradecimientos}
+
+Este trabajo ha sido posible gracias a las Cátedras  de Ciberseguridad de la Universidad de La Laguna patrocinadas por Binter, y por INCIBE en el marco de los fondos del Plan de Recuperación, Transformación y Resiliencia, financiada por la Unión Europea (Next Generation). Además forma parte del proyecto PID2022-138933OB-I00 financiado  por MCIN/AEI/ 10.13039/501100011033/FEDER, UE.\\
+
+%%% inclusión de referencias
+\bibliographystyle{IEEEtran}
+\bibliography{Bibliografia}
+
+%\bibitem{JNIC2024} Nombre autores: "Título del trabajo", en {\it nombre
+%    revista/conferencia}, vol. x, n. y, pp. aa-bb, año.
+\end{document}
+
+\begin{figure}[htb!]
+\begin{center}
+    \begin{quantikz}
+        \lstick{$\ket{0}$}& & \gate{H} & \gate[4]{U_f} & \gate{H} & \meter{} & \cw\\
+        \lstick{\vdots}\hspace*{1.5mm}\\
+        \lstick{$\ket{0}$}& & \gate{H} &  & \gate{H} & \meter{} & \cw \\
+        \lstick{$\ket{0}$}& \gate{X} & \gate{H} &  &  &  & \qw \\ 
+    \end{quantikz}
+    \caption{Circuito de Deutsch-Jozsa}
+\end{center}
+\end{figure}
+
+ \begin{figure}[htb!]
+$$\boxed{(I \otimes M^{\otimes n-1}) (I \otimes H^{\otimes n - 1}) U_f H^{\otimes n} (X \otimes I^{\otimes n - 1})\ket{0}^{\otimes n}}$$
+\caption{Notación tradicional - Deutsch-Jozsa}
+        \label{Fig6} 
+\end{figure}
