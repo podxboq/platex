@@ -1,0 +1,27 @@
+\section{Introduction}
+
+Quantum circuits, pioneered by Deutsch in~\cite{Deutsch1989}, are widely acknowledged as a practical and commonly used approach for illustrating the operations of quantum gates on qubits, ultimately describing the unitary matrix of a quantum computer through graphical representations.
+Consequently, quantum algorithms and protocols are typically depicted in the format of quantum circuits.
+This leads to a challenge when dealing with complex quantum algorithms or protocols, as their circuit graphs can quickly surpass manageable sizes, making drawing and manipulation impractical.
+
+In classical computing, circuits can be not only graphically represented but also expressed as Boolean expressions using Boolean gates that implement logic based on truth tables.
+These Boolean expressions are well-suited for algebraic manipulations.
+Conversely, the derivation of an algebraic expression for a quantum circuit has been challenging because quantum computing lacks a language analogous to Boolean expressions in classical computing.
+The present paper aims to introduce a formal semantics for a novel algebraic language designed to streamline the expression of quantum circuits in a concise manner so that fundamental algebraic laws for quantum circuits can be easily proven, and complex quantum algorithms can be simplified when expressed in this language.
+
+A bibliographic review shows the great interest that the problem arouses, although no solution has been fully accepted to date.
+
+Note that the present work does not require the use of Mathematica or matrices.
+
+Another close paper is~\cite{Ying}, which presents the design of an algebraic language for formally specifying quantum circuits in distributed quantum computing so that using that language, quantum circuits can be represented in a compact way.
+However, the language proposed in the present work is simpler and closer to simulation programming, which facilitates its implementation.
+Indeed, this issue is demonstrated through the presentation of a first version of a software implementation of the proposal.
+In particular, the present notation proposal is more intuitive as it sets the quantum gates in order of execution (from left to right).
+
+The equational theory of quantum circuits is discussed in the paper~\cite{Staton}, which presents an axiomatization of the relationship between measurement, qubit initialization and a set of unitary gates.
+Another recent work~\cite{Wang19} proposes the unification of quantum and classical computing in open quantum systems.
+Also recently, the paper~\cite{doi:10.1098/rsta.2019.0161} describes the flow of quantum compilation with several NP-hard tasks and proposes algorithms based on Boolean satisfiability to address those computationally complex problems.
+Note that the three aforementioned recent papers address related but different topics than the one addressed in the present paper.
+
+Finally, one of the latest related works is~\cite{Wang21} on the equivalence of dynamic quantum circuits.
+That proposal looks promising, but has only been evaluated on toy examples, with no available software packages for checking yet.
