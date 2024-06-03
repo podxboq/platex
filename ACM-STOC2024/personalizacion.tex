@@ -1,0 +1,11 @@
+\newtheorem{notation}{Notation}[subsection]
+\newcommand{\Q}{\mathcal{Q}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\C}{\mathcal{C}}
+\renewcommand{\gate}[1]{\text{#1}}
+\newcommand{\stateket}[3]{\ket{#1}^{#2}_{#3}}
+\newcommand{\stategate}[3]{\gate{#1}^{#2}_{#3}}
+\newcommand{\set}[1]{\{#1\}}
+\renewcommand{\boxed}[2]{\textcolor{#1}{%
+	\tikz[baseline={([yshift=-1ex]current bounding box.center)}] \node [rectangle, minimum width=1ex,rounded corners,draw] {\normalcolor$\displaystyle#2$};}}
