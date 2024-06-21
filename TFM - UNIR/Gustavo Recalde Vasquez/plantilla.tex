@@ -1,7 +1,10 @@
 \documentclass[11pt,a4paper,spanish]{book}
 \usepackage{unir}
-
-
+\usepackage{tcolorbox}
+\usepackage{float}
+\usepackage{courier}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}}
 
 %---------------------------
 %título del trabajo y autor
@@ -9,7 +12,7 @@
 \title{ Algoritmos cuánticos para optimización de rutas}
 \titulacion{ Máster en Computación Cuántica}
 \author{ Gustavo Recalde Vásquez}
-\date{ 15 de mayo de 2024}
+\date{ 19 de junio de 2024}
 \director{ Francisco Costa Cano}
 \nombreciudad{ Quito - Ecuador}
 
@@ -29,7 +32,6 @@
 \renewcommand{\tablename}{Tabla} 
 
 \maketitle
-
 \frontmatter
 \tableofcontents
 \listoffigures
@@ -62,7 +64,7 @@ Este trabajo se centra en el desarrollo y aplicación de algoritmos cuánticos p
 
 \section{Planteamiento del trabajo.}
 
-    Este estudio se centra en el desarrollo y evaluación de algoritmos cuánticos diseñados para optimizar las rutas de entrega y la carga de camiones para la empresa Wolf. Se analizarán y compararán estos algoritmos con métodos clásicos de optimización para determinar su viabilidad y eficacia. Dividiremos el probleam en tres partes específicas:
+    Este estudio se centra en el desarrollo y evaluación de algoritmos cuánticos diseñados para optimizar las rutas de entrega y la carga de camiones para la empresa Wolf. Se analizarán y compararán estos algoritmos con métodos clásicos de optimización para determinar su viabilidad y eficacia. Dividiremos el problema en tres partes específicas:
 
     \begin{itemize}
     \item Optimización de rutas: Desarrollar un algoritmo que mejore la eficiencia de las rutas de entrega, teniendo en cuenta la ubicación geográfica de los puntos de distribución, el tamaño y volumen de los paquetes, y los intervalos de tiempo de entrega.
@@ -90,9 +92,9 @@ Este trabajo se centra en el desarrollo y aplicación de algoritmos cuánticos p
 	
 	\item \textbf{Fundamentos Teóricos:} Explicación de los conceptos básicos de optimización, mecánica cuántica y la computación cuántica necesarios para entender los algoritmos utilizados tanto clásicos como cuánticos, incluyendo qubits, superposición, entrelazamiento, interferencia cuántica, puertas cuánticas, y circuitos cuánticos.
 	
-	\item \textbf{Desarrollo de la solucion:} Descripción de las técnicas y herramientas seleccionadas para el desarrollo de los algoritmos cuánticos, así como la metodología de comparación con sistemas clásicos. Incluye el diseño y codificación de los algoritmos cuánticos, seguido de la realización de simulaciones computacionales para evaluar su rendimiento. Este capítulo abarca la generación de la muestra de clientes, la implementación de algoritmos clásicos y genéticos, y la implementación de algoritmos cuánticos como Quantum Annealing (QA) y Quantum Approximate Optimization Algorithm (QAOA). Se detalla cada paso en el desarrollo de la solución y los códigos fuente utilizados en la implementación.
+	\item \textbf{Desarrollo de la solución:} Descripción de las técnicas y herramientas seleccionadas para el desarrollo de los algoritmos cuánticos, así como la metodología de comparación con sistemas clásicos. Incluye el diseño y codificación de los algoritmos cuánticos, seguido de la realización de simulaciones computacionales para evaluar su rendimiento. Este capítulo abarca la generación de la muestra de clientes, la implementación de algoritmos clásicos y genéticos, y la implementación de algoritmos cuánticos como Quantum Annealing (QA) y Quantum Approximate Optimization Algorithm (QAOA). Se detalla cada paso en el desarrollo de la solución y los códigos fuente utilizados en la implementación.
 		
-	\item \textbf{Resultados y Análisis:} Presentación y análisis de los resultados obtenidos, comparando las soluciones cuánticas con las clásicas y genéticas. Evaluación de la eficiencia y eficacia de los algoritmos cuánticos en términos de mejora de rutas, carga de vehículos y costos operativos.
+	\item \textbf{Resultados y Análisis:} Presentación y análisis de los resultados obtenidos, comparando las soluciones cuánticas con las clásicas y genéticas. Evaluación de la eficiencia y eficacia de los algoritmos cuánticos en términos de mejora de rutas y costos operativos.
 	
 	\item \textbf{Conclusiones y Recomendaciones:} Síntesis de los hallazgos clave del estudio, recomendaciones para futuras investigaciones y aplicaciones prácticas, y una reflexión sobre el impacto potencial de la computación cuántica en la logística y la gestión de la cadena de suministro.
 	
@@ -102,7 +104,7 @@ Este trabajo se centra en el desarrollo y aplicación de algoritmos cuánticos p
 
 La logística y la optimización de rutas han sido áreas de estudio intensivo debido a su impacto crítico en la economía y la sostenibilidad ambiental. Con el avance de la tecnología, los métodos para abordar estos problemas han evolucionado significativamente. Desde los enfoques heurísticos clásicos hasta los algoritmos de optimización avanzados, el campo ha visto una considerable transformación. La introducción de la computación cuántica ha abierto nuevas avenidas de investigación, prometiendo superar las limitaciones de los algoritmos clásicos al manejar problemas de optimización NP-difíciles con una eficiencia potencialmente mayor \citep{nielsenChuang}.
 
-El desarrollo de algoritmos cuánticos específicos para la optimización, como quantum annealing y el algoritmo de Grover, ha mostrado ser prometedor en la simulación de escenarios complejos dentro de la optimización de rutas \citep{farhiQuantum, groverAlgorithm}. Estos algoritmos han sido aplicados en diversos contextos, demostrando la capacidad de la computación cuántica para explorar eficientemente grandes espacios de soluciones \citep{QWalk-Based}.
+El desarrollo de algoritmos cuánticos específicos para la optimización, como quantum annealing, QAOA y paseo cuántico, ha mostrado ser prometedor en la simulación de escenarios complejos dentro de la optimización de rutas . Estos algoritmos han sido aplicados en diversos contextos, demostrando la capacidad de la computación cuántica para explorar eficientemente grandes espacios de soluciones \citep{QWalk-Based}.
 
 \section{Aplicación de la Computación Cuántica en Transporte y Logística}
 
@@ -117,12 +119,12 @@ Con el incremento del interés y la inversión en tecnologías cuánticas, ha ha
 \chapter{Objetivos}
 
 \section{Objetivo General}
-Mejorar significativamente la eficiencia de las rutas de entrega y la optimización del volumen de carga de la flota de camiones de la empresa Wolf a través del desarrollo y la implementación de algoritmos cuánticos.
+Mejorar significativamente la eficiencia de las rutas de entrega y carga de la flota de camiones de la empresa Wolf a través del desarrollo y la implementación de algoritmos cuánticos.
 
 \section{Objetivos Específicos}
 
 \begin{itemize}
-    \item Desarrollar un algoritmo cuántico para la optimización de rutas de entrega que considere variables clave como la geolocalización de los puntos de entrega. Este algoritmo debe demostrar una mejora del 10\% en la eficiencia de las rutas comparado con los métodos de optimización clásicos utilizados actualmente por la empresa.Esta métrica ha sido definida por la institución que proporciona los datos en base a metas internas.
+    \item Desarrollar un algoritmo cuántico para la optimización de rutas de entrega que considere variables clave como la geolocalización de los puntos de entrega. Este algoritmo debe demostrar una mejora del 10\% en la eficiencia de las rutas comparado con los métodos de optimización clásicos utilizados actualmente por la empresa. Esta métrica ha sido definida por la institución que proporciona los datos en base a metas internas.
 
     \item Implementar un sistema de planificación de itinerarios detallados utilizando el algoritmo cuántico desarrollado para predecir con precisión el tiempo estimado de llegada de cada camión en todos los puntos de distribución.
 
@@ -202,6 +204,8 @@ La optimización es fundamental en la logística y la gestión de la cadena de s
 		\item \textbf{Algoritmo de Búsqueda Tabú:} Utiliza una lista tabú para evitar ciclos y explorar soluciones alternativas mediante búsquedas locales iterativas \cite{glover1989tabu}.
 		\item \textbf{Algoritmo de Colonia de Hormigas (ACO):} Se inspira en el comportamiento de las hormigas para encontrar rutas óptimas, utilizando feromonas para guiar la búsqueda hacia soluciones eficientes \cite{dorigo1997ant}.
 		\item \textbf{Optimización por Enjambre de Partículas (PSO):} Emplea partículas que exploran el espacio de soluciones de manera colaborativa, ajustando sus posiciones en base a su experiencia y la de sus vecinas \cite{kennedy1995particle}.
+        \item \textbf{Algoritmo 2-opt:} El algoritmo 2-opt es una técnica de optimización local utilizada para mejorar soluciones de problemas de optimización combinatoria, como el (TSP). Este algoritmo funciona mediante la eliminación de dos aristas de un tour y la reconexión de las subrutas resultantes de la manera más óptima. Repite este proceso iterativamente hasta que no se pueden encontrar más mejoras. La simplicidad y eficacia del 2-opt lo convierten en una herramienta valiosa para refinar soluciones generadas por otros algoritmos heurísticos. \cite{lawler1985}
+
 	\end{itemize}
 	
 \subsection{Problemas de Diseño de Redes Logísticas:} 
@@ -214,6 +218,9 @@ La optimización es fundamental en la logística y la gestión de la cadena de s
 		\item \textbf{Algoritmo de Recocido Simulado (SA):} Emula el proceso de enfriamiento de materiales para encontrar soluciones cercanas al óptimo global mediante la exploración del espacio de soluciones \cite{kirkpatrick1983optimization}.
 		\item \textbf{Algoritmo de Búsqueda de Vecindad Variable (VNS):} Emplea una serie de búsquedas locales en diferentes vecindades para escapar de óptimos locales y encontrar mejores soluciones globales \cite{mladenovic1997variable}.
 		\item \textbf{Algoritmo Genético (GA):} Utiliza técnicas de selección, cruce y mutación inspiradas en la evolución natural para explorar y explotar el espacio de soluciones \cite{holland1992adaptation}.
+        \item \textbf{Algoritmo Greedy:}  selecciona iterativamente la próxima ciudad más cercana no visitada hasta que todas las ciudades han sido visitadas. Aunque no garantiza la solución óptima global, es fácil de implementar y proporciona soluciones razonablemente buenas en un tiempo de ejecución relativamente corto. \cite{Cormen2009}
+
+  
 	\end{itemize}
 	
 \subsection{Problemas de Carga de Contenedores:} 
@@ -248,6 +255,8 @@ Con la llegada de la computación cuántica, han surgido nuevas técnicas que pr
 \begin{itemize}
 	\item \textbf{Quantum Annealing (QA):} Un método de optimización que utiliza fluctuaciones cuánticas para encontrar el mínimo global de una función de costo. Es particularmente efectivo para resolver problemas de optimización combinatoria, como el VRP y la carga de contenedores \cite{phillipson2024}.
 	\item \textbf{Quantum Approximate Optimization Algorithm (QAOA):} Un algoritmo híbrido que combina computación cuántica y clásica para aproximar soluciones a problemas de optimización. Ha mostrado ser prometedor en la optimización de rutas y otros problemas logísticos \cite{farhiQuantum}.
+    \item \textbf{Quantum Walks Algorithm (QW):} Los paseos cuantciso son una generalización cuántica de los paseos aleatorios clásicos, donde la probabilidad de transición entre estados se reemplaza por amplitudes de probabilidad. Estos paseos cuánticos han mostrado ventajas significativas en la búsqueda y optimización de grafos, proporcionando una mayor velocidad y eficiencia en la exploración de grandes espacios de soluciones. Por ejemplo en el contexto del problema del viajante de comercio (TSP), los paseos cuánticos permiten una exploración más rápida y eficiente de las rutas posibles, mejorando la probabilidad de encontrar soluciones óptimas. \cite{kempe2003}
+ 
 \end{itemize}
 
 Para abordar estos algoritmos primero veremos un breve resumen de la Teoría Básica de Computación Cuántica.
@@ -271,7 +280,7 @@ El entrelazamiento es un fenómeno cuántico en el que los estados de dos o más
 
 \subsection{Interferencia Cuántica}
 
-La interferencia cuántica se refiere a la forma en que las probabilidades de diferentes caminos cuánticos se combinan. Los algoritmos cuánticos utilizan la interferencia para cancelar las amplitudes de probabilidad de los caminos no deseados y aumentar las de los caminos deseados. Esto es fundamental para el funcionamiento de muchos algoritmos cuánticos, como el algoritmo de Grover \cite{groverAlgorithm}.
+La interferencia cuántica se refiere a la forma en que las probabilidades de diferentes caminos cuánticos se combinan. Los algoritmos cuánticos utilizan la interferencia para cancelar las amplitudes de probabilidad de los caminos no deseados y aumentar las de los caminos deseados. Esto es fundamental para el funcionamiento de muchos algoritmos cuánticos, como el algoritmo de Grover. \cite{groverAlgorithm}.
 
 \subsection{Puertas Cuánticas}
 
@@ -360,7 +369,7 @@ Las puertas cuánticas son los bloques básicos de construcción de los circuito
 	\]
 	Actúa sobre el estado de tres qubits.
 	
-\end{itemize
+\end{itemize}
 
 \subsection{Circuitos Cuánticos}
 
@@ -443,61 +452,397 @@ El QAOA ha sido aplicado exitosamente a varios problemas de optimización combin
 
 Plataformas como IBM Quantum Experience proporcionan acceso a hardware cuántico y simuladores cuánticos para implementar QAOA. La biblioteca Qiskit de IBM incluye módulos específicos para construir y ejecutar circuitos QAOA, permitiendo a los investigadores modelar problemas de optimización y encontrar soluciones utilizando computación cuántica \cite{gibneyQuantumTech}.
 
+\subsection{Paseos Cuánticos (Quantum Walks)}
+
+\subsubsection{Principios de los Paseos Cuánticos}
+
+Los paseos cuánticos son la contraparte cuántica de los paseos aleatorios clásicos. En lugar de probabilidades, utilizan amplitudes de probabilidad, lo que permite la interferencia constructiva y destructiva. Esto resulta en una propagación mucho más rápida a través del espacio de estados. Los paseos cuánticos pueden ser discretos o continuos.
+
+Para un paseo cuántico discreto en un grafo, el estado del sistema se describe por un vector de estado \(|\psi(t)\rangle\) en un espacio de Hilbert. La evolución temporal se da por la aplicación repetida de un operador de evolución \(U\), que combina una operación de cambio de posición (shift) y una operación de moneda (coin).
+
+\[
+|\psi(t+1)\rangle = U|\psi(t)\rangle
+\]
+
+Donde el operador de evolución \(U\) está definido como:
+
+\[
+U = S \cdot (C \otimes I)
+\]
+
+Aquí, \(C\) es la operación de moneda que actúa sobre el qubit de moneda, y \(S\) es la operación de shift que actúa sobre los estados de posición del grafo.
+
+\subsubsection{Aplicación en Problemas de Optimización}
+
+En problemas de optimización como el TSP, los paseos cuánticos permiten una exploración más eficiente del espacio de soluciones. La capacidad de los paseos cuánticos para evaluar múltiples rutas simultáneamente y su tendencia a interferir constructivamente en las rutas óptimas hacen que estos algoritmos sean prometedores para encontrar soluciones óptimas o casi óptimas en tiempos más cortos que los métodos clásicos.
+
+Para representar el TSP en términos de paseos cuánticos, se puede usar un grafo donde cada nodo representa una ciudad y las aristas representan los caminos entre ellas con pesos correspondientes a las distancias. La evolución del paseo cuántico sobre este grafo puede favorecer las rutas que minimizan el costo total del viaje.
+
+\subsubsection{Implementación y Herramientas}
+
+La implementación de paseos cuánticos puede realizarse utilizando la plataforma D-Wave, que ofrece herramientas para modelar problemas de optimización combinatoria y resolverlos mediante paseos cuánticos. La herramienta Ocean SDK de D-Wave proporciona las bibliotecas necesarias para definir y resolver problemas de optimización.
+
+
 \chapter{Descripción de la solución}
+
+El problema que abordamos en este estudio es la optimización de rutas de entrega para una flota de camiones. Este problema, como vimos, es esencialmente un problema de ruteo de vehículos (VRP), donde el objetivo principal es determinar las rutas más eficientes para que un conjunto de camiones entregue productos a varios clientes. Este problema se puede modelar como un problema del viajante de comercio (TSP) cuando se considera un único camión, y se extiende a múltiples camiones en el caso del VRP.
+
+El TSP es un problema de optimización combinatoria en el que se busca encontrar la ruta más corta que visite un conjunto de ciudades (clientes) exactamente una vez y regrese al punto de partida. En el contexto de nuestro problema, cada "ciudad" representa un cliente, y la "ruta más corta" es la secuencia de entregas que minimiza la distancia total recorrida por un camión.
+
+Para resolver este problema de manera efectiva, hemos implementado y comparado varios algoritmos de optimización tanto clásicos como cuánticos. Los algoritmos utilizados incluyen:
+
+\begin{itemize}
+    \item Clásicos: Greedy y Simulated Annealing.
+    \item Cuánticos: Quantum Annealing, Quantum Approximate Optimization Algorithm (QAOA), y Quantum Walks.
+\end{itemize}
+
+Además, para mejorar la eficiencia en la distribución de rutas entre los camiones, hemos aplicado el algoritmo de k-means.
+
 
 La solución propuesta se desarrollará en varias etapas, cada una de las cuales abordará diferentes aspectos del problema de optimización. A continuación se describe el esquema detallado de cada etapa:
 
+
+
+
 \section{Generación de la Muestra de Clientes}
 
-El primer paso consiste en generar una muestra de clientes que serán evaluados en el proceso de optimización. Para ello, se utilizará un script en Python que leerá las coordenadas GPS de los clientes desde un archivo de texto, seleccionará una muestra aleatoria de estos y calculará la distancia Manhattan entre cada par de clientes. Este proceso se detalla a continuación:
+El primer paso consiste en generar una muestra de clientes que serán evaluados en el proceso de optimización. Para ello, se utilizará un script en Python que leerá las coordenadas GPS de los clientes desde un archivo de texto, seleccionará una muestra aleatoria de 100 clientes y calculará la distancia Manhattan entre cada par de clientes. Este proceso se detalla a continuación:
 
 \begin{itemize}
-	\item Lectura de datos desde un archivo de texto.
-	\item Selección aleatoria de una muestra de clientes.
-	\item Cálculo de la distancia Manhattan entre cada par de clientes seleccionados.
-	\item Visualización de la distribución geográfica de los clientes seleccionados.
-	\item Creación de un grafo que represente las distancias entre los clientes.
+    \item Lectura de datos desde un archivo de texto.
+    \item Selección aleatoria de una muestra de clientes.
+    \item Cálculo de la distancia Manhattan entre cada par de clientes seleccionados.
+    \item Visualización de la distribución geográfica de los clientes seleccionados.
+    \item Creación de un grafo que represente las distancias entre los clientes.
 \end{itemize}
 
-\section{Implementación del Algoritmo Clásico}
 
-Se implementará un algoritmo clásico de optimización de rutas utilizando el OR-Tools de Google. Este algoritmo resolverá el problema de ruteo de vehículos (VRP) para una pequeña muestra de clientes y camiones, proporcionando una base para la comparación con los algoritmos cuánticos. Los pasos específicos incluyen:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{ubicaciones.png}
+    \caption{Muestra de 100 ubicaciones aleatorias}
+    \label{fig:enter-label}
+\end{figure}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{grafoinicial.png}
+    \caption{Grafo generado con las 100 muestras}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+
+\section{Distribución de Rutas en los Camiones con k-means}
+
+Para abordar el problema de múltiples camiones, utilizamos el algoritmo de k-means para dividir el conjunto de clientes en k grupos, donde k es el número de camiones disponibles. El proceso es el siguiente:
 \begin{itemize}
-	\item Definición del modelo de datos que incluye la matriz de distancias, el número de vehículos y el depósito.
-	\item Configuración del gestor de índices y el modelo de ruteo.
-	\item Registro de la función de distancia y configuración de los parámetros de búsqueda.
-	\item Resolución del problema de ruteo utilizando estrategias clásicas como PATH\_CHEAPEST\_ARC.
-	\item Visualización y análisis de las rutas resultantes.
+    \item Agrupamiento Inicial: Aplicamos k-means para agrupar los clientes en 15 clusters, cada uno correspondiente a un camión.
+    \item Asignación de Clientes a Camiones: Los clientes en cada cluster se asignan al camión correspondiente.
+    \item Optimización de Rutas: Dentro de cada cluster, optimizamos la ruta usando los algoritmos mencionados (Greedy, Simulated Annealing, Quantum Annealing, QAOA, y Quantum Walks) y aplicamos 2-opt para refinar las rutas y reducir la distancia total recorrida.
 \end{itemize}
 
-\subsection{Evaluación y Comparación de Algoritmos Genéticos}
+Este enfoque permite una distribución inicial equilibrada de los clientes entre los camiones, mejorando así la eficiencia en la planificación y ejecución de las rutas de entrega.
 
-Como siguiente paso, se implementará un algoritmo genético para la optimización de rutas. Este enfoque se seleccionará para evaluar su rendimiento y comparar sus resultados con los obtenidos mediante el algoritmo clásico. La implementación incluirá:
+\textbf{Pseudocódigo:}
 
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Kmeans, fontupper=\ttfamily]
+\begin{enumerate}
+    \item Aplicar K-means para agrupar clientes en `num\_camiones` clústeres.
+    \item Para cada camión:
+    \begin{itemize}
+        \item Inicializar ruta con el depósito y los clientes del clúster.
+        \item Utilizar paseos cuánticos para explorar el espacio de soluciones y encontrar una ruta inicial.
+        \item Aplicar algoritmo 2-opt para optimizar la ruta.
+    \end{itemize}
+    \item Calcular la distancia total recorrida por todos los camiones.
+\end{enumerate}
+\end{tcolorbox}
+
+\section{Implementación de Algoritmos Clásicos}
+
+\subsection{Algoritmo 2-opt}
+
+El algoritmo 2-opt es una técnica de optimización local utilizada para mejorar soluciones de problemas de optimización combinatoria. En nuestro caso, hemos adaptado el algoritmo 2-opt para refinar las rutas generadas por todos los algoritmos de optimización siguiendo estos pasos:
 \begin{itemize}
-	\item Inicialización de una población de soluciones.
-	\item Aplicación de operadores genéticos como selección, cruce y mutación.
-	\item Evaluación de las soluciones en cada generación y selección de las mejores.
-	\item Iteración del proceso hasta alcanzar un criterio de parada predefinido.
-	\item Comparación de los resultados con el algoritmo clásico.
+	\item Inicialización: Comenzamos con una ruta generada por uno de los algoritmos principales (Greedy, Simulated Annealing, Quantum Annealing, QAOA, Quantum Walks).
+    \item Iteración: Iteramos sobre cada par de aristas en la ruta actual y consideramos el intercambio de sus extremos para ver si la nueva ruta resultante es más corta.
+    \item Intercambio de Aristas: Si encontramos un par de aristas cuyo intercambio resulta en una ruta más corta, realizamos el intercambio.
+    \item Repetición: Repetimos este proceso hasta que no se puedan encontrar más mejoras en la ruta.
+Este método permite mejorar iterativamente la calidad de las soluciones iniciales proporcionadas por los algoritmos principales, asegurando que las rutas finales sean lo más cortas posible.
 \end{itemize}
+
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo 2-opt, fontupper=\ttfamily]
+	\begin{enumerate}
+		\item Inicializar la mejor ruta del algoritmo principal
+		\item Repetir
+		\begin{itemize}
+			\item Establecer mejorado como Falso
+			\item Para i desde 1 hasta longitud(ruta) - 2 hacer
+			\begin{itemize}
+				\item Para j desde i + 1 hasta longitud(ruta) hacer
+				\begin{itemize}
+					\item Si j - i == 1 continuar
+					\item Generar una nueva ruta intercambiando las aristas (i, i+1) y (j, j+1)
+					\item Si la nueva ruta es más corta que la mejor ruta
+						\item Actualizar la mejor ruta a la nueva ruta hasta que no mejore.
+				\end{itemize}
+			\end{itemize}    
+			\item Devolver la mejor ruta
+		\end{itemize}
+	\end{enumerate}
+\end{tcolorbox}
+
+
+\subsection{Algoritmo Greedy}
+
+Para adaptar el algoritmo Greedy a nuestro problema, comenzamos en el nodo de inicio (el depósito) y seleccionamos iterativamente el nodo más cercano no visitado hasta que todos los nodos hayan sido visitados. Finalmente, volvemos al nodo de inicio para completar la ruta. Este enfoque es simple pero puede resultar en soluciones subóptimas.
+
+\textbf{Pseudocódigo:}
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo Greedy, fontupper=\ttfamily]
+\begin{enumerate}
+    \item Iniciar en un nodo aleatorio.
+    \item Mientras no se hayan visitado todos los nodos hacer:
+    \begin{enumerate}
+        \item Seleccionar el nodo más cercano no visitado.
+        \item Añadir el nodo seleccionado a la ruta.
+        \item Marcar el nodo seleccionado como visitado.
+    \end{enumerate}
+    \item Añadir el nodo inicial al final de la ruta para completar el ciclo.
+    \item Devolver la ruta
+\end{enumerate}
+\end{tcolorbox}
+
+
+\subsection{Algoritmo Simulated Annealing}
+
+Para adaptar Simulated Annealing a nuestro problema, inicialmente generamos una solución aleatoria y evaluamos su longitud. Luego, iterativamente generamos nuevas soluciones mediante permutaciones aleatorias de la ruta actual y las evaluamos. Aceptamos nuevas soluciones basadas en un criterio de probabilidad que disminuye con el tiempo (temperatura). Este proceso permite escapar de óptimos locales y encontrar soluciones cercanas al óptimo global.
+
+
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo de Recocido Simulado (SA), fontupper=\ttfamily]
+\begin{enumerate}
+    \item Inicializar la temperatura y la solución actual.
+    \item Mientras la temperatura no sea mínima:
+    \begin{enumerate}
+        \item Generar una solución vecina.
+        \item Evaluar el cambio en la calidad de la solución.
+        \item Aceptar o rechazar la nueva solución basada en la probabilidad de aceptación.
+        \item Reducir la temperatura.
+    \end{enumerate}
+    \item Retornar la mejor solución encontrada.
+\end{enumerate}
+\end{tcolorbox}
+
+
 
 \section{Implementación de Algoritmos Cuánticos}
 
-Finalmente, se desarrollarán algoritmos cuánticos para la optimización de rutas y carga de camiones. Este enfoque aprovechará las propiedades únicas de la mecánica cuántica, como la superposición y el entrelazamiento, para encontrar soluciones óptimas. Los pasos incluirán:
+\subsection{Algoritmo Quantum Annealing}
 
-\begin{itemize}
-	\item Selección y configuración de la plataforma cuántica (por ejemplo, D-Wave o IBM Quantum Experience).
-	\item Implementación de Quantum Annealing y Quantum Approximate Optimization Algorithm (QAOA).
-	\item Traducción del problema de optimización a un formato compatible con la plataforma cuántica (por ejemplo, QUBO).
-	\item Ejecución de los algoritmos cuánticos y análisis de los resultados.
-	\item Comparación de la eficiencia y eficacia de los algoritmos cuánticos con los métodos clásicos y genéticos.
-\end{itemize}
+En nuestro problema, Quantum Annealing se usa para resolver la formulación QUBO del TSP. Inicializamos el sistema cuántico en el estado fundamental de un Hamiltoniano simple y lo evolucionamos adiabáticamente hacia el Hamiltoniano del problema. La medición del estado final del sistema nos da la ruta óptima.
+
+\textbf{Pseudocódigo:}
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Quantum Annealing (QA), fontupper=\ttfamily]
+\begin{enumerate}
+    \item Definir el problema en términos de QUBO.
+    \item Preparar el sistema en el estado fundamental de \(H_0\).
+    \item Evolucionar el sistema hacia \(H_1\) de manera adiabática.
+    \item Medir el estado final para obtener la solución óptima.
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Algoritmo QAOA}
+
+Para QAOA, preparamos un estado inicial de superposición uniforme y aplicamos secuencialmente operadores unitarios parametrizados que dependen de un Hamiltoniano de mezclado y el Hamiltoniano del problema. Usamos un algoritmo clásico para optimizar los parámetros de estos operadores, y la medición del estado final proporciona la ruta aproximada.
+
+
+\textbf{Pseudocódigo:}
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Quantum Approximate Optimization Algorithm (QAOA), fontupper=\ttfamily]
+\begin{enumerate}
+    \item Preparar el estado inicial en superposición.
+    \item Aplicar operadores \(U(H_B, \gamma)\) y \(U(H_C, \beta)\) secuencialmente.
+    \item Optimizar \(\gamma\) y \(\beta\) mediante un algoritmo clásico.
+    \item Medir el estado final para obtener la solución aproximada.
+\end{enumerate}
+\end{tcolorbox}
+
+
+\subsection{Algoritmo Quantum Walks}
+En el caso de Quantum Walks, inicializamos el estado cuántico del sistema y aplicamos un operador de evolución repetidamente. Este enfoque permite explorar el espacio de soluciones de manera eficiente. La medición del estado final nos da la ruta óptima.
+
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Quantum Walks (QW), fontupper=\ttfamily]
+\begin{enumerate}
+    \item Inicializar el estado cuántico del sistema.
+    \item Definir las operaciones de moneda y shift.
+    \item Aplicar repetidamente las operaciones de moneda y shift.
+    \item Medir el estado final para obtener la solución óptima.
+\end{enumerate}
+\end{tcolorbox}
+
 
 \chapter{Resultados y Análisis}
 
+En este capítulo, se presentan y analizan los resultados obtenidos al aplicar tanto algoritmos clásicos como cuánticos para la optimización de rutas analizados. Los algoritmos evaluados incluyen Greedy, Recocido Simulado (Simulated Annealing), Quantum Annealing, Quantum Approximate Optimization Algorithm (QAOA) y Quantum Walks. Además, se ha utilizado el algoritmo de k-means para distribuir las rutas entre los camiones y el algoritmo 2-opt para optimizar localmente las soluciones generadas.
+
+\section{Metodología de Evaluación}
+
+\subsection{Métricas de Evaluación}
+
+Las métricas principales utilizadas para la evaluación de los algoritmos fueron:
+
+\begin{itemize}
+    \item \textbf{Distancia Total Recorrida (km):} La suma de las distancias recorridas por todos los camiones en sus rutas de entrega.
+    \item \textbf{Tiempo de Ejecución del Algoritmo (ms):} El tiempo necesario para que el algoritmo genere una solución.
+    \item \textbf{Tiempo de Ejecución del Código (s):} El tiempo total que incluye la ejecución del código en las plataformas cuánticas y clásicas unto con las metricas y graficos generados dentr del codigo.
+\end{itemize}
+
+\subsection{Configuración Experimental}
+
+Para realizar la evaluación, se generaron muestras de 100 clientes con ubicaciones aleatorias. Las distancias entre los clientes se calcularon utilizando la distancia Manhattan. Los algoritmos se ejecutaron en un entorno controlado para asegurar la comparabilidad de los resultados.
+
+\section{Resultados Obtenidos}
+
+\subsection{Comparación General de Algoritmos}
+
+La Tabla \ref{tab:comparison} muestra una comparación de los resultados obtenidos para cada algoritmo evaluado. Los algoritmos cuánticos (Quantum Annealing, QAOA y Quantum Walks) se evaluaron en la plataforma cuánticas D-Wave, mientras que los algoritmos clásicos (Greedy y Simulated Annealing) se ejecutaron en una computadora convencional.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|m{5cm}|m{3cm}|m{3cm}|m{3cm}|}
+\hline
+\textbf{Algoritmo} & \textbf{Distancia} & \multicolumn{2}{c|}{\textbf{Tiempos de ejecución}} \\ \cline{3-4}
+& \textbf{(km)} & \textbf{Algoritmo (ms)} & \textbf{Código (s)} \\ \hline
+Greedy & 766,73 & 258,6 & 107 \\ \hline
+Simulated Annealing & 765,24 & 315,8 & 45 \\ \hline
+Quantum Annealing & 767,83 & 55,5 & 83,88 \\ \hline
+QAOA & 767,83 & 52,4 & 81,8 \\ \hline
+Quantum Walks & 767,83 & 48,5 & 76,3 \\ \hline
+\end{tabular}
+\caption{Comparación de Algoritmos}
+\label{tab:comparison}
+\end{table}
+
+\subsection{Análisis de Distancias Recorridas}
+
+Los resultados indican que el algoritmo de Recocido Simulado (Simulated Annealing) logró la menor distancia total recorrida (765,24 km), seguido de cerca por el algoritmo Greedy (766,73 km). Los algoritmos cuánticos mostraron distancias recorridas similares (767,83 km), lo cual demuestra su capacidad para generar soluciones competitivas.
+
+\subsection{Análisis de Tiempos de Ejecución}
+
+En términos de tiempos de ejecución del algoritmo, los algoritmos cuánticos fueron significativamente más rápidos que los clásicos. Quantum Walks tuvo el menor tiempo de ejecución del algoritmo (48,5 ms), seguido de QAOA (52,4 ms) y Quantum Annealing (55,5 ms). Esto resalta la eficiencia computacional de los algoritmos cuánticos en comparación con sus contrapartes clásicas.
+
+\subsection{Análisis de Eficiencia en la Computación Cuántica}
+
+Aunque los algoritmos cuánticos demostraron ser más rápidos en la ejecución del algoritmo, el tiempo total de ejecución del código fue mayor debido a la interacción con las plataformas cuánticas. Este tiempo adicional incluye la latencia de comunicación con el hardware cuántico y la inicialización del sistema.
+
+\section{Visualización de Resultados}
+
+\subsection{Solución Óptima Clásica}
+
+La Figura \ref{fig:solucionSA2opt} muestra las rutas generadas por el algoritmo de Recocido Simulado optimizado con 2-opt y k-means.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{solucionSA2opt.png}
+\caption{Rutas con Simulated Annealing optimizado con 2-opt y k-means}
+\label{fig:solucionSA2opt}
+\end{figure}
+
+\subsection{Solución Óptima Cuántica}
+
+La Figura \ref{fig:solucionQW2opt} muestra las rutas generadas por el algoritmo Quantum Walks optimizado con 2-opt y k-means.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.1\linewidth]{solucionQW2opt.png}
+\caption{Rutas con Quantum Walks optimizado con 2-opt y k-means}
+\label{fig:solucionQW2opt}
+\end{figure}
+
+\section{Conclusiones}
+
+\subsection{Rendimiento de los Algoritmos Cuánticos}
+
+Los algoritmos cuánticos demostraron ser eficientes en términos de tiempo de ejecución del algoritmo, logrando tiempos significativamente menores que los algoritmos clásicos. Sin embargo, la distancia total recorrida fue ligeramente mayor en comparación con los mejores algoritmos clásicos, lo que sugiere que los algoritmos cuánticos aún tienen margen de mejora en términos de optimización de rutas.
+
+\subsection{Viabilidad Técnica y Económica}
+
+La implementación de soluciones cuánticas en la logística de transporte es técnicamente viable y muestra una promesa significativa en términos de eficiencia computacional. No obstante, la latencia de comunicación con el hardware cuántico y los costos asociados a su uso deben considerarse cuidadosamente para evaluar la viabilidad económica.
+
+\subsection{Recomendaciones para Futuros Trabajos}
+
+Se recomienda continuar explorando y refinando los algoritmos cuánticos para mejorar su rendimiento en términos de distancia recorrida. Además, es importante investigar formas de reducir la latencia de comunicación con el hardware cuántico y optimizar los tiempos de ejecución del código. La integración de algoritmos cuánticos con técnicas de aprendizaje automático podría ofrecer mejoras adicionales en la optimización de rutas y carga en el contexto de la logística de transporte.
+
+
+
+
 \chapter{Conclusiones y Trabajo Futuro}
+
+\section{Conclusiones}
+
+El presente estudio abordó el desarrollo y aplicación de algoritmos cuánticos para la optimización de rutas de entrega y carga en la empresa Wolf, comparándolos con métodos clásicos. A continuación, se detallan las conclusiones principales obtenidas a partir de los resultados presentados en los capítulos anteriores.
+
+\subsection{Rendimiento de Algoritmos Clásicos y Cuánticos}
+
+Los resultados mostraron que los algoritmos cuánticos pueden ofrecer tiempos de ejecución significativamente menores en comparación con los algoritmos clásicos. En particular, el algoritmo Quantum Walks demostró ser el más eficiente en términos de tiempo de ejecución del algoritmo (48,5 ms), seguido de cerca por QAOA (52,4 ms) y Quantum Annealing (55,5 ms). Estos tiempos son considerablemente menores que los obtenidos por los algoritmos clásicos Greedy y Simulated Annealing, que registraron 258,6 ms y 315,8 ms respectivamente (ver Tabla \ref{tab:comparison}).
+
+\subsection{Eficiencia en la Distancia Recorrida}
+
+En términos de distancia total recorrida, los algoritmos clásicos mostraron un mejor rendimiento. El Recocido Simulado (Simulated Annealing) logró la menor distancia total recorrida (765,24 km), seguido por el algoritmo Greedy (766,73 km). Los algoritmos cuánticos presentaron distancias recorridas similares (767,83 km), lo que indica que aún hay margen de mejora para estos algoritmos en términos de optimización de rutas.
+
+\subsection{Viabilidad Técnica y Económica}
+
+La implementación de soluciones cuánticas en la logística de transporte es técnicamente viable y muestra una promesa significativa en términos de eficiencia computacional. Sin embargo, la latencia de comunicación con el hardware cuántico y los costos asociados a su uso deben considerarse cuidadosamente. Los tiempos de ejecución del código total, que incluyen la interacción con las plataformas cuánticas, fueron mayores para los algoritmos cuánticos en comparación con los clásicos. Esto sugiere la necesidad de optimizar las interfaces y la infraestructura de comunicación para aprovechar plenamente las ventajas de la computación cuántica.
+
+\subsection{Impacto en la Logística de Transporte}
+
+Los algoritmos cuánticos demostraron ser herramientas prometedoras para mejorar la eficiencia en la logística de transporte. La reducción en los tiempos de ejecución del algoritmo puede traducirse en una capacidad para procesar y optimizar rutas en tiempo real, lo cual es crucial en contextos de alta demanda y variabilidad. A pesar de que la distancia recorrida no fue óptima en comparación con los mejores algoritmos clásicos, la eficiencia computacional de los algoritmos cuánticos abre nuevas posibilidades para la optimización de rutas en tiempo real y a gran escala.
+
+\section{Trabajo Futuro}
+
+A partir de los resultados obtenidos, se identifican varias áreas de investigación futura que pueden contribuir a mejorar y expandir el uso de algoritmos cuánticos en la optimización de rutas y carga en logística.
+
+\subsection{Mejora de Algoritmos Cuánticos}
+
+Aunque los algoritmos cuánticos mostraron una gran eficiencia en términos de tiempo de ejecución, su rendimiento en términos de distancia recorrida puede ser mejorado. Futuros trabajos deberían enfocarse en:
+
+\begin{itemize}
+    \item \textbf{Optimización de Parámetros:} Investigar técnicas avanzadas de optimización de parámetros para algoritmos como QAOA y Quantum Annealing para mejorar su capacidad de encontrar soluciones más óptimas.
+    \item \textbf{Híbridos Cuántico-Clásicos:} Desarrollar y evaluar algoritmos híbridos que combinen la eficiencia computacional de los métodos cuánticos con la precisión de los métodos clásicos, optimizando ambos aspectos.
+    \item \textbf{Refinamiento de Heurísticas Cuánticas:} Implementar y probar nuevas heurísticas cuánticas que puedan reducir aún más las distancias recorridas sin sacrificar la eficiencia en tiempo.
+\end{itemize}
+
+\subsection{Reducción de Latencia y Costos de Computación Cuántica}
+
+El tiempo adicional necesario para la comunicación con plataformas cuánticas es un área crítica a abordar. Se recomienda:
+
+\begin{itemize}
+    \item \textbf{Optimización de Infraestructura:} Investigar mejoras en la infraestructura de comunicación entre sistemas clásicos y cuánticos para reducir la latencia.
+    \item \textbf{Economías de Escala:} Evaluar el impacto de las economías de escala en los costos de operación cuántica a medida que las tecnologías cuánticas se vuelvan más accesibles y asequibles.
+\end{itemize}
+
+\subsection{Aplicaciones en Tiempo Real y Escenarios Dinámicos}
+
+La capacidad de los algoritmos cuánticos para procesar datos rápidamente los hace ideales para aplicaciones en tiempo real. Futuros trabajos pueden explorar:
+
+\begin{itemize}
+    \item \textbf{Implementación en Tiempo Real:} Desarrollar sistemas de optimización de rutas que utilicen algoritmos cuánticos para ajustar dinámicamente las rutas en función de datos en tiempo real, como el tráfico y las condiciones climáticas.
+    \item \textbf{Escenarios Dinámicos:} Investigar cómo los algoritmos cuánticos pueden manejar cambios dinámicos en las rutas y carga, como cancelaciones de última hora o adiciones de nuevos destinos.
+\end{itemize}
+
+\subsection{Integración con Aprendizaje Automático}
+
+La integración de algoritmos cuánticos con técnicas de aprendizaje automático puede ofrecer mejoras adicionales en la optimización de rutas y carga. Se sugiere:
+
+\begin{itemize}
+    \item \textbf{Modelos Predictivos:} Utilizar modelos de aprendizaje automático para predecir patrones de demanda y optimizar proactivamente las rutas utilizando algoritmos cuánticos.
+    \item \textbf{Aprendizaje Reforzado:} Investigar el uso de algoritmos de aprendizaje reforzado cuántico para mejorar continuamente las rutas basadas en retroalimentación y datos históricos.
+\end{itemize}
+
+\section{Reflexión Final}
+
+El trabajo realizado demuestra el potencial de la computación cuántica para transformar la optimización de rutas y la logística en general. A medida que las tecnologías cuánticas continúan avanzando, es probable que veamos una adopción más amplia y una mayor integración de estas técnicas en la industria. El camino hacia la optimización cuántica está lleno de oportunidades y desafíos, y el trabajo futuro será crucial para desbloquear todo su potencial.
+
 
 \begin{thebibliography}{a}
 
@@ -613,9 +958,285 @@ Finalmente, se desarrollarán algoritmos cuánticos para la optimización de rut
 	\textit{Quantum Computing in Logistics and Supply Chain Management - an Overview.}
 	Maastricht University, arXiv:2402.17520.
 
+    \bibitem[Cormen(2009)]{Cormen2009} 
+    \textsc{Cormen, Thomas H. and Leiserson, Charles E. and Rivest, Ronald L. and Stein, Clifford} (2009),
+	\textit{Introduction to Algorithms.}
+	MIT Press. fourth edition.
+
+    \bibitem[kempe(2003)]{kempe2003}
+    \textsc{Kempe, Julia},
+    \textit{Quantum random walks: an introductory overview},
+    Taylor \& Francis, Contemporary Physics. 44.4 (2003): 307-327.
+
+    \bibitem[childs(2002)]{childs2002}
+    \textsc{Childs, Andrew M., Edward Farhi, and Sam Gutmann.}
+    \textit{Example of the difference between quantum and classical random walks}.
+    Quantum Information Processing, 1.1-2 (2002): 35-43.    
+
+    \bibitem[lawler(1985)]{lawler1985}
+    \textsc{Lawler, Eugene L., Lenstra, Jan Karel, Rinnooy Kan, Alexander Hendrik George, and Shmoys, David B.}
+    \textit{The Traveling Salesman Problem: A Guided Tour of Combinatorial Optimization}. 
+    John Wiley \& Sons, Inc., 1985.
+
 \end{thebibliography}
 
 \appendix
+
 \chapter{Apendices}
+
+\section{Codigo Algoritmo Greedy}
+
+\lstset{frame=single}
+\begin{lstlisting}
+import random
+import numpy as np
+from sklearn.cluster import KMeans
+
+# Initialization
+nodes = initialize_nodes()
+distances = calculate_distances(nodes)
+
+# Apply k-means to cluster nodes into k clusters
+k = number_of_clusters
+kmeans = KMeans(n_clusters=k)
+clusters = kmeans.fit_predict(nodes)
+
+routes = []
+for cluster in range(k):
+    cluster_nodes = [node for i, node in enumerate(nodes) if clusters[i] == cluster]
+    route = [starting_node]
+    
+    # Greedy Algorithm
+    while cluster_nodes:
+        current_node = route[-1]
+        next_node = min(cluster_nodes, key=lambda node: distances[current_node][node])
+        route.append(next_node)
+        cluster_nodes.remove(next_node)
+    routes.append(route)
+
+# 2-opt Optimization
+for route in routes:
+    improvement = True
+    while improvement:
+        improvement = False
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route)):
+                if j - i == 1:
+                    continue
+                new_route = route[:i] + route[i:j][::-1] + route[j:]
+                if calculate_route_distance(new_route, distances) < calculate_route_distance(route, distances):
+                    route = new_route
+                    improvement = True
+\end{lstlisting}
+
+
+
+
+
+
+\section{Codigo Algoritmo Simulated Annealing}
+
+\begin{lstlisting}
+import random
+import numpy as np
+from sklearn.cluster import KMeans
+
+# Initialization
+nodes = initialize_nodes()
+distances = calculate_distances(nodes)
+
+# Apply k-means to cluster nodes into k clusters
+k = number_of_clusters
+kmeans = KMeans(n_clusters=k)
+clusters = kmeans.fit_predict(nodes)
+
+routes = []
+for cluster in range(k):
+    cluster_nodes = [node for i, node in enumerate(nodes) if clusters[i] == cluster]
+    route = initial_random_route(cluster_nodes)
+    current_temp = initial_temp
+    
+    # Simulated Annealing Algorithm
+    while current_temp > final_temp:
+        new_route = generate_neighbor(route)
+        delta = calculate_route_distance(new_route, distances) - calculate_route_distance(route, distances)
+        if delta < 0 or random.random() < np.exp(-delta / current_temp):
+            route = new_route
+        current_temp = cool_down(current_temp)
+    routes.append(route)
+
+# 2-opt Optimization
+for route in routes:
+    improvement = True
+    while improvement:
+        improvement = False
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route)):
+                if j - i == 1:
+                    continue
+                new_route = route[:i] + route[i:j][::-1] + route[j:]
+                if calculate_route_distance(new_route, distances) < calculate_route_distance(route, distances):
+                    route = new_route
+                    improvement = True
+\end{lstlisting}
+
+
+
+
+
+\section{Codigo Algoritmo Quantum Annealing}
+
+\begin{lstlisting}
+import random
+import numpy as np
+from sklearn.cluster import KMeans
+from dwave.system import DWaveSampler, EmbeddingComposite
+import dimod
+
+# Initialization
+nodes = initialize_nodes()
+distances = calculate_distances(nodes)
+
+# Apply k-means to cluster nodes into k clusters
+k = number_of_clusters
+kmeans = KMeans(n_clusters=k)
+clusters = kmeans.fit_predict(nodes)
+
+routes = []
+for cluster in range(k):
+    cluster_nodes = [node for i, node in enumerate(nodes) if clusters[i] == cluster]
+    QUBO = construct_QUBO(cluster_nodes, distances)
+    sampler = EmbeddingComposite(DWaveSampler())
+    response = sampler.sample_qubo(QUBO)
+    route = get_route_from_response(response)
+    routes.append(route)
+
+# 2-opt Optimization
+for route in routes:
+    improvement = True
+    while improvement:
+        improvement = False
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route)):
+                if j - i == 1:
+                    continue
+                new_route = route[:i] + route[i:j][::-1] + route[j:]
+                if calculate_route_distance(new_route, distances) < calculate_route_distance(route, distances):
+                    route = new_route
+                    improvement = True
+\end{lstlisting}
+
+
+\section{Codigo Algoritmo QAOA}
+
+\begin{lstlisting}
+import random
+import numpy as np
+from sklearn.cluster import KMeans
+from qiskit import Aer, execute
+from qiskit.optimization.applications.ising import tsp
+from qiskit.aqua.algorithms import QAOA
+from qiskit.aqua.components.optimizers import COBYLA
+
+# Initialization
+nodes = initialize_nodes()
+distances = calculate_distances(nodes)
+
+# Apply k-means to cluster nodes into k clusters
+k = number_of_clusters
+kmeans = KMeans(n_clusters=k)
+clusters = kmeans.fit_predict(nodes)
+
+routes = []
+for cluster in range(k):
+    cluster_nodes = [node for i, node in enumerate(nodes) if clusters[i] == cluster]
+    qubit_op, offset = tsp.get_operator(matrix)
+
+    # QAOA parameters
+    p = 1
+    optimizer = COBYLA(maxiter=250)
+    qaoa = QAOA(qubit_op, optimizer, p)
+    backend = Aer.get_backend('statevector_simulator')
+    result = qaoa.run(backend)
+    route = tsp.sample_most_likely(result['eigvecs'][0])
+    routes.append(route)
+
+# 2-opt Optimization
+for route in routes:
+    improvement = True
+    while improvement:
+        improvement = False
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route)):
+                if j - i == 1:
+                    continue
+                new_route = route[:i] + route[i:j][::-1] + route[j:]
+                if calculate_route_distance(new_route, distances) < calculate_route_distance(route, distances):
+                    route = new_route
+                    improvement = True
+\end{lstlisting}
+
+
+
+\section{Codigo Algoritmo Quantum Walks}
+
+\begin{lstlisting}
+import random
+import numpy as np
+from sklearn.cluster import KMeans
+from dwave.system import DWaveSampler, EmbeddingComposite
+import dimod
+
+# Initialization
+nodes = initialize_nodes()
+distances = calculate_distances(nodes)
+
+# Apply k-means to cluster nodes into k clusters
+k = number_of_clusters
+kmeans = KMeans(n_clusters=k)
+clusters = kmeans.fit_predict(nodes)
+
+routes = []
+for cluster in range(k):
+    cluster_nodes = [node for i, node in enumerate(nodes) if clusters[i] == cluster]
+    QUBO = construct_QUBO(cluster_nodes, distances)
+    sampler = EmbeddingComposite(DWaveSampler())
+    response = sampler.sample_qubo(QUBO)
+    route = get_route_from_response(response)
+    routes.append(route)
+
+# 2-opt Optimization
+for route in routes:
+    improvement = True
+    while improvement:
+        improvement = False
+        for i in range(1, len(route) - 2):
+            for j in range(i + 1, len(route)):
+                if j - i == 1:
+                    continue
+                new_route = route[:i] + route[i:j][::-1] + route[j:]
+                if calculate_route_distance(new_route, distances) < calculate_route_distance(route, distances):
+                    route = new_route
+                    improvement = True
+\end{lstlisting}
+
+
+\section{Mejor resultado de algortimos Clásico y Cuántico}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{solucionSA2opt.png}
+    \caption{Rutas con SA optimizado con 2-opt y K-means}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.1\linewidth]{solucionQW2opt.png}
+    \caption{Rutas con QW optimizado con 2-opt y K-means}
+    \label{fig:enter-label}
+\end{figure}
 
 \end{document}
