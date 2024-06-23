@@ -1,51 +1,255 @@
 \chapter{Introducción}
 
-El primer capítulo es siempre una introducción. En ella debes resumir de forma esquemática pero suficientemente clara lo esencial de cada una de las partes del trabajo. La lectura de este primer capítulo ha de dar una primera idea clara de lo que se pretendía, las conclusiones a las que se ha llegado y del procedimiento seguido.
+El concepto de computación cuántica se remonta a los años 1980, cuando Richard Feynman, físico del Instituo de Tecnología de California (Estados Unidos), la propuso en una ponencia titulada Simulación de la física con computadoras.
 
-Como tal, es uno de los capítulos más importantes de la memoria. Las ideas principales a transmitir son la identificación del problema a tratar, la justificación de su importancia, los objetivos generales (a grandes rasgos) y un adelanto de la contribución que esperas hacer.
+Desde entonces, la computación cuántica ha ido desarrollándose y cogiendo fuerza gracias a investigadores como David Deutsch, físico israelí de la Universidad de Oxford (Inglaterra), que descibió por primera vez cómo debería ser un ordenador cuántico o a investigadores como Dan Simon, Lov Grover y Peter Shor que en la década de los 90 empezarón a desarrollar los primeros algoritmos cuánticos.
 
-Típicamente una introducción tiene tres apartados: Motivación, Planteamiento del trabajo, Estructura del trabajo. (Texto Normal del menú de estilos.)
+\section{Conceptos de Computación Cuántica}
+La computación cuántica consiste en aplicar conceptos de la Mecánica Cuántica a la computación, ofreciendo determinadas ventajas con respecto a la computación tradicional.
+Algunos de los conceptos más importantes son los siguientes:
 
-(Ejemplo de nota al pie\footnote{Ejemplo de nota al pie.}.)
+\begin{enumerate}
+    \item \textbf{Qubit:} análogamente al bit clásico, se define el qubit (quantum bit) con la unidad básica de información en la computación cuántica.
+    A diferencia de un bit, que sólamente puede estar en los estados 0 y 1, un qubit pueda estar en una superposición de ambos estados simultáneamente.
+
+    
+    \item \textbf{Principio de Superposición:} el principio de superposición hace referencia al hecho de que un qubit pueda estar como comentábamos en una superposición de los estados base $|0\rangle$ y $|1\rangle$ (que serían el equivalente cuántico a los estados 0 y 1 clásicos).
+    Matemáticamente, representamos el estado de un qubit con como:
+    $$|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$$
+    con $|\alpha|^2 + |\beta|^2 = 1$.
+
+    O también en forma matricial:
+    $$|\psi\rangle = \alpha\begin{pmatrix}
+         1  \\
+         0 
+    \end{pmatrix}
+    +
+    \beta\begin{pmatrix}
+         0  \\
+         1 
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+         \alpha  \\
+         \beta 
+    \end{pmatrix}
+    $$
+
+    \item \textbf{Entrelazamiento:} el principio de entrelazamiento es un fenómeno de la mecánica cuántica consistente en que el estado de dos o más qubits quedan relacionados, de forma que influir en el estado de un qubit, afecta al resto de qubits incluso aunque se encuentren separados por grandes distancias.
+    Este principio es muy importante para la computación cuántica y es usado en multitud de algoritmos cuánticos.
+
+    \item \textbf{Medición cuántica:} la forma que tenemos de medir un estado en computación cuántica es muy diferente a la computación clásica, cuando medimos un qubit, este colapsa a uno de sus estados básicos $|0\rangle$ o $|1\rangle$ con una probabilidad de $|\alpha|^2$ y $|\beta|^2$ respectivamente.
+
+    \item \textbf{Producto tensorial:} la forma que tenemos de trabajar con el estado combinado de varios qubits es mediante el producto tensorial. 
+    Si tenemos dos qubits en los estados $|\psi\rangle$ y $|\phi\rangle$, el estado combinado de ambos vendrá dado por:
+    $$|\psi\rangle \otimes |\phi\rangle$$
+    Los estados básicos que podrán adoptar estos qubits vendrán dados por los productos tensoriales de los estados $|0\rangle$ y $|1\rangle$ y se definen por comodidad de la siguiente manera:
+    $$|00\rangle = |0\rangle \otimes |0\rangle$$
+    $$|01\rangle = |0\rangle \otimes |1\rangle$$
+    $$|10\rangle = |1\rangle \otimes |0\rangle$$
+    $$|11\rangle = |1\rangle \otimes |1\rangle$$
+
+    \item \textbf{Principio de no clonación:} este principio establece que el estado de un qubit no puede ser copiado a otro qubit sin ser destruido en el proceso.
+    
+    Si bien puede parecer un inconveniente ya que nos restringe la manipulación de los estados cuánticos, también es responsable de cosas como la seguridad de la criptografía cuántica.
+
+    \item \textbf{Puerta cuántica:} la forma que tenemos de trabajar en computación cuántica es mediante el uso de puertas cuánticas.
+    Algunas de estas puertas cuánticas se comportan de forma similar a puertas lógicas de la computación clásica como la puerta XOR, pero otras sin embargo no tienen contraparte clásica.
+    Matemáticamente se relacionan con operadores unitarios y pueden ser representadas mediante matrices con valores complejos.
+    
+    Una puerta cuántica de un qubit puede ser representada por una matriz unitaria de tamaño $2\times2$, una puerta cuántica de $2$ qubits por una matriz $4\times4$, y en general, una puerta cuántica de $n$ qubits, podrá ser representada por una matriz unitaria compleja de tamaño $2^n \times 2^n$.
+\end{enumerate}
+
+
+\section{Puertas Cuánticas}
+Como ya hemos mencionado, una puerta cuántica $U$ de $n$ qubits, es un operador unitario que puede ser representado con una matriz compleja de tamaño $2^n \times 2^n$.
+
+Se requiere que sea unitaria para que las puertas cuánticas puedan ser invertibles y conserven la distancia (y así si un estado al que se le ha aplicado una puerta unitaria $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ siga verificando que $|\alpha|^2 + |\beta|^2 = 1$.
+
+Algunas de las puertas cuánticas más importantes son las siguientes:
+
+\begin{enumerate}
+    \item \textbf{Hadamard:} Representada por $H$, la puerta Hadamard es una de las puertas cuánticas más usadas puesto que permite colocar un estado en superposición:
+    $$H|0\rangle=\frac{1}{\sqrt2}(|0\rangle+|1\rangle)$$
+    $$H|1\rangle=\frac{1}{\sqrt2}(|0\rangle-|1\rangle)$$
+    Dichos estados suelen representarse comúnmente por $|+\rangle$ y $|-\rangle$.
+
+    La puerta Hadamard se representa matricialmente como:
+    $$H=\frac{1}{\sqrt2}\begin{pmatrix}
+        1 & 1 \\
+        1 & -1 \\
+    \end{pmatrix}$$
+
+    
+    \item \textbf{Pauli-X:} también llamada puerta Not, se representa por $X$, esta puerta intercambia los estados $|0\rangle$ y $|1\rangle$:
+    $$X|0\rangle = |1\rangle$$
+    $$X|1\rangle = |0\rangle$$
+    Se representa matricialmente como:
+    $$X=\begin{pmatrix}
+        0 & 1 \\
+        1 & 0 \\
+    \end{pmatrix}$$    
+
+    \item \textbf{Pauli-Y:} Representada por $Y$, esta puerta intercambia los estados $|0\rangle$ y $|1\rangle$ con un cierto factor de fase:
+    $$Y|0\rangle = i|1\rangle$$
+    $$Y|1\rangle = -i|0\rangle$$
+    Se representa matricialmente como:
+    $$Y=\begin{pmatrix}
+        0 & -i \\
+        i & 0 \\
+    \end{pmatrix}$$   
+
+    
+    \item \textbf{Pauli-Z:} Representada por $Z$, esta puerta aplica un cambio de fase al estado $|1\rangle$ y deja inalterado al estado $|0\rangle$:
+    $$Z|0\rangle = |0\rangle$$
+    $$Z|1\rangle = -|1\rangle$$
+    Se representa matricialmente como:
+    $$Z=\begin{pmatrix}
+        1 & 0 \\
+        0 & -1 \\
+    \end{pmatrix}$$   
+
+
+    \item \textbf{Puerta de Fase S:} Representada por $S$, esta puerta introduce una rotación de $\frac{\pi}{2}$ alrededor del eje Z del qubit:
+    $$S|0\rangle = |0\rangle$$
+    $$S|1\rangle = i|1\rangle$$
+    Se representa matricialmente como:
+    $$S=\begin{pmatrix}
+        1 & 0 \\
+        0 & i \\
+    \end{pmatrix}$$   
+    Notar que dos puertas $S$ equivalen a una puerta $Z$.
+    
+
+    \item \textbf{T:} Representada por $T$, esta puerta introduce una rotación de $\frac{\pi}{4}$ alrededor del eje Z del qubit, es similar a la puerta $S$ pero rotando sólo $\frac{\pi}{4}$:
+    $$T|0\rangle = |0\rangle$$
+    $$T|1\rangle = e^{i\pi/4}|1\rangle$$
+    Se representa matricialmente como:
+    $$T=\begin{pmatrix}
+        1 & 0 \\
+        0 & e^{i\pi/4} \\
+    \end{pmatrix}$$   
+    Notar que dos puertas $T$ equivalen a una puerta $S$.   
+
+
+    \item \textbf{CNOT:} puerta de dos qubits, también llamada Control-Not.
+    
+    Representada por $CNOT$, esta puerta aplica una puerta $X$ al segundo qubit sólo si el primer qubit (qubit de control):
+    Se suele escribir como:
+    $$CNOT(|a\rangle|b\rangle) = |a\rangle|a\oplus b\rangle$$
+    Donde $\oplus$ representa la suma módulo 2.
+    
+    Se representa matricialmente como:
+    $$CNOT=\begin{pmatrix}
+        1 & 0 & 0 & 0\\
+        0 & 1 & 0 & 0\\
+        0 & 0 & 0 & 1\\
+        0 & 0 & 1 & 0\\
+    \end{pmatrix}$$   
+
+
+    \item \textbf{SWAP:} representada por $SWAP$, esta puerta intercambia los estados de dos qubits:
+    $$SWAP(|a\rangle|b\rangle) = |b\rangle|a\rangle$$
+    
+    Se representa matricialmente como:
+    $$SWAP=\begin{pmatrix}
+        1 & 0 & 0 & 0\\
+        0 & 0 & 1 & 0\\
+        0 & 1 & 0 & 0\\
+        0 & 0 & 0 & 1\\
+    \end{pmatrix}$$   
+
+    \item \textbf{Toffoli:} representada por $TOFFOLI$ o también por $CCNOT$ esta puerta es similar a la puerta CNOT, pero con dos qubits de control y un tercer qubit como objetivo:
+    $$TOFFOLI(|a,b,c\rangle) = |a,b,c \oplus (a\wedge b)\rangle$$
+    Donde $oplus$ representa la suma módulo 2 (equivalente a la puerta XOR clásica), y $\wedge$ equivaldría a la puerta AND clásica.
+    
+    Se representa matricialmente como:
+    $$TOFFOLI=\begin{pmatrix}
+        1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+        0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+        0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+        0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+        0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+        0 & 0 & 0 & 0 & 0 & 1 & 0 & 0\\
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\
+        0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\\
+    \end{pmatrix}$$   
+    
+\end{enumerate}
+
+
+\section{Algoritmo de Shor}
+Uno de los algoritmos que más revolucionó el mundo de la computación cuántica es el algoritmo de Shor, el cual utilizaremos en uno de los dos enfoques en los que dividiremos este trabajo.
+$\\$
+
+El algoritmo de Shor fue propuesto por Peter Shor en 1994 y es sin duda el algoritmo más famoso y que más ha impulsado el avance en el área de la computación cuántica. Esto es debido a que permite resolver el problema de la factorización de números enteros en tiempo polinómico, lo cual implica que la mayoría de sistemas criptográficos actuales dejen de servir, al estar basados en la imposibilidad actual de factorizar grandes números enteros.
+$\\$
+
+El algoritmo de Shor puede dividirse en dos partes, una clásica y una cuántica que es la que usaremos más adelante en el trabajo.
+
+Sea $N\in\mathbf{N}$ el número que queremos factorizar en un producto de otros dos números (para descomponerlo totalmente podríamos repetir la operación con cada una de las partes).
+El algoritmo de Shor se puede resumir de la siguiente manera:
+
+\begin{enumerate}
+        \item Seleccionamos un número aleatorio $a$ tal que $1<a<N$
+        \item Calculamos el máximo común divisor (MCD) de $a$ y $N$ usando el algoritmo de Euclides, si es distinto de 1, entonces hemos encontrado un factor de $N$ no trivial (distinto de $1$ y $N$).
+        \item Encontrar el periodo $r$ de la función $f(x)=a^x \mod N$ usando la Transformada de Fourier Cuántica (QFT).
+        \item Si $r$ es impar, entonces volvemos al paso 1 (elegimos un nuevo $a$ y repetimos el proceso).
+        \item Calculamos $m=MCD(N,a^{r/2}+1)$. Si $m$ es no trivial, entonces los factores serán $m$ y $\frac{N}{m}$, en caso contrario volvemos al paso 1.
+\end{enumerate}
+
+
+\subsection{Parte Cuántica para hallar el periodo}
+El objetivo de esta parte del algoritmo que tanto nos interesa particularmente, es el siguiente:
+
+Dado dos enteros coprimos $N$ y $a$ que verifiquen $1<a<N$, buscaremos el menor entero $r$ que verifique $a^r \equiv 1 \mod N$.
+$\\$
+
+Para conseguirlo el algoritmo de Shor utiliza un circuito cuántico con dos registros cuánticos.
+El segundo registro tratará de $n$ qubits, donde $n$ es el menor entero tal que $N<2^n$ (es decir n es la potencia de 2 inmediatamente superior a $N$). 
+El número de qubits del primer registro determinará como de precisa será la aproximación que produce nuestro circuito.
+
+El algoritmo consiste en dos pasos:
+\begin{enumerate}
+    \item \textbf{Uso de la estimación de fase cuántica (QPE):} Utilizaremos el algoritmo de estimación de fase cuántica con el operador unitario $U$, que representará la operación de multiplicar por $a \mod N$.
+
+    Los valores propios de $U$ codifican información sobre el periodo y gracias a esto, el algoritmo QPE nos permitirá extraer un entero de la forma $\frac{j}{r}2^{2n+1}$ para un $j=0,1,...,r-1$ aleatorio.
+
+    \item \textbf{Uso del algoritmo de fracción continua:} utilizaremos este algoritmo clásico para extraer el valor $r$ de la medición obtenida por el QPE.
+
+    Este algoritmo esta basado en las fracciones continuas, que son fracciones infinitas de la forma:
+    $$x=a_0 + \frac{1}{a_1 + \frac{1}{a_2 + \frac{1}{a_3 + \frac{1}{. . .}}}}$$
+\end{enumerate}
+
+
+
 
 \section{Motivación/justificación del tema a tratar}
+La intención de este trabajo es estudiar la viabilidad de desarrollar algoritmos que aporten evidencia computacional o busquen contraejemplos de conjeturas matemáticas no resueltas hasta la fecha.
 
-¿Cuál es el problema que quieres tratar?
+Para este trabajo hemos elegido la conjetura de Collatz, que es una conjetura matemática dentro de la teoría de números que sigue sin haber sido resuelta desde que fue propuesta en 1937 por Lothar Collatz.
 
-¿Cuáles crees que son las causas?
-
-¿Por qué es relevante el problema?
-
-A continuación, se indica con un ejemplo cómo deben introducirse los títulos y las fuentes en Tablas y Figuras.
-
-\begin{table}[t]
-	\begin{center}
-	\caption{Ejemplo de tabla con sus principales elementos.}
-	\label{tab:tab-1}
-	\includegraphics[width=4.90737in,height=2.42708in]{tabla}
-
-	\small Fuente: American Psychological Association, 2020e.
-	\end{center}
-\end{table}
-
-\begin{figure}[ht]
-	\begin{center}
-		\caption{Ejemplo de figura realizada para nuestro trabajo.}
-		\label{fig:fig-1}
-		\includegraphics[width=4.90737in,height=2.42708in]{figura}
-
-		\small Fuente: American Psychological Association, 2020f.
-	\end{center}
-\end{figure}
 
 \section{Planteamiento del trabajo/problema}
+Para resolver una conjetura matemática puede hacerse de dos formas, bien podemos demostrar matemáticamente que es cierta siempre, o bien podemos aportar un ejemplo particular que la contradiga, en cuyo caso se considera que ha sido resuelta como falsa (en general).
+$\\$
 
-¿Cómo se podría solucionar el problema?
+Desde que se propuso la conjetura, se han ido demostrando resultados parciales (algunos de los cuales utilizaremos para optimizar nuestros algoritmos), así como también se ha comprobado computacionalmente para cierto rango de valores.
+$\\$
 
-¿Qué es lo que se propone?
+En este trabajo plantearemos dos enfoques de algoritmos cuánticos diferentes para tratar de aportar evidencia computacional, realizaremos pruebas con entornos de simulación y con pocos números de qubits y analizaremos su posible escalabilidad a sistemas con un mayor número de qubits.
+$\\$
 
-Aquí describes tu objetivo en términos generales.
+El primero de los dos enfoques se tratará como mencionamos en utilizar la parte cuántica del algoritmo de Shor para la búsqueda del periodo. Con el uso de este algoritmo cuántico sumado a una parte clásica que desarrollemos, trataremos de encontrar ciertos valores en específico que puedan ser contraejemplo de la conjetura.
+$\\$
+
+Para el segundo enfoque, desarrollaremos un algoritmo cuántico propio en el que utilizaremos la ventaja cuántica de la superposición para obtener la comprobación de la conjetura en un rango de valores simultáneamente (en lugar de ir iterando uno a uno como se hace de forma clásica).
 
 \section{Estructura del trabajo}
+Primero definiremos la conjetura de Collatz e introduciremos una serie de nociones y conceptos relacionados que nos servirán para el desarrollo e implementación de nuestros algoritmos, también mencionaremos resultados parciales de interés que ya han sido demostrados y hablaremos del estado en el que se encuentra actualmente la conjetura.
 
-Aquí describes brevemente lo que vas a contar en cada uno de los capítulos siguientes.
+Posteriormente hablaremos de los objetivos que queremos conseguir con cada uno de los dos enfoques en los que hemos dividido este trabajo.
+
+Después desarrollaremos los algoritmos en ambos enfoques, explicando el uso que damos de ellos así como de los resultados parciales sobre la conjetura que han sido demostrados hasta hoy por diversos investigadores.
+
+Por último probaremos los algoritmos en entornos simulados y de pocos qubits y discutiremos sobre su escalabilidad y posible implementación a gran escala (con ordenadores cuánticos de un gran número de qubits).

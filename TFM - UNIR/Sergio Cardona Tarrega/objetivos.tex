@@ -1,4 +1,33 @@
 \chapter{Objetivos}
-Es muy importante indicar claramente los objetivos del trabajo. Puede haber una sección de objetivos generales y otra de objetivos específicos, donde se detallen de forma más esquemáticas todos los pasos necesarios para conseguir los generales.
-\section{Objetivos generales}
-\section{Objetivos específicos}
+Como ya hemos mencionado dividiremos el trabajo en dos enfoques diferentes.
+
+\section{Uso de Algoritmo de Shor para la búsqueda de ciclos de Collatz}
+
+En el primer enfoque trataremos de utilizar la parte cuántica del algoritmo de Shor para desarrollar un algoritmo híbrido (con una parte clásica y una parte cuántica similar a la de Shor), que busque determinados ciclos de Collatz para hallar así un contraejemplo de la conjetura.
+
+Utilizaremos además resultados sobre la conjetura de Collatz para agilizar este algoritmo, como por ejemplo el hecho de que los ciclos han de ser de determinada manera dada por \ref{RestriccionLongitudCiclo} o el hecho de que los $k-ciclos$ no existen si $k\leq91$ como se puede ver en \cite{hercher2023collatzmcycles}
+
+
+\section{Uso de la representación binaria en superposición}
+Para el segundo enfoque usaremos $q$ qubits para representar una superposición de todos los números desde el $0$ hasta el $2^q - 1$ en su forma binaria, en la que cada qubit en estado $|0\rangle$ o $|1\rangle$ representará que su correspondiente dígito binario es $0$ o $1$.
+
+por ejemplo el estado $|1011\rangle$ representaría al número binario $1011$ ($11$).
+$\\$
+
+Utilizaremos la ventaja cuántica de la superposición, aplicando una puerta Hadamard a cada qubit y después trataremos de desarrollar un circuito cuántico que aplique $p$ iteraciones para comprobar finalmente que hemos alcanzado el estado correspondiente al número $1$, lo cual significará que todos los números de $q$ dígitos binarios (menores a $2^q$), verifican la conjetura.
+
+Para ello necesitaremos qubits auxiliares y una elección de $q$ y $p$ adecuados.
+$\\$
+
+Este enfoque tiene dos principales inconvenientes.
+
+El primero de ellos es la imposibilidad que tenemos en la computación cuántica de leer el estado del circuito sin que colapse, por lo tanto tendremos agenciárnoslas para determinar cuando el estado es $1$ y cuando es una superposición del estado $1$ con otro estado.
+Para ello deberemos medir el estado y ejecutar el algortimo varias veces (y teniendo en cuenta el ruido), o bien utilizar alguna técnica para estimar el estado.
+
+El segundo inconveniente es que los algoritmos que desarrollemos tendrán una gran cantidad de puertas cuánticas y deberemos compactar el algoritmo en gran medida (utilizando quizás más qubits auxiliares) y teniendo siempre en cuenta que es posible que la ventaja cuántica que nos ofrecen estos posibles algoritmos quede contrarrestada por el crecimiento no lineal de puertas cuánticas.
+
+
+\section{Análisis de resultados}
+Analizaremos los resultados de ambos enfoques primero en simulador y después en un entorno real de pocos qubits para ver como sería aplicar el proceso a gran escala cuando contemos con ordenadores cuánticos de un mayor número de qubits.
+
+También analizaremos si merece la pena usar los algoritmos desarrollados en ambos enfoques y si podrían resultar a ser una ventaja respecto a sus posibles contrapartes clásicas a grandes escalas de cantidad de qubits (probablemente con la cantidad de qubits en los que trabajemos no lo sean). 

@@ -1,5 +1,110 @@
 \chapter{Resultados / Análisis / Comparativa / Discusión de resultados}
-Es muy importante presentar los resultados de forma clara y detallada. Analizar estos resultados, presentar comparaciones con otros trabajos y/o entre las distintas soluciones que aportemos. También es muy importante analizar cuidadosamente todos estos resultados.
 
-
+\section{Enfoque de busqueda de s-ciclos mediante el algoritmo de Shor}
 Aqui haremos comparativa de tiempos de ejecución y resultados para la búsqueda de s-ciclos con el algoritmo de Shor y clásico (y para otros métodos de búsqueda si nos ocurren)
+
+
+\section{Enfoque de superposición en representación binaria}
+Aquí haremos un recuento de las puertas que utilizamos y analizaremos si el algoritmo es viable a gran escala (es decir si el hecho de que la superposición nos permite resolver todos los números de nuestro rango simultáneamente no es contrarrestado por el crecimiento exponencial del número de puertas).
+
+
+\section{Aplicación del algoritmo}
+Aplicamos el algoritmo para todos los números hasta 7 con 4 iteraciones (sabemos que es suficiente pues tienen poco tiempo de parada).
+
+\begin{lstlisting}[language=Python]
+num_iter =  4
+num_digits = 3
+num_qubits = num_iter + num_digits
+
+q = QuantumRegister(num_qubits, 'q')
+a = QuantumRegister(num_qubits, 'a')
+m = ClassicalRegister(num_qubits, 'm')
+circuitoCollatz = QuantumCircuit(q, a, m)
+
+
+#Iniciamos los primeros qubits en superposición
+for i in range(0, num_digits):
+    circuitoCollatz.h(q[i])
+
+
+#Iniciamos el sistema con n=13 (01101)
+#n=0
+#circuitoCollatz.initialize(n, q)
+
+
+circuitoCollatz.barrier()
+
+
+#circuitoCollatz.initialize(0, a)
+#print ("Aplicando Circuito: ", num_digits, ",", 0)
+#circuitoCollatz = circuitoCollatz.compose(PuertaIteracionCollatz(num_digits), qubits = [q[0], q[1], q[2], q [3], a[0], a[1], a[2]])
+circuitoCollatz = ComposeCollatz(circuitoCollatz, q, a, num_digits, 0)
+
+circuitoCollatz.barrier()
+
+for j in range(1, num_iter):
+    for i in range(0, num_digits+j):
+        circuitoCollatz = ComposeCollatz(circuitoCollatz, q, a, num_digits+j- i, i)
+    circuitoCollatz.barrier()
+
+
+circuitoCollatz.barrier()
+
+FinalState = Statevector(circuitoCollatz)
+
+print(np.round(FinalState, 2))
+
+#Medimos el resultado
+circuitoCollatz.measure(q, m)
+
+
+
+# aersim = AerSimulator()
+
+# result = qiskit.execute(circuitoCollatz, aersim, shots=100).result()
+# counts = result.get_counts(0)
+# print('Counts:', counts)
+
+
+
+result = sampler_v1.run(circuitoCollatz).result()
+quasi_dist = result.quasi_dists[0]
+print(f"The quasi-probability distribution is: {quasi_dist}")
+Tn = quasi_dist.copy()
+Tn = Tn.popitem()[0]
+print(f'{Tn:06b}', "(Tn=", Tn, ")")
+
+
+
+
+#circuitoCollatz.draw('mpl', scale = 0.5, style="clifford")
+#qiskit.visualization.plot_histogram(quasi_dist, sort='value_desc')
+FinalState.draw('latex')
+\end{lstlisting}
+
+El programa nos muestra la siguiente salida:
+
+\begin{lstlisting}
+[-0.+0.j  0.+0.j  0.+0.j ...  0.+0.j  0.+0.j  0.+0.j]
+The quasi-probability distribution is: {64: 1.0}
+1000000 (Tn= 64 )
+\end{lstlisting}
+
+y nos muestra que el estado final es:
+$$|00000001000000\rangle$$
+Donde los primeros $0$ corresponden a los qubits auxiliares, por tanto podemos eliminarlos y obtener el estado:
+$$|1000000\rangle$$
+
+Esto significa que efectivamente todos los números han convergido después de las $4$ iteraciones a $n=1$, es decir se verifica que la conjetura es cierta para todo $n\leq2^3$ y que además lo hace en un tiempo de parada total menor que 4 (respecto de la Función de Collatz con atajo).
+$\\$
+
+Si ejecutáramos el algoritmo con solo 2 iteraciones de parada, obtendríamos el estado:
+$$|0000010001\rangle$$
+Que después de eliminar los qubits auxiliares nos quedaría como:
+$$|10001\rangle$$
+Lo cual significa que no todos los estados han llegado a $n=1$ (por falta de iteraciones en este caso, aunque podría deberse a que es un contraejemplo de la conjetura en el caso de trabajar con un gran número de qubits).
+
+
+
+
+

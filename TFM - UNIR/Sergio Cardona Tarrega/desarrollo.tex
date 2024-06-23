@@ -3,12 +3,7 @@
 
 \section{Algoritmo de Shor para buscar k-ciclos}
 
-Como ya sabemos, el algoritmo de Shor nos permitiría una eficiencia mayor a la hora de calcular el periodo de la función $2^x \equiv 1 \pmod N$, lo que nos permitiría realizar la búsqueda de ciclos de una mayor longitud.
-
-
-
-\subsection{Breve introducción del algoritmo de Shor}
-(buscar referencias y hacer una introducción al algoritmo de Shor)
+Como ya sabemos, el algoritmo de Shor (referencia al algoritmo de shor), nos permitiría una eficiencia mayor a la hora de calcular el periodo de la función $2^x \equiv 1 \pmod N$, lo que nos permitiría realizar la búsqueda de ciclos de una mayor longitud.
 
 
 
@@ -90,7 +85,7 @@ En caso de que encontráramos un $r$ que sí dividiera a nuestro $Y$, tendríamo
 \subsection{Algoritmo clásico para la búsqueda del periodo}
 Un algoritmo clásico en python para el cálculo del periodo podría ser el siguiente:
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 #Esta funcion busca el menor r>0 que verifica 2^r=1 (mod N) y que sea menor que Y
 #Devolvera 0 si no existe y r>0 si existe
 def CalculoPeriodoClasico(N, Y, debug = False):
@@ -121,7 +116,7 @@ def CalculoPeriodoClasico(N, Y, debug = False):
     
     #Si hemos acabado el for y no ha encontrado r devolvemos 0
     return 0
-\end{verbatim}
+\end{lstlisting}
 
 En este algoritmo (seguro que se puede optimizar), nos detenemos si llegamos a $Y$, puesto que si $r>Y$ entonces nunca será múltiplo, de hecho podríamos optimizar el algoritmo comprobando simplemente los divisores de $Y$ por ejemplo.
 
@@ -139,19 +134,19 @@ Introducir aquí la implementación de la parte cuántica de Shor
 \subsection{Algoritmo de búsqueda de k-ciclos}
 Definimos primero una función que calcule el periodo de forma cuántica o clásica en función de una variable booleana:
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 def CalculoPeriodo(N, Y, esCuantico = False, debugPeriodo = False):
     if esCuantico:
         return CalculoPeriodoCuantico(N, Y, debugPeriodo)
     else:
         return CalculoPeriodoClasico(N, Y, debugPeriodo)
-\end{verbatim}
+\end{lstlisting}
 $\\$
 
 
 Ahora definimos una función para buscar los ciclos de una determinada longitud L:
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 #Esta funcion busca k-ciclos de longitud L
 def BuscarCiclo(L, debug = False, debugPeriodo = False):
     #Establecemos este numero grande para debuggear N grande
@@ -201,7 +196,7 @@ def BuscarCiclo(L, debug = False, debugPeriodo = False):
                 print ("¡¡¡¡¡CICLO ENCONTRADO!!!!!")
                 
     return(r)
-\end{verbatim}
+\end{lstlisting}
 $\\$
 
 
@@ -209,7 +204,7 @@ La función BusquedaYi(r, Y) se encargaría de buscar una combinación válida d
 $\\$
 
 Por último buscamos todos los ciclos que verifiquen la condición $$L = 301994a + 17087915b$$ o bien $$L = 17087915b + 85137581c$$
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 #Buscamos primero el ciclo en que a=0, c=0:
 BuscarCiclo(17087915, True, False)
 
@@ -221,12 +216,12 @@ for i in range(1, 1001):  #Iteramos la variable a entre 1 y 1000 incluidos
         #Buscamos k-ciclos con longitud L teniendo a=0
         L = 85137581 * i + 17087915 * j 
         BuscarCiclo(L, True, False)
-\end{verbatim}
+\end{lstlisting}
 
 
 
 
-\section{Algoritmo Cuántico usando la representación binaria}
+\section{Algoritmo cuántico usando la representación binaria}
 
 Utilizando la representación binaria de un número $n \in \mathbf{N}$, podemos realizar una aplicación de la función de Collatz $T$ (\ref{T(n)}), de la siguiente manera:
 
@@ -365,7 +360,7 @@ Veamos una tabla de verdad:
 \begin{center}
     \begin{tabular}{|c|c|c||c|c|c|}
         \hline
-        $a_0$ & $q_0$ & $q_1$ & $a_1$ & $r_1$\\
+        $a_0$ & $q_0$ & $q_1$ & $a_1$ & $r_0$\\
         \hline
         \hline
         0 & 0 & 0 & 0 & 0 \\
@@ -381,66 +376,279 @@ Veamos una tabla de verdad:
     \end{tabular}
 \end{center}
 
-Vemos que la primera mitad de la tabla de verdad (correspondiente a $a_0=0$), es simplemente una suma sin acarreo entre $q_0$ y $q_1$. Es decir una puerta XOR clásica entre $q_0$ y $q_1$ para hallar $r_1$ y una puerta AND para el acarreo $a_1$. 
+Vemos que la primera mitad de la tabla de verdad (correspondiente a $a_0=0$), es simplemente una suma sin acarreo entre $q_0$ y $q_1$. Es decir una puerta XOR clásica entre $q_0$ y $q_1$ para hallar $r_0$ y una puerta AND para el acarreo $a_1$. 
 
-La puerta XOR equivaldría en cuántica a dos puertas CNOT, de $q_0$ a $r_1$ y de $q_1$ a $r_1$:
+La puerta XOR equivaldría en cuántica a dos puertas CNOT, de $q_0$ a $r_0$ y de $q_1$ a $r_0$:
 
-(insertar imagen de las 2 puertas CNOT)
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{XOR Cuantica.png}
-    \caption{XOR Cuántica}
-    \label{fig:XORCuantica}
-\end{figure}
-
-La puerta AND equivaldría cuánticamente a una puerta de Toffoli (CCNOT) con $q_0$ y $q_1$ como control y $r_1$ como objetivo.
-
-(insertar imagen de la CCNOT)
+\begin{center}
+    \includegraphics[width=0.2\linewidth]{Imagenes/2CNOTS_q0r0_q1r0.png}
+    \label{fig:2CNOTS_q0r0_q1r0}
+\end{center}
 
 
-Para la segunda mitad de la tabla ($a_0=1$) tendremos que para obtener $r_1$ basta con invertir el resultado de la tabla superior, es decir aplicar una puerta NOT, por tanto a la doble puerta CNOT de la tabla anterior le añadiremos una CNOT con $a_0$ como control para obtener el valor de $r_1$ en general.
 
-(insertar imagen de las 3 puertas CNOT)
+La puerta AND equivaldría cuánticamente a una puerta de Toffoli (CCNOT) con $q_0$ y $q_1$ como control y $r_0$ como objetivo:
+
+\begin{center}
+    \includegraphics[width=0.2\linewidth]{Imagenes/1CCNOT_q0q1a1.png}
+    \label{fig:1CCNOT_q0q1a1}
+\end{center}
+
+
+
+
+Para la segunda mitad de la tabla ($a_0=1$) tendremos que para obtener $r_0$ basta con invertir el resultado de la tabla superior, es decir aplicar una puerta NOT, por tanto a la doble puerta CNOT de la tabla anterior le añadiremos una CNOT con $a_0$ como control para obtener el valor de $r_0$ en general.
+
+\begin{center}
+    \includegraphics[width=0.2\linewidth]{Imagenes/3CNOTS_q0r0_q1r0_a0r0.png}
+    \label{fig:3CNOTS_q0r0_q1r0_a0r0}
+\end{center}
+
+
 
 
 Para el valor de $a_1$, tendremos que es $0$ únicamente cuando $q_0$ y $q_1$ son $0$ simultáneamente, por tanto equivaldría a una CCNOT, pero con los qubits de control invertidos (que se puede lograr invirtiendo $q0$ y $q_1$ aplicando una CCNOT y volviéndolos a invertir para quedar como al inicio).
 
-(insertar imagen de las 3 puertas CCNOT)
-
 Una forma más sencilla de ver la salida de $a_1$ es observar que valdrá $1$ cuando $2$ o $3$ de los qubits $a_0$, $q_0$ y $q_1$ valgan $1$, y valdrá $0$ en caso contrario, cuando sólamente 1 de ellos o ninguno tenga valor $0$.
 Esto lo podemos representar cuánticamente como 3 puertas CCNOT con qubits de control $a_0$ y $q_0$, $a_0$ y $q_1$, $q_0$ y $q_1$ respectivamente:
 
-(insertar imagen de las 3 puertas CCNOT)
+\begin{center}
+    \includegraphics[width=0.2\linewidth]{Imagenes/3CCNOTS_a0q0a1_a0q1a1_q0q1a1.png}
+    \label{fig:3CCNOTS_a0q0a1_a0q1a1_q0q1a1}
+\end{center}
 
-Esto es debido a que si únicamente 2 de los 3 qubits tienen valor $1$, se activará únicamente la puerta CCNOT que los tenga como qubits de control, mientras que si están los $3$ activados, se activarán las 3 puertas CCNOT (dando como resultado $1$ en el qubit $r1$).
 
-El circuito final de nuestra función cuántica nos quedaría de la siguiente manera:
 
-(insertar imagen del circuito de la función suma)
+
+Esto es debido a que si únicamente 2 de los 3 qubits tienen valor $1$, se activará únicamente la puerta CCNOT que los tenga como qubits de control, mientras que si están los $3$ activados, se activarán las 3 puertas CCNOT (dando como resultado $1$ en el qubit $r_0$).
+
+Finalmente, nuestro circuito cuántico que nos permitiría realizar la suma de los dígitos dos a dos nos quedaría de la siguiente manera:
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{Imagenes/CircuitoSuma2DigitosConAcarreo.png}
+    \label{fig:CircuitoSuma2DigitosConAcarreo}
+\end{center}
 
 $\\$
 
-Ahora la idea es como comentábamos más arriba aplicar dicha función de forma recursiva como mostraremos en el siguiente cuadro:
+Ahora la idea es como comentábamos más arriba aplicar dicha función de forma recursiva para acabar resultando en la suma de $n = n_{m-1} \cdots n_1 n_0$ y $2n+1 = n_{m-1} \cdots n_1 n_0 1$.
+
+
+Primero aplicaremos el circuito con los valores de entrada $(a_0, q_0, q_1)$ con $a_0$ inicializado a $0$, obteniendo el primer dígito $r_0$ y un nuevo acarreo de $a_1$.
+
+Después aplicaremos nuevamente el circuito esta vez con los valores de entrada $(a_1, q_1, q_2)$ obteniendo el segundo dígito $r_1$ y el acarreo $a_2$
+
+Procederemos recursivamente hasta por último aplicar el circuito con valores de entrada $(a_{m-1}, 0, q_{m-1})$ obteniendo $r_m$ y un acarreo de $a_m$.
+
+Nuestro número resultado sera $3n+1 = a_m r_m r_{m-1} \cdots r_1 r_0$ que tendrá (a lo sumo) $2$ dígitos más.
+
+De esta manera, para realizar la operación $\frac{3n+1}{2}$ de un número $n$ de $m$ dígitos, necesitaríamos $m$ qubits para almacenar el resultado ($r_0, \cdots, r_{m-1}$), otros $m$ qubits para ir almacenando los acarreos ($c_0, \cdots, c_{m-1}$) y un qubit auxiliar iniciado a 0 para el primer acarreo y también lo usaremos para la suma del último dígito $q_{m-1}$ con $0$ (este paso también puede ser optimizado).
+
+Después de realizar el proceso, tanto los $m$ qubits iniciales ($q_0, \cdots, q_{m-1}$), como los $m-1$ primeros qubits de acarreo pueden ser descartados (recordemos que guardamos $c_{m-1}$ como último dígito), así como el qubit auxiliar que hemos usado.
+
+Para un número $n$ de 4 dígitos obtendríamos el siguiente circuito:
+
+
+\begin{center}
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/CircuitoTSinCompactar.png}
+    \label{fig:CircuitoTSinCompactar}
+\end{center}
+
+En particular, si lo quisiéramos aplicar por ejemplo a $n=13$ ($1101$), nos quedaría el siguiente código:
+
+\begin{lstlisting}[language=Python]
+#from qiskit_aer import AerSimulator, Aer
+from qiskit.circuit import QuantumCircuit, QuantumRegister, ClassicalRegister
+from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
+#from qiskit_ibm_runtime import Session, SamplerV2 as Sampler
+from qiskit.quantum_info import Statevector
+from qiskit import transpile
+from qiskit.primitives import (
+    Sampler,
+    StatevectorSampler,
+    Estimator,
+    StatevectorEstimator,
+)
+from qiskit.visualization import plot_histogram
+
+
+estimator_v1 = Estimator()
+sampler_v1 = Sampler()
+estimator_v2 = StatevectorEstimator()
+sampler_v2 = StatevectorSampler()
+
+
+
+a0 = QuantumRegister(1, 'a0')
+q0 = QuantumRegister(1, 'q0')
+q1 = QuantumRegister(1, 'q1')
+r0 = QuantumRegister(1, 'r0')
+a1 = QuantumRegister(1, 'a1')
+
+suma2Dig = QuantumCircuit(a0, q0, q1, r0, a1)
+
+q = QuantumRegister(4, 'q')
+c = QuantumRegister(4, 'c')
+r = QuantumRegister(5, 'r')
+a = QuantumRegister(3, 'a')
+m = ClassicalRegister(5, 'm')
+circuit = QuantumCircuit(q, r, c, a, m)
+
+suma2Dig.cx(a0[0], r0[0])
+suma2Dig.cx(q0[0], r0[0])
+suma2Dig.cx(q1[0], r0[0])
+
+suma2Dig.ccx(a0[0], q0[0], a1[0])
+suma2Dig.ccx(a0[0], q1[0], a1[0])
+suma2Dig.ccx(q0[0], q1[0], a1[0])
+
+
+
+#Iniciamos el sistema con n=1101 (13)
+qIni = Statevector.from_label('1101')
+circuit.initialize(qIni.data, [q[0], q[1], q[2], q[3]])
+#Iniciamos a1 como 1 (usaremos este auxiliar unicamente para sumar 1 a q0 inicialmente). Esto se puede optimizar
+circuit.initialize(Statevector.from_label('1').data, [a[1]])
+
+circuit.barrier()
+
+#Primero sumamos (0, 1, q0), usamos para ellos los qubits auxiliares a0 y a1 (establecidos en )
+circuit = circuit.compose(suma2Dig, qubits=[a[0], a[1], q[0], a[2], c[0]])
+
+circuit.barrier()
+
+circuit = circuit.compose(suma2Dig, qubits=[c[0], q[0], q[1], r[0], c[1]])
+
+circuit.barrier()
+
+circuit = circuit.compose(suma2Dig, qubits=[c[1], q[1], q[2], r[1], c[2]])
+
+circuit.barrier()
+
+circuit = circuit.compose(suma2Dig, qubits=[c[2], q[2], q[3], r[2], c[3]])
+
+circuit.barrier()
+
+#Por último sumamos el ultimo dígito (q3) con un qubit auxiliar establecido en 0 (a0)
+#y guardamnos el resultado en r3 y r4 (r4 en lugar del acarreo normal ya que el ultimo
+#dígito del resultado es el ultimo acarreo)
+circuit = circuit.compose(suma2Dig, qubits=[c[3], q[3], a[0], r[3], r[4]])
+
+
+#FinalState = Statevector(circuit)
+
+circuit.barrier()
+
+#Medimos el resultado
+circuit.measure(r, m)
+
+
+
+result = sampler_v1.run(circuit).result()
+quasi_dist = result.quasi_dists[0]
+print(f"The quasi-probability distribution is: {quasi_dist}")
+
+
+
+circuit.draw('mpl')
+
+#FinalState.draw('latex')
+\end{lstlisting}
+
+Obteniendo el siguiente circuito:
+
+\begin{center}
+    \includegraphics[width=1\linewidth]{CircuitoTSinCompactarn=13.png}
+    \label{fig:CircuitoTSinCompactarn=13}
+\end{center}
+
+Y obteniendo como resultado $\frac{3n+1}{2} = 20$:
+
+\begin{verbatim}
+    The quasi-probability distribution is: {20: 1.0}
+\end{verbatim}
+
+
+
+\subsection{Compactando el circuito}
+
+Este circuito se puede compactar, de forma que con dos qubits adicionales tengamos el mismo resultado pero almacenado esta vez en los qubits de origen y el nuevo qubit en uno de los qubits adicionales (el otro podremos descartarlo).
+
+Tenemos hasta ahora un circuito con el siguiente esquema:
+
 
 \begin{center}
     \begin{tabular}{c|c|c|c|c}
-        $a_0=0$ & $r_1$ &  \\
-        $q_0$   & $a_1$ & $r_2$ \\
-        $q_1$   & $q_1$ & $a_2$ \\
-                & $q_2$ & $q_2$
+        $0$     &       &       &       &       \\
+        $1$     & $c_0$ & $r_0$ &       &       \\
+        $q_0$   & $q_0$ & $c_1$ & $r_1$ &       \\
+                & $q_1$ & $q_1$ & $c_2$ & $r_2$ \\
+                &       & $q_2$ & $q_2$ & $r_3$ \\
+                &       &       & $q_3$ &       \\
+    \end{tabular}
+\end{center}
+
+Lo primero que podemos hacer es eliminar la primera operación, debido a que los dos primeros inputs serán siempre $0$, $1$, $q_0$, además podemos asumir siempre que el primer dígito del número es $1$, debido a que este circuito que realiza la operación $\frac{3n+1}{2}$ lo aplicaremos solamente cuando el número es impar. Por tanto el output de la primera iteración será de $c_0=1$ y de $0$ como dígito resultado que será el que eliminemos (esto equivale a decir que si $n$ es impar, entonces $\frac{3n+1}{2}$ es par.
+
+Obtendríamos entonces el siguiente esquema:
+
+\begin{center}
+    \begin{tabular}{c|c|c|c}
+                        &               &           &           \\
+        $1$             &   $r_0=q_0$   &           &           \\
+        $1$             &   $c_0=1$     &   $r_1$   &           \\
+        $q_0$           &   $q_0$       &   $c_1$   &   $r_2$   \\
+                        &   $q_1$       &   $q_1$   &   $r_3$   \\
+                        &               &   $q_2$   &           \\
+    \end{tabular}
+\end{center}
+
+En el hemos renombrado los qubits $q_0 \cdots q_{m-1}$ desplazándolos un lugar, por tanto ahora el número $n$ vendrá representado por $n=q_{m-1} q_{m-2} \cdots q_1 1$.
+
+Para la compactación utilizaremos dos qubits auxiliares ($a_0$, $a_1$), para ir intercambiando el acarreo entre uno y otro.
+
+Tendríamos un nuevo circuito de suma que aceptará inicialmente como entrada ($a_0$, $q_0$, $q_1$) y nos devolverá como salida $a_1$ y el resultado quedará almacenado en $q_0$.
+
+Por tanto nos formaremos un circuito de 4 qubits de la siguiente manera:
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{CircuitoSuma2DigitosConAcarreoCompacto.png}
+    \label{fig:CircuitoSuma2DigitosConAcarreoCompacto}
+\end{center}
+
+Y el esquema de aplicación lo podemos ver resumido en el siguiente esquema:
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        $(a_0, q_0, q_1)$   &   $(a_1, q_0)$    \\
+        $(a_1, q_1, q_2)$   &   $(a_0, q_1)$    \\
+        $(a_0, q_2, q_3)$   &   $(a_1, q_2)$    \\
+        $(a_1, q_3, q_4)$   &   $(a_0, q_3)$    \\
     \end{tabular}
 \end{center}
 
 
-$f(0,q_0,q_1) = (r_1, a_1)$
-$f(a_1,q_1,q_2) = (r_2, a_2)$
-$f(a_2,q_2,q_3) = (r_3, a_3)$
-.
-.
-.
-$f(a_$
+Por tanto 
 
 
-\section{Problemas QUBO}
-(Analizar si se puede formular algo como un problema de optimización, por ejemplo minimizar la distancia entre $\frac{X}{Y}-log_2 3$ o algo similar).
+\subsection{Realizando múltiples iteraciones de $T(n)$}
+
+
+Hemos obtenido pues una aplicación de $T(n) = \frac{3n+1}{2}$ a cambio de utilizar un qubit extra (a parte de los $m$ que ya teníamos empleados para los $m$ dígitos binarios de $n$).
+
+Ahora, para hacer una nueva aplicación de la función $T$ \ref{T(n)} para obtener $T^2(n)$, tenemos que distinguir en dos casos, los que $T(n)$ es par y los que es impar.
+
+La paridad de $T(n)$ dependerá de si el dígito representado por $r_1$ es $0$ o $1$.
+
+Si es $1$ (impar), podremos aplicar de nuevo el circuito $U$ para obtener $T^2(n)$.
+Por tanto el caso impar lo cubriremos realizando una puerta controlada de nuestro circuito $U$ (es decir $CU$), con el dígito que indique la paridad como control.
+
+Para ello convertiremos nuestro circuito que aplica la operación $\frac{3n+1}{2}$ en una puerta $U$ y la utiremos de forma condicionada $CU$:
+
+(insertar imagen de CU)
+
+
+Si por el contrario es $0$, procederemos a ignorar el qubit $r_1$ y realizaremos el mismo procedimiento con el nuevo número $\frac{3n+1}{2^2} = a_m r_m r_{m-1} \cdots r_2$ (de $m$ dígitos ahora).
+
+
