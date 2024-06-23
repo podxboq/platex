@@ -1,9 +1,8 @@
 \chapter{Desarrollo del trabajo}
-Este es el grueso del TFM. Por supuesto, la estructura de este Capítulo dependerá de el trabajo específico que se desarrolle.
 
 \section{Introducción a la corrección cuántica de errores}
 
-Una de las principales dificultades a las que se enfrenta la computación cuántica es la destrucción de los estados cuánticos debido a la decoherencia producida por la interacción con el entorno (Shor, 1995). Este hecho pone de manifiesta la necesidad de utilizar técnicas para la corrección cuántica de errores.
+Una de las principales dificultades a las que se enfrenta la computación cuántica es la destrucción de los estados cuánticos debido a la decoherencia producida por la interacciówn con el entorno (Shor, 1995). Este hecho pone de manifiesto la necesidad de utilizar técnicas para la corrección cuántica de errores.
 
 En computación clásica, el uso de códigos correctores de errores es una técnica bien desarrollada. Uno de sus elementos clave es la incorporación de información redundante. Debido a los principios de la mecánica cuántica, se encuentran diversas dificultades al tratar de aplicar esta técnica (Benenti, Casati y Strini, 2007):
 \begin{enumerate}
@@ -14,7 +13,44 @@ En computación clásica, el uso de códigos correctores de errores es una técn
 
 No obstante, a pesar de estas dificultades, la corrección cuántica de errores es posible. Durante las siguientes secciones veremos cómo.
 
-\subsection{Código de inversión de bit (Bit-flip code)}
+\section{Fundamentos de la corrección cuántica de errores}
+
+En esta sección, se describirán los conceptos básicos de la teoría de la corrección cuántica de errores. En general, nos centraremos en los métodos de corrección de errores en dos pasos: detección del error y recuperación del estado cuántico. 
+
+Con el fin de preservar un estado cuántico determinado, este será codificado mediante la aplicación de una operación unitaria en un código de corrección de errores. Formalmente, un código $C$ es un subespacio de un espacio de Hilbert más general. Se denotará por $P$ al proyector del subespacio $C$ (Nielsen y Chuang, 2010). 
+
+Tras la codificación, los efectos del ruido operan sobre el estado cuántico codificado. A continuación, se realiza una técnica conocida como cálculo de síndrome y que se describirá con más detalle en las siguientes secciones. Como resultado, se determinará qué clase de error a ocurrido y se realizará una operación de recuperación para devolver el estado cuántico a su estado original (Nielsen y Chuang, 2010). Un aspecto importante es que el subespacio $C$ debe ser ortogonal ya que de otro modo el cálculo del síndrome no sería fiable. 
+
+El proceso completo de corrección de errores se realiza mediante una operación cuántica $\mathcal{R}$ que conserva la traza del sistema. Asimismo, los efectos del ruido son descritos por una operación cuántica $\mathscr{E} $. Una corrección de errores se considera exitosa si para cualquier estado $ \rho$ se cumple 
+
+$$ ( \mathcal{R} \circ \mathscr{E} ) ( \rho ) \propto \rho. $$ 
+
+Veamos, a continuación, las condiciones que nos permiten saber si un código en particular protege contra un determinado tipo de ruido. 
+
+\begin{theorem}
+
+Sea $C$ un código cuántico de corrección de errores y sea $P$ su proyector. Sea 
+$\mathscr{E}$ una operación cuántica con elementos $ \left \{ E_i \right \}$. Entonces, la expresión 
+
+$$ P E^{\dagger}_i E_j P = \alpha_{ij} P $$
+
+es condición necesaria y suficiente para que exista una operación de corrección  $\mathcal{R}$ para el par $ \mathscr{E}, C$ donde $\alpha_{ij}$ son los números complejos que componen una determinada matrix hermitiana (Kribs et al., 2005).
+
+\end{theorem}
+
+Como se durante la sección anterior, en la corrección cuántica de errores existe un inconveniente que no tiene un análogo clásica: el tipo de error que puede producirse es continuo ya que cualquier rotación  $\theta$ sobre la esfera de Bloch conforma un error. Afortunadamente, existe un resultado que permite salvar este obstáculo: la discretización de los errores. 
+
+\begin{theorem}
+
+Sea un código $C$ y su operación de recuperación $\mathcal{R}$ que permite restaurar un estado cuántico afectado por un ruido $\mathscr{E}$ con elementos $ \left \{ E_i \right \} $. Sea una operación cuántica $\mathscr{F}$ cuyos elementos $ \left \{ F_j \right \} $ son una combinación lineal de los elementos $ \left \{ E_i \right \} $, es decir, $ F_j = \sum_i m_{ji} E_i $ para una determinada matrix $m_{ji}$ de números complejos. Entonces la operación de corrección $\mathcal{R}$, también corrige los efectos del ruido producido por la operación $\mathscr{F}$ sobre el código $C$ (Nielsen y Chuang, 2010).
+\end{theorem}
+
+Dicho de otro modo, es posible corregir el error consistente en una rotación arbitraria sobre la esfera de Bloch corrigiendo únicamente un conjunto finito de errores.
+
+
+
+
+\section{Código de inversión de bit (Bit-flip code)}
 
 El código de 3 qubits de inversión de bit fue propuesto por Asher Peres (1985) y, aunque no se trata de un código de corrección de errores completo, suele utilizarse como introducción a la corrección cuántica de errores (Devitt et al., 2013). Veamos el funcionamiento de este código.
 
@@ -24,43 +60,103 @@ $$ | 0 \rangle \rightarrow | 0 \rangle_L \equiv | 000 \rangle,  \phantom{abcd}  
 
 donde $ |0 \rangle_L$ y $| 1 \rangle_L $ representan los estados lógicos 0 y 1, respectivamente.
 
-De manera análoga, el estado genérico $| \psi \rangle = \alpha |0 \rangle + \beta | 1 \rangle $ queda codificado como $|\psi \rangle_L = \alpha | 0 \rangle_L + \beta | 1 \rangle_L = \alpha | 000 \rangle + \beta | 111 \rangle $. Este es un estado entrelazado conocido como estado GHZ (Greenberger, Horne y Zeilinger, 2007; Nermin, 1990). El siguiente circuito permite codificar dicho estado.
+De manera análoga, el estado genérico $| \psi \rangle = \alpha |0 \rangle + \beta | 1 \rangle $ queda codificado como $|\psi \rangle_L = \alpha | 0 \rangle_L + \beta | 1 \rangle_L = \alpha | 000 \rangle + \beta | 111 \rangle $. Este es un estado entrelazado conocido como estado GHZ (Greenberger, Horne y Zeilinger, 2007; Nermin, 1990). El circuito de la figura 4.1. permite codificar dicho estado.
 
-FIGURA CIRCUITO
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Código de inversión de bit.}
+		\label{fig:fig-1}
+	\begin{quantikz}
+	\lstick{$| \psi \rangle$} & \ctrl{1} & \ctrl{2} &\\
+	\lstick{$| 0 \rangle$} & \targ{} & &\\
+	\lstick{$| 0 \rangle$} & & \targ{}&\\
+	\end{quantikz}
+\end{center}
+\end{figure}
 
 Supongamos que, debido al ruido, se produce un error de amplitud sobre uno de los 3 qubits que forman el código. Este tipo de error hace que el estado $ | \psi \rangle = \alpha | 0 \rangle + \beta | 1 \rangle$ evolucione al estado $X | \psi \rangle = \beta | 0 \rangle + \alpha | 1 \rangle $.
 
 La técnica a utilizar es un procedimiento de corrección de errores en dos pasos: detección del error y recuperación del estado (Nielsen y Chuang, 2010). 
 
-Para la primera parte, detectar sobre qué qubit se ha producido el error (en caso de que así haya sido), se utilizarán dos qubits ancila. Midiendo dichos qubits obtenemos dos bits de información clásica $x_0$ y $x_1$ (conocidos como síndrome) que nos indicarán donde se ha producido dicho error. El siguiente circuito implementa el cálculo del síndrome.
+Para la primera parte, detectar sobre qué qubit se ha producido el error (en caso de que así haya sido), se utilizarán dos qubits ancila. Midiendo dichos qubits obtenemos dos bits de información clásica $x_0$ y $x_1$ (conocidos como síndrome) que nos indicarán dónde se ha producido dicho error. El circuito de la figura 4.2 implementa el cálculo del síndrome.
 
-FIGURA SINDROME
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome de error (bit flip code)}
+		\label{fig:fig-2}
+
+	\begin{quantikz}
+	& \ctrl{3} & & \ctrl{4} & &\\
+        &  & \ctrl{2} & & &\\
+        & & & & \ctrl{2}  & \\
+        \lstick{$| 0 \rangle$} & \targ{} & \targ{} & &  &\gate{D_0} & \rstick{$x_0$} \\
+        \lstick{$| 0 \rangle$} & & & \targ{} & \targ{} &  \gate{D_1} & \rstick{$x_1$} \\
+	\end{quantikz}
+\end{center}
+\end{figure}
 
 La siguiente tabla muestra el síndrome obtenido en función del error producido: \\
 
 
-\begin{tabular}{|c|c|c|}
-  \hline
-  $x_0$ & $x_1$ & Error \\
-  \hline
-  0 & 0 & Sin errores \\
-  \hline
-  0 & 1 & Tercer qubit \\
-  \hline
-  1 & 0 & Segundo qubit \\
-  \hline
-  1 & 1 & Primer qubit \\
-  \hline
-\end{tabular}
-\\
+	\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        $x_0$ & $x_1$ & Error \\
+        \hline
+        0 & 0 & Sin errores \\
+        \hline
+        0 & 1 & Tercer qubit \\
+        \hline
+        1 & 0 & Segundo qubit \\
+        \hline
+        1 & 1 & Primer qubit \\
+        \hline
+    \end{tabular}
+\end{center}
 
-Por último, para recuperar el estado corrupto, basta con aplicar una puerta $X$ sobre el qubit erróneo y realizar la decodificación del estado. La siguiente figura muestra el proceso
 
-FIGURA RECOVERY AND DECOD
+
+Por último, para recuperar el estado corrupto, basta con aplicar una puerta $X$ sobre el qubit erróneo y realizar la decodificación del estado. La figura 4.3. muestra el proceso.
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error (bit flip code)}
+		\label{fig:fig-4}
+
+    \begin{quantikz}
+        & & & & \targ{} & \ctrl{2} & \ctrl{1} & \\
+        & & & \targ{} & & & \targ{} & \\
+        & & \targ{} & & & \targ{} & & \\
+        \gate[4]{\left.\begin{matrix} x_0=0,x_1=0 \\ x_0=0, x_1=1 \\ x_0=1, x_1=0 \\ x_0=1, x_1=1 \end{matrix} \right.} & \\
+        & & \ctrl{-2} \\
+        & & & \ctrl{-4} \\
+        & & & & \ctrl{-6} \\
+
+
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+El circuito completo que implementa el código de inversión de bit quedaría tal y como muestra la figura 4.4.
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Esquema completo (bit flip code)}
+		\label{fig:fig-4}
+    \begin{quantikz}
+    \lstick{ \ket{ \psi}} & \ctrl{1} & \ctrl{2} & \gate[5]{Sindrome} & \gate[3]{Recuperacion} & \ctrl{2} & \ctrl{1} & \\
+    \lstick{ \ket{0}} & \targ{} & & & & &  \targ{ }& \\
+    \lstick{ \ket{0}} & & \targ{} & & & \targ{ } & & \\
+    \lstick{ \ket{0}} & & & & \ctrl{-1} \\
+    \lstick{ \ket{0}} & & & &  \ctrl{-2} \\
+
+    \end{quantikz}
+\end{center}
+\end{figure}
 
 Veamos algunas consideraciones finales sobre esta técnica. Este código permite recuperar el estado cuántico si un único qubit ha sido invertido. En caso contrario, el código fallará. Nótese que la medida realizada sobre el síndrome no permite obtener ninguna información sobre el estado $ | \psi \rangle $ y, por tanto, su coherencia cuántica no es destruida. Esto es posible debido a que el estado del qubit queda codificado como un estado entrelazado de varios qubits y, únicamente, se están midiendo las propiedades colectivas del estado cuántico (Benenti, Casati y Strini, 2007).
 
-\subsection{Código de inversión de fase (Phase-flip code)}
+\section{Código de inversión de fase (Phase-flip code)}
 
 A diferencia de su versión clásica, el error de amplitud no es el único posible y, por tanto, en el campo de la corrección cuántica de errores también debe tenerse en cuenta el error de fase. Este nuevo tipo de error no tiene un equivalente clásico ya que no existe ninguna propiedad clásica equivalente a la fase. 
 
@@ -70,10 +166,476 @@ Este error, cuando se produce, provoca que el estado $ | \psi \rangle = \alpha |
 
 Los vectores de la base computacional pueden transformarse en los vectores de la base de Hadamard mediante la aplicación de puerta Hadamard. Por tanto, el método anteriormente expuesto para la corrección de errores de amplitud puede reutilizarse para la corrección de errores de fase añadiendo únicamente un cambio de base.
 
-FIGURA CIRCUITO
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Código de inversión de fase}
+		\label{fig:fig-1}
+	\begin{quantikz}
+	\lstick{$| \psi \rangle$} & \ctrl{1} & \ctrl{2} & \gate{H} & \\
+	\lstick{$| 0 \rangle$} & \targ{} & & \gate{H} &\\
+	\lstick{$| 0 \rangle$} & & \targ{}& \gate{H} &\\
+	\end{quantikz}
+\end{center}
+\end{figure}
 
-Mediante un proceso equivalente, es posible identificar sobre qué qubit se ha producido el error de fase y corregirlo mediante la aplicación de una puerta $Z$ sobre dicho qubit. Por último, será necesario descodificar el estado cuántico de nuestro qubit mediante la aplicación inversa de las puertas utilizadas en la codificación. La siguiente figura muestra el circuito con el proceso completo. 
+Mediante un proceso equivalente, es posible identificar sobre qué qubit se ha producido el error de fase y corregirlo mediante la aplicación de una puerta $Z$ sobre dicho qubit. Por último, será necesario descodificar el estado cuántico de nuestro qubit mediante la aplicación inversa de las puertas utilizadas en la codificación. La figura 4.6 muestra el esquema completo para la corrección del error de fase mediante el código de inversión de fase. 
 
-FIGURA COMPLETA 
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Esquema completo (Phase flip code)}
+		\label{fig:fig-1}
+    \begin{quantikz}
+    \lstick{ \ket{ \psi}} & \ctrl{1} & \ctrl{2} & \gate{H} & \gate[5]{Sindrome} & \gate[3]{Recuperacion} & \gate{H} & \ctrl{2} & \ctrl{1} & \\
+    \lstick{ \ket{0}} & \targ{} & & \gate{H} & & & \gate{H} & &  \targ{ }& \\
+    \lstick{ \ket{0}} & & \targ{} & \gate{H} & & & \gate{H} & \targ{ } & & \\
+    \lstick{ \ket{0}} & & & & & \ctrl{-1} \\
+    \lstick{ \ket{0}} & & & & &  \ctrl{-2} \\
 
-\subsection{Código de Shor}
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\section{Código de Shor}
+
+El código de Shor (1995) corrige los efectos del ruido sobre un único qubit de la manera más general posible (Benenti, Casati y Strini, 2007). Este código es una combinación de los códigos de inversión de bit y de inversión de fase ((Nielsen y Chuang, 2010). El código de Shor mapea los estados lógicos $ | 0 \rangle$ y $ | 1 \rangle$ del siguiente modo:
+
+$$| 0 \rangle \to | 0 \rangle_L \equiv \frac{1}{\sqrt{8}} ( | 000 \rangle + |111 \rangle )( | 000 \rangle + |111 \rangle )( | 000 \rangle + |111 \rangle ), $$
+
+$$| 1 \rangle \to | 1 \rangle_L \equiv \frac{1}{\sqrt{8}} ( | 000 \rangle - |111 \rangle )( | 000 \rangle - |111 \rangle )( | 000 \rangle - |111 \rangle ), $$
+
+así el estado genérico $| \psi \rangle = \alpha | 0 \rangle + \beta | 1 \rangle$ quedará mapeado como $| \psi \rangle_L = \alpha | 0 \rangle_L + \beta | 1 \rangle_L$.
+
+La figura 4.7. muestra el circuito que permite obtener el estado deseado.
+
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Código de Shor}
+		\label{fig:fig-1}
+    \begin{quantikz}
+
+\lstick{\ket{\psi}} & \ctrl{3} & \ctrl{6} & \gate{H} & \ctrl{1} & \ctrl{2} & \\
+\lstick{\ket{0}} & & & & \targ{} & & \\
+\lstick{\ket{0}} & & & & & \targ{} & \\
+\lstick{\ket{0}} & \targ{} & & \gate{H} & \ctrl{1} & \ctrl{2} & \\
+\lstick{\ket{0}} & & & & \targ{} & & \\
+\lstick{\ket{0}} & & & & & \targ{} & \\
+\lstick{\ket{0}} &  & \targ{} & \gate{H} & \ctrl{1} & \ctrl{2} & \\
+\lstick{\ket{0}} & & & & \targ{} & & \\
+\lstick{\ket{0}} & & & & & \targ{} & \\
+    
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+Las primeras dos puertas CNOT junto con las puertas Hadamard codifican los estados cuánticos de manera idéntica al código de inversión de fase:
+
+$$ | 0 \rangle \to | +++ \rangle, \quad |1 \rangle \to | --- \rangle .$$
+
+A continuación, las últimas puertas CNOT codifican el circuito en 3 bloques de 3 qubits de manera idéntica al código de inversión de bits. 
+
+$$ | + \rangle = \frac{1}{\sqrt{2}} (| 0 \rangle + | 1 \rangle ) \to \frac{1}{\sqrt{2}} (| 000 \rangle + | 111 \rangle ), $$
+$$ | - \rangle = \frac{1}{\sqrt{2}} (| 0 \rangle - | 1 \rangle ) \to \frac{1}{\sqrt{2}} (| 000 \rangle - | 111 \rangle ). $$
+
+Este método de codificar por niveles de manera jerárquica se conoce como concatenación (Nielsen y Chuang, 2010).
+
+Antes de pasar al diseño y análisis del circuito que calcula el síndrome de error, se expondrá una visión general de como este código detecta y corrige errores. 
+
+Se suele decir que el código de Shor corrige un único error sobre un único error. No obstante, lo cierto es que este código es capaz de corregir un error de inversión de bit en cada bloque de 3 qubits, es decir, puede corregir un total de 3 errores de inversión de bit siempre y cuando no se hayan producido en el mismo bloque (Benenti, Casati y Strini, 2007). La manera en que se detectan estos errores y se corrigen es equivalente al método expuesto en la sección 4.1.2. En cuanto al error de fase, únicamente es posible detectar y corregirse cuando es un único qubit el afectado por este tipo de error. La técnica empleada es la siguiente. Mediante el cálculo del síndrome se determina en qué bloque de 3 qubits se ha producido el error. A continuación, aplicando puertas $Z$ a los 3 qubits de dicho bloque se consigue corregir el error. Durante la siguiente sección, profundizaremos más en cómo sucede esto. 
+
+\subsection{Síndrome}
+
+A continuación, se realizarán varias propuestas para el diseño del circuito que calcula el síndrome y se describirá con mayor precisión como actúa el mismo. 
+
+Empezaremos con la versión más sencilla, la propuesta 1, la cual emplea los qubits necesarios para realizar el cálculo del síndrome y corregir el error producido. A continuación, se buscará optimizar el número de qubits empleados en las propuestas 2 y 3. La idea central es reducir el número de qubits utilizados diviendo el cálculo del síndrome en distintas etapas y reutilizando los mismos qubits en cada una de ellas.
+
+Dada la situación actual de la computación cuántica (Gomes, 2018), con ordenadores cuánticos de "pocos" qubits, tiene sentido afirmar que cualquier esfuerzo invertido en reducir el número de qubits empleados en labores de corrección de errores de manera que se liberen recursos para la ejecución de algoritmos cuánticos será beneficioso. Por contraposición, reinicializar qubits para su reutilización conllevará, indefectiblemente, un cierto consumo energético. El principio de Landauer (1961) establece un límite inferior para la energía necesaria para borrar un bit de información ( o, en el caso que nos ocupa, reinicializar un qubit) dado por $ E= K_B \ T \ ln \ 2 $ donde $K_B$ es la constante de Boltzmann y $T$ es la temperatura del disipador de calor.
+
+En conclusión, optimizar el número de qubits que intervienen en el proceso de corrección cuántica de errores provoca un aumento en el consumo energético. Cabe esperar que haya que llegar a una posición de equilibrio entre consumo energético y de recurso en función de las características particulares de la tarea que pretenda llevarse a cabo.
+
+\subsubsection{Propuesta 1}
+
+Esta propuesta es la más sencilla y la que suele encontrarse en la bibliografía (Benenti, Casati y Strini, 2007; Devitt et al., 2013). Utiliza un total de 8 qubits auxiliares para obtener el síndrome. 
+
+En las figuras 4.8 y 4.9., se muestra el circuito que implementa el cálculo del síndrome de error. Por cuestiones de espacio, se ha dividido el circuito en dos figuras distintas de tal manera que la primera corresponde al cálculo del síndrome para el error de amplitud y la segunda corresponde al error de fase. 
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome para el código de Shor (error de amplitud)}
+		\label{fig:fig-1}
+
+    \begin{quantikz}
+
+        & \ctrl{9} & & \ctrl{10} & & & & & & & & & & \\
+        & & \ctrl{8} & & & & & & & & & & &  \\
+        & & & & \ctrl{8} & & & & & & & & & \\
+        & & & & & \ctrl{8} & & \ctrl{9} & & & & & & \\
+        & & & & & & \ctrl{7} & & & & & & & \\
+        & & & & & & & & \ctrl{7} & & & & &  \\
+        & & & & & & & & & \ctrl{7} & & \ctrl{8} & & \\
+        & & & & & & & & & & \ctrl{6} & & & \\
+        & & & & & & & & & & & & \ctrl{6} & \\
+        \lstick{\ket{0}} & \targ{} & \targ{} & & & & & & & & & & & \gate{D_0}\\
+        \lstick{\ket{0}} & & & \targ{} & \targ{} & & & & & & & & & \gate{D_1}\\
+        \lstick{\ket{0}} & & & & & \targ{} & \targ{} & & & & & & & \gate{D_2}\\
+        \lstick{\ket{0}} & & & & & & & \targ{} & \targ{} & & & & & \gate{D_3}\\
+        \lstick{\ket{0}} & & & & & & & & & \targ{} & \targ{} & & & \gate{D_4}\\
+        \lstick{\ket{0}} & & & & & & & & & & & \targ{} & \targ{} & \gate{D_5}\\
+
+        \lstick{\ket{0}} & & & & & & & & & & & & &  \\
+        \lstick{\ket{0}} & & & & & & & & & & & & &  \\
+    
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome para el código de Shor (error de fase)}
+		\label{fig:fig-1}
+
+    \begin{quantikz}
+
+        & \gate{H} & \ctrl{15} & & & & & & \ctrl{16} & & & & & & \gate{H} & \\
+        & \gate{H} & & \ctrl{14} & & & & & &  \ctrl{15} & & & & & \gate{H} & \\
+        & \gate{H} & & & \ctrl{13} & & & & & & \ctrl{14} & & & & \gate{H} & \\
+        & \gate{H} & & & & \ctrl{12} & & & & & & & & & \gate{H} & \\
+        & \gate{H} & & & & & \ctrl{11} & & & & & & & & \gate{H} & \\
+        & \gate{H} & & & & & & \ctrl{10} & & & & & & & \gate{H} & \\
+        & \gate{H} & & & & & & & & & & \ctrl{10} & & & \gate{H} & \\
+        & \gate{H} & & & & & & & & & & & \ctrl{9} & & \gate{H} & \\
+        & \gate{H} & & & & & & & & & & & & \ctrl{8} & \gate{H} & \\
+        & \gate{D_0}\\
+        & \gate{D_1}\\
+        & \gate{D_2}\\
+        & \gate{D_3}\\
+        & \gate{D_4}\\
+        & \gate{D_5}\\
+
+        & & \targ{} & \targ{} & \targ{} & \targ{} & \targ{} & \targ{} & & & & & & & \gate{D_6} \\
+         & & & & & & & & \targ{} & \targ{} & \targ{} & \targ{} & \targ{} & \targ{} & \gate{D_7} \\
+    
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+Como puede observarse en la figura 4.8., los 6 primeros qubits auxiliares se miden obteniendo 6 bits de información clásica: $D_0, D_1, D_2, D_3, D_4, D_5$. Estos 6 bits permiten conocer qué errores de inversión de bit se han producido. Los bits $D_0$ y $D_1$ indican en qué qubit del primer bloque de 3 qubits se ha producido el error así como las parejas de bits $D_2$, $D_3$ y $D_4$ , $D_5$ indican en qué qubit del segundo y tercer bloque, respectivamente, se ha producido el error.
+
+A continuación, se miden los últimos 2 qubits auxiliarse, obteniendo los bit $D_6$ y $D_7$ los cuales nos indican en qué bloque de qubits se ha producido un error de fase. Aplicando una puerta $Z$ sobre cualquiera de los qubits de dicho bloque, se consigue corregir el error de fase producido.
+
+Veamos ahora con más detalle cómo se corrige, en efecto, el error de fase de esta manera (Benenti, Casati y Strini, 2007).  Supongamos, sin pérdida de generalidad, que el error de fase se ha producido sobre el primer qubit. De este modo, el estado del primer bloque de qubits se modifica de la siguiente forma:
+$$ | 000 \rangle + | 111 \rangle \to | 000 \rangle - | 111 \rangle , $$
+$$ | 000 \rangle - | 111 \rangle \to | 000 \rangle + | 111 \rangle . $$
+
+Para corregir el estado cuántico operamos del siguiente modo
+
+$$ ( Z \otimes I \otimes I ) ( | 000 \rangle \pm | 111 \rangle ) = | 000 \rangle \mp  | 111 \rangle .$$
+
+Las siguientes tablas muestran el significado de las distintas cadenas de bits que se pueden obtener al calcular el síndrome de error. 
+
+\begin{table}[]
+\begin{tabular}{|llll|l|llll|l|llll|}
+\cline{1-4} \cline{6-9} \cline{11-14}
+\multicolumn{4}{|l|}{BLOQUE 1}                                                                                       &  & \multicolumn{4}{l|}{BLOQUE 2}                                                                                         &  & \multicolumn{4}{l|}{BLOQUE 3}                                                                                        \\ \cline{1-4} \cline{6-9} \cline{11-14} 
+\multicolumn{1}{|l|}{\multirow{3}{*}{$ D_1 D_0 $}} & \multicolumn{3}{l|}{Error de}                                   &  & \multicolumn{1}{l|}{\multirow{3}{*}{$ D_3 D_2 $}} & \multicolumn{3}{l|}{Error de}                                     &  & \multicolumn{1}{l|}{\multirow{3}{*}{$ D_5 D_4 $}} & \multicolumn{3}{l|}{Error de}                                    \\
+\multicolumn{1}{|l|}{}                             & \multicolumn{3}{l|}{amplitud}                                   &  & \multicolumn{1}{l|}{}                             & \multicolumn{3}{l|}{amplitud}                                     &  & \multicolumn{1}{l|}{}                             & \multicolumn{3}{l|}{amplitud}                                    \\ \cline{2-4} \cline{7-9} \cline{12-14} 
+\multicolumn{1}{|l|}{}                             & \multicolumn{1}{l|}{$q_2$} & \multicolumn{1}{l|}{$q_1$} & $q_0$ &  & \multicolumn{1}{l|}{}                             & \multicolumn{1}{l|}{$ q_5 $} & \multicolumn{1}{l|}{$q_4$} & $q_3$ &  & \multicolumn{1}{l|}{}                             & \multicolumn{1}{l|}{$q_8 $} & \multicolumn{1}{l|}{$q_7$} & $q_6$ \\ \cline{1-4} \cline{6-9} \cline{11-14} 
+\multicolumn{1}{|l|}{00}                           & \multicolumn{1}{l|}{}      & \multicolumn{1}{l|}{}      &       &  & \multicolumn{1}{l|}{00}                           & \multicolumn{1}{l|}{}        & \multicolumn{1}{l|}{}      &       &  & \multicolumn{1}{l|}{00}                           & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{}      &       \\ \cline{1-4} \cline{6-9} \cline{11-14} 
+\multicolumn{1}{|l|}{01}                           & \multicolumn{1}{l|}{}      & \multicolumn{1}{l|}{X}     &       &  & \multicolumn{1}{l|}{01}                           & \multicolumn{1}{l|}{}        & \multicolumn{1}{l|}{X}     &       &  & \multicolumn{1}{l|}{01}                           & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{X}     &       \\ \cline{1-4} \cline{6-9} \cline{11-14} 
+\multicolumn{1}{|l|}{10}                           & \multicolumn{1}{l|}{X}     & \multicolumn{1}{l|}{}      &       &  & \multicolumn{1}{l|}{10}                           & \multicolumn{1}{l|}{X}       & \multicolumn{1}{l|}{}      &       &  & \multicolumn{1}{l|}{10}                           & \multicolumn{1}{l|}{X}      & \multicolumn{1}{l|}{}      &       \\ \cline{1-4} \cline{6-9} \cline{11-14} 
+\multicolumn{1}{|l|}{11}                           & \multicolumn{1}{l|}{}      & \multicolumn{1}{l|}{}      & X     &  & \multicolumn{1}{l|}{11}                           & \multicolumn{1}{l|}{}        & \multicolumn{1}{l|}{}      & X     &  & \multicolumn{1}{l|}{11}                           & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{}      & X     \\ \cline{1-4} \cline{6-9} \cline{11-14} 
+\end{tabular}
+\end{table}
+
+
+Así, si se obtiene, por ejemplo, la cadena $D_7D_6D_5D_4D_3D_2D_1D_0 = 10110100$, se estaría produciendo un error de amplitud sobre los qubits 6 y 4 y un error de fase en alguno de los qubits del tercer bloque de qubits. Una vez conocido el síndrome, es momento de pasar a la recuperación del estado cuántico
+
+
+\subsubsection{Propuesta 2}
+
+En este segundo caso, se procederá al cálculo del síndrome del error de amplitud. Acto seguido, los dos primeros qubits serán reinicializados al estado $ | 0 \rangle $ y se reutilizarán para el cálculo del error de fase.
+
+Nótese que una vez que se haya calculado el síndrome para el error de fase, la información sobre el error de amplitud proporcionada por los bits $D_0$ y $D_1$ se habrá perdido. Por este motivo, la corrección del error de amplitud debe realizarse antes de calcular reinicializar dichos qubits y proceder con el cálculo del síndrome del error de fase. 
+
+De este modo, el circuito completo quedaría de la manera en que se indica en la  figura 4.10. Como puede observarse en dicha figura, tras la codificación, se produce el error (provocado por los efectos del ruido). Acto seguido, se aplica sobre el circuito el operador $S_A$, encargado de calcular el síndrome del error de amplitud. Dicho operador es idéntico al circuito mostrado en la primera figura del apartado anterior. A continuación, los qubits auxiliares son medidos y actúan como qubits de control para realizar la corrección del estado cuántico (operados $R_A$). A partir de este momento, de los 6 qubits auxiliares que intervienen, solo se utilizarán los dos primeros, los cuales son reiniciados al estado $ | 0 \rangle $. El operador $S_F$, encargado de calcular el síndrome del error de fase, actúa sobre el circuito. Este operador es equivalente al circuito mostrado en la segunda figura del apartado anterior con la salvedad de que, en este caso, los qubits objetivos de las puertas CNOT no son los dos últimos qubits auxiliares si no los dos primeros, que acaban de ser reinicializados. Dichos qubits son medidos y utilizados para corregir el error de fase (operador $R_F$). Por último, el circuito es decodificado para recuperar el estado inicial. 
+
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Esquema completo del código de Shor (propuesta 2)}
+		\label{fig:fig-1}
+    \begin{quantikz}
+
+\lstick{\ket{\psi}} & \gate[9]{Cod.} & \gate[9]{Error} & \gate[15]{S_A} & & \gate[9]{R_A} & & \gate[11]{S_F} & & \gate[9]{R_F} & \gate[9]{Decod.} & \rstick{\ket{\psi}} \\
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}} \\
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\ 
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\ 
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\
+\lstick{\ket{0}} & & & & & & & & & & & \rstick{\ket{0}}\\
+\lstick{\ket{0}} & & & & \meter{} & \ctrl{-1} & \gate{\ket{0}} & & \meter{} & \ctrl{-1} \\ 
+\lstick{\ket{0}} & & & & \meter{} & \ctrl{-2} & \gate{\ket{0}} & & \meter{} & \ctrl{-2} \\
+\lstick{\ket{0}} & & & & \meter{} & \ctrl{-3} \\
+\lstick{\ket{0}} & & & & \meter{} & \ctrl{-4}  \\
+\lstick{\ket{0}} & & & & \meter{} & \ctrl{-5} \\
+\lstick{\ket{0}} & & & & \meter{} & \ctrl{-6}  \\
+
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+
+
+\subsubsection{Propuesta 3}
+
+Si se presta atención, es fácil deducir que la corrección del error puede dividirse en cuatro etapas: corrección del error de amplitud en el bloque 1 de qubits, corrección del error de amplitud en el bloque 2 de qubits, corrección del error de amplitud en el bloque 3 de qubits y corrección del error de fase. Cada una de estas etapas utiliza únicamente dos qubits auxiliares y, por ende, cabe esperar que pueda conseguirse una versión del código aún más eficiente en términos de número de qubits empleados que utilice solo dos qubits auxiliares. La idea es la misma que en el caso anterior, corregir sucesivamente cada error reutilizando los mismos qubits auxiliares. 
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome y corrección del error de amplitud sobre el bloque 1 de qubits}
+		\label{fig:fig-1}
+
+    \begin{quantikz}
+        \lstick{...} & \gate[11]{S_{B1}} & & \gate[3]{R_{B1}} & & \rstick{...} \\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} &  & & & & \rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...} \\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{\ket{0}} & & \meter{} & \ctrl{-7} & \gate{\ket{0}} & \rstick{...}\\
+        \lstick{\ket{0}} & & \meter{} & \ctrl{-1} & \gate{\ket{0}} & \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+Tras la aplicación de la codificación del estado cuántico y el error producido por el ruido, se procede del siguiente modo. 
+
+La estrategia empleada es similar a la empleada en la propuesta 2. El operador $S_{B1}$ calcula el síndrome del error de amplitud producido en el primer bloque de qubits. Los dos qubits auxiliares son medidos y utilizados como qubits de control para actuar sobre el dicho bloque (operador $R_{B1}$ ) corrigiendo el primer error de amplitud (Figura 4.11). A continuación, los dos qubits auxiliares son reinicializados al estado $ | 0 \rangle $ y reutilizados para repetir el mismo proceso sobre los bloques 2 y 3 de qubits (Figura 4.12 y 4.13). Finalmente, se calcula el síndrome del error de fase y se corrige dicho error (Figura 4.14).
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome y corrección del error de amplitud sobre el bloque 2 de qubits}
+		\label{fig:fig-1}
+
+    \begin{quantikz}
+        \lstick{...} & \gate[11]{S_{B2}} & & & &\rstick{...} \\
+        \lstick{...} & & & & & \rstick{...} \\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} & & & \gate[3]{R_{B2}} & &\rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{...} & & \meter{} & \ctrl{-4} & \gate{\ket{0}} & \rstick{...} \\
+        \lstick{...} & & \meter{} & \ctrl{-4} & \gate{\ket{0}} & \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome y corrección del error de amplitud sobre el bloque 3 de qubits}
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & \gate[11]{S_{B3}} & & & & \rstick{...} \\
+        \lstick{...} & & & & & \rstick{...} \\
+        \lstick{...} & & & & & \rstick{...}\\
+        \lstick{...} & & & & &  \rstick{...}\\
+        \lstick{...} & & & & & \rstick{...} \\
+        \lstick{...} & & & & &  \rstick{...} \\
+        \lstick{...} & & & \gate[3]{R_{B3}} & & \rstick{...} \\
+        \lstick{...} & & & & & \rstick{...} \\
+        \lstick{...} & & & & & \rstick{...} \\
+        \lstick{...} & & \meter{} & \ctrl{-1} & \gate{\ket{0}} & \rstick{...} \\
+        \lstick{...} & & \meter{} & \ctrl{-2} & \gate{\ket{0}} & \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Síndrome y corrección del error de fase }
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & \gate[11]{S_F} & & \gate[9]{R_F} & \rstick{...}  \\
+        \lstick{...} & & & & \rstick{...} \\
+        \lstick{...} & & & & \rstick{...} \\
+        \lstick{...} & & & & \rstick{...} \\
+        \lstick{...} & & & & \rstick{...}\\
+        \lstick{...} & &  & & \rstick{...}\\
+        \lstick{...} & & & & \rstick{...}\\
+        \lstick{...} & &  & & \rstick{...}\\
+        \lstick{...} & & & & \rstick{...}\\
+        \lstick{...} & & \meter{} & \ctrl{-1} \rstick{...} \\
+        \lstick{...} & &\meter{} & \ctrl{-2} \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+
+\subsection{Corrección del error}
+
+A continuación, se describe el modo en que se actúa sobre los 9 qubits que componen el código de Shor para, en función del síndrome obtenido, realizar la corrección oportuna sobre el estado cuántico. Veamos para cada una de las propuestas cómo se materializará dicha corrección.
+
+\subsubsection{Propuesta 1}
+
+En la propuesta 1, se acaba de calcular el síndrome de error utilizando 8 qubits auxiliares y se ha obtenido la cadena de bits $D_7D_6D_5D_4D_3D_2D_1D_0$ cuyo significado se describe en las tablas XXXXX. Estos qubits se utilizarán como control para actuar sobre los 9 qubits del código. 
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error de amplitud}
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & \targ{} & & & & & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & \targ{} & \targ{} & & & & & & & & & & & & & \rstick{...}\\
+        \lstick{...} & & & & \targ{} & \targ{} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & \targ{} & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & \targ{} & \targ{} & & & & & & & & \rstick{...}\\
+        \lstick{...} & & & & & & & & & \targ{} & \targ{} & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \targ{} & & & & &  \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & & \targ{} & \targ{} & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & & & & \targ{} & \targ{} & \rstick{...} \\
+        \lstick{$D_0$} & \ctrl{-9} & \ctrl{-8} & \ctrl{-8} & \ctrl{-7} \\
+        \lstick{$D_1$} & \ctrl{-1} & \ctrl{-1} & & \ctrl{-1} & \ctrl{-8} \\
+        \lstick{$D_2$} & & & & & & \ctrl{-8} & \ctrl{-7} & \ctrl{-7} & \ctrl{-6} \\
+        \lstick{$D_3$} & & & & & & \ctrl{-1} & \ctrl{-1} & & \ctrl{-1} & \ctrl{-7} \\
+        \lstick{$D_4$} & & & & & & & & & & & \ctrl{-7} & \ctrl{-6} & \ctrl{-6} & \ctrl{-5}\\
+        \lstick{$D_5$} & & & & & & & & & & & \ctrl{-1} & \ctrl{-1} & & \ctrl{-1} & \ctrl{-6} \\
+        \lstick{$D_6$} & & & & & & & & & & & & & & & & \rstick{...} \\
+        \lstick{$D_7$} & & & & & & & & & & & & & & & & \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error de fase }
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & \gate{H} & \targ{} & \gate{H} & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & \gate{H} & \targ{} & \gate{H} & \gate{Z} & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & \gate{H} & \targ{} & \gate{H} & \gate{Z} & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{$D_6$} & & \ctrl{-9} & & \ctrl{-6} & & \ctrl{-6} & & \ctrl{-3}  \\
+        \lstick{$D_7$} &  & \ctrl{-1} & & \ctrl{-1} & & & & \ctrl{-1} & & \ctrl{-4} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+Nótese que la corrección del error de fase es análoga a la corrección del error de amplitud con la diferencia de que se utilizan puertas $Z$ en lugar de puertas $X$. En este sentido, para implementar una puerta $Z$ controlada por dos qubits de control (similar a la puertas Toffoli empleadas para la corrección del error de amplitud), se está empleando la equivalencia $Z=HXH$.
+
+
+
+\subsubsection{Propuesta 2}
+
+La corrección del estado cuántico, en este caso, es idéntica al caso anterior con la salvedad de que, tras corregir el error de amplitud los dos primeros qubits auxiliares serán reinicializados al estado $ | 0 \rangle $ para calcular el síndrome del error de fase. A continuación, utilizando de nuevo los dos primeros qubits, se realiza la corrección del error de fase de la manera mostrada en la figura XXXX.
+
+\subsubsection{Propuesta 3}
+
+De nuevo, la corrección del error se realiza de manera análoga a la propuesta 1. En este caso, se dividirá la corrección del error en 4 etapas: 3 para para la corrección del error de amplitud en cada uno de los 3 bloques de qubits y una para la corrección del error de fase. Entre cada una de estas etapas, los dos qubits auxiliares se reinicializarán y se utilizarán para el cálculo del síndrome correspondiente. 
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error de amplitud en el bloque 1 de qubits}
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & \targ{} & & & & &  \rstick{...} \\
+        \lstick{...} & & \targ{} & \targ{} & & & \rstick{...}\\
+        \lstick{...} & & & & \targ{} & \targ{} & \rstick{...} \\
+        \lstick{...} & & & & & &  \rstick{...} \\
+        \lstick{...} & & & & & &  \rstick{...}\\
+        \lstick{...} & & & & & &  \rstick{...} \\
+        \lstick{...} & & & & & &  \rstick{...} \\
+        \lstick{...} & & & & & &  \rstick{...} \\
+        \lstick{...} & & & & & &  \rstick{...} \\
+        \lstick{$D_0$} & \ctrl{-9} & \ctrl{-8} & \ctrl{-8} & \ctrl{-7} & & \rstick{...} \\
+        \lstick{$D_1$} & \ctrl{-1} & \ctrl{-1} & & \ctrl{-1} & \ctrl{-8} & \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error de amplitud en el bloque 2 de qubits}
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & \rstick{...}\\
+        \lstick{...} & & & & & & \rstick{...} \\
+        \lstick{...} & \targ{} & & & & &  \rstick{...} \\
+        \lstick{...} & & \targ{} & \targ{} & & & \rstick{...}\\
+        \lstick{...} & & & & \targ{} & \targ{} & \rstick{...} \\
+        \lstick{...} & & & & & &   \rstick{...} \\
+        \lstick{...} & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & &  \rstick{...} \\
+        \lstick{$D_2$} & \ctrl{-6} & \ctrl{-5} & \ctrl{-5} & \ctrl{-4} & &\rstick{...} \\
+        \lstick{$D_3$} & \ctrl{-1} & \ctrl{-1} & & \ctrl{-1} & \ctrl{-5} & \rstick{...}
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error de amplitud en el bloque 3 de qubits}
+		\label{fig:fig-1}
+    \begin{quantikz}
+        \lstick{...} & & & & & & \rstick{...} \\
+        \lstick{...}  & & & & & & \rstick{...}\\
+        \lstick{...}  & & & & & & \rstick{...} \\
+        \lstick{...}  & & & & & & \rstick{...} \\
+        \lstick{...}  & & & & & & \rstick{...}\\
+        \lstick{...}  & & & & & & \rstick{...} \\
+        \lstick{...} & \targ{} & & & & &  \rstick{...} \\
+        \lstick{...}  & & \targ{} & \targ{} & & & \rstick{...} \\
+        \lstick{...}  & & & & \targ{} & \targ{} & \rstick{...} \\
+        \lstick{$D_4$} & \ctrl{-3} & \ctrl{-2} & \ctrl{-2} & \ctrl{-1} & & \rstick{...} \\
+        \lstick{$D_5$} & \ctrl{-1} & \ctrl{-1} & & \ctrl{-1} & \ctrl{-2} & \rstick{...} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		\caption{Corrección del error de fase}
+		\label{fig:fig-1}
+
+    \begin{quantikz}
+        \lstick{...} & \gate{H} & \targ{} & \gate{H} & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & \gate{H} & \targ{} & \gate{H} & \gate{Z} & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & \gate{H} & \targ{} & \gate{H} & \gate{Z} & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{...} & & & & & & & & & & & \rstick{...} \\
+        \lstick{$D_6$} & & \ctrl{-9} & & \ctrl{-6} & & \ctrl{-6} & & \ctrl{-3}  \\
+        \lstick{$D_7$} &  & \ctrl{-1} & & \ctrl{-1} & & & & \ctrl{-1} & & \ctrl{-4} \\
+    \end{quantikz}
+\end{center}
+\end{figure}
+
+\subsection{Discretización de errores}
+
+Tal y como se introdujo en la sección 4.2. el código de Shor permite corregir no solo el error de amplitud y el de fase si no también cualquier rotación arbitraria producida sobre un qubit. Veamos, a continuación, como se produce este efecto (Nielsen y Chuang, 2010).
+
+Supongamos que el estado del qubit codificado es $| \psi \rangle = \alpha | 0 \rangle_L + \beta | 1 \rangle_L $ y, por simplificar, que se ha producido un error arbitrario únicamente sobre el primer qubit. Sea el operador ruido $\mathscr{E}$ con elementos $ \left \{ E_i \right \}$. Entonces, tras la acción del ruido, el estado evoluciona a $ \mathscr{E} ( | \psi \rangle \langle \psi |) = \sum_i E_i  | \psi \rangle \langle \psi | E_i^\dagger $. Podemos, sin pérdida de generalidad, estudiar un único término de la suma, así el término $E_i$ puede expandirse en una combinación lineal de los operadores $I, X, Z, Y$ actúando sobre el primer qubit:
+
+$$ E_i = e_{i0}I+ e_{i1}X + e_{i2}Z+ e_i3Y. $$
+
+De este modo, el estado $ E_i | \psi \rangle$ puede escribirse como una superposición cuántica de los estados $| \psi \rangle, X | \psi \rangle, Z | \psi \rangle, Y | \psi \rangle.  $ Por tanto, al medir el síndrome del error, se provoca que dicha superposición colapse a uno de los estados $| \psi \rangle, X | \psi \rangle, Z | \psi \rangle, Y | \psi \rangle$, a partir de los cuales puede recuperarse el estado original aplicando la inversión correcta ( $X, Y$ o $Z$ ). Nótese que $Y=XZ$, es decir, se trata de corregir un error de amplitud y de fase sucesivamente. 
+
+De manera análoga, puede razonarse para el resto de elementos $E_i$. En conclusión, queda demostrado que corrigiendo únicamente un conjunto finito de errores, el código de Shor consigue corregir cualquier error arbitrario que se produzca sobre un qubit. 
