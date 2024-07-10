@@ -8,15 +8,15 @@ En este capítulo se recogen las conclusiones obtenidas después de presentar lo
 
 \item Con el desarrollo de este trabajo se ha comprendido el estado de la técnica de las estrategias que combinan algoritmos de tensor networks y algoritmos cuánticos variacionales.
 
-\item Se ha presentado un nuevo protocolo de pre-optimización, el cual supera a su antecesor. El nuevo protocolo impide caer en estados producto de la base computacional, los cuales representan mínimos locales, evitando posteriormente, que el VQA se quede atrapado. Se sustituyen las puertas cuánticas $SU(4)$ genéricas que deben optimizarse por capas de operadores del algoritmo QAOA, aligerando enormemente el numero de parámetros a optimizar.
+\item Se ha presentado un nuevo protocolo de pre-optimización, el cual supera a su antecesor. El nuevo protocolo impide caer en estados producto de la base computacional, los cuales representan mínimos locales, evitando posteriormente que el VQA se quede atrapado en uno de ellos. Se sustituyen las puertas cuánticas $SU(4)$ genéricas que deben optimizarse por capas de operadores del algoritmo QAOA, aligerando enormemente el numero de parámetros a optimizar.
 
 \item Se comprueba, a traves de simulaciones numéricas, que la magnitud entropía juega un papel fundamental en el rendimiento de los algoritmos cuánticos variacionales.
 
-\item Los resultados expuestos sobre como los estados de Gibbs puros maximizan el rendimiento del algoritmo QAOA son bastante solidos. Se han presentado resultados en un rango amplio de tamaños, usando un problema como el Max Cut, que es NP duro.
+\item Los resultados expuestos sobre como los estados de Gibbs puros maximizan el rendimiento del algoritmo QAOA son bastante solidos. Se han presentado resultados en un rango amplio de tamaños, usando un problema como el Max Cut, que es NP-Duro.
 
 \item Se amplia el conocimiento sobre el algoritmo QAOA. Dentro del estado de la técnica no aparecen los estados de Gibbs, excluyendo el estado Hadamard, como aquellos estados que maximizan el rendimiento del algoritmo. 
 
-\item La pre-optimización permite reducir el uso intensivo que los VQA's hacen de los ordenadores cuánticos. Es una vía que permite que la computación cuántica tenga antes un impacto industrial relevante.
+\item La pre-optimización permite reducir el uso intensivo que los VQA hacen de los ordenadores cuánticos. Es una vía que permite que la computación cuántica tenga antes un impacto industrial relevante.
 
 \item El protocolo de pre-optimización ITEVO-QAOA hace uso de técnicas de tensor networks para la construcción de los estados de Gibbs puros, sin embargo, cualquier otro método que permita la construcción de los estados de Gibbs que pueda ser expresado en un PQC es valido para sustituir al algoritmo MPO Time Evolution.
 
@@ -39,4 +39,4 @@ Presentamos las posibles lineas de trabajo en las cuales se puede utilizar la me
 
 \section{Agradecimientos}
 
-Quiero empezar las palabras de agradecimiento, citando a los tutores \textit{Dr. Arnau Riera} y \textit{Dr. Francisco Costa} que han hecho posible la realización del trabajo de fin de máster que se recoge en este documento. Por otro lado, me gustaría nombrar a  \textbf{Qilimanjaro Quantum Tech} como la empresa que me ha permitido llevar a cabo este proyecto y muy en especial a personas como Jordi, Josep, Pau, Elisabeth y muchas otras personas de Qilimanjaro que han ayudado a que este trabajo tenga la calidad que posee.
+Quiero empezar las palabras de agradecimiento, citando a los tutores \textit{Dr. Arnau Riera} y \textit{Dr. Francisco Costa} que han hecho posible la realización del trabajo de fin de máster que se recoge en este documento. Por otro lado, me gustaría nombrar a  \textbf{Qilimanjaro Quantum Tech} como la empresa que me ha permitido llevar a cabo este proyecto y muy en especial a grandes profesionales como Jordi, Josep, Pau, Eli y muchas otras personas de Qilimanjaro que han ayudado a que este trabajo tenga la calidad que posee.

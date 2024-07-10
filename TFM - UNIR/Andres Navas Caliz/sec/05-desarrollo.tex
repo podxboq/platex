@@ -139,7 +139,7 @@ El protocolo de preprocesado DMRG implementa un algoritmo de traducción de MPS 
 \section{Protocolo de preprocesado ITEVO}
 \label{sub_sec:i_tevo}
 
-El protocolo de preprocesado ITEVO es un algoritmo novedoso, el cual pretende ser una mejora con respecto a sus análogos del estado de la técnica. La mejora conseguida en este nuevo algoritmo de pre-optimización se basa en la hipótesis de trabajo presentada en el apartado \ref{sub_sec:hip_work}, la cual conjetura que los estados de inicialización que maximizan el rendimiento de los VQA's, en concreto el algoritmo QAOA, son los estados de Gibbs puros. \\
+El protocolo de preprocesado ITEVO es un algoritmo novedoso, el cual pretende ser una mejora con respecto a sus análogos del estado de la técnica. La mejora conseguida en este nuevo algoritmo de pre-optimización se basa en la hipótesis de trabajo presentada en el apartado \ref{sub_sec:hip_work}, la cual conjetura que los estados de inicialización que maximizan el rendimiento de los VQA, en concreto el algoritmo QAOA, son los estados de Gibbs puros. \\
 
 El protocolo ITEVO al igual que el protocolo de pre-optimización DMRG, consta de tres partes bien diferenciadas. En un primer paso, se realiza una optimización inicial basada en la construcción de los denominados estados de Gibbs puros, mediante un algoritmo de tensor network, denominado como MPO Time Evolution. Posteriormente estos estados de Gibbs puros, que están contenidos en MPS's, se traducen a \mbox{PQC's} mediante los algoritmos de traducción expuestos en el apartado \ref{sub_sec:mps_to_pqc}. Una vez se ha obtenido el \mbox{PQC}, que representa con alta fidelidad el estado de Gibbs puro generado, se añaden $p$ capas pertenecientes al algoritmo QAOA, con ángulos iniciales cercanos a cero. En un primer paso las capas de operadores añadidos, operador de mezcla y operador de coste, actúan como identidades, no perturbando inicialmente el estado de Gibbs puro generado, debido a sus ángulos de inicialización cercanos a cero. En un ultimo paso, se realiza la optimización por parte del algoritmo QAOA, utilizando el \mbox{PQC} extendido que se ha construido. \\
 
@@ -307,7 +307,7 @@ La dimensión efectiva da cuenta del número de estados de la base que participa
 
 Donde $\rho=\sum_{i} \eta_{i} \ket{i}\bra{i}$ es matriz densidad, siendo $\ket{i}$ los autovectores de $\rho$. Para estados puros, la matriz densidad $\rho$ es idempotente y por tanto la entropía $S(\rho)$ se anula. Así, si el sistema es de dimensión finita, la entropía de coherencia relativa cuantifica la diferencia del sistema con respecto de un estado puro de la base computacional. Por tanto la entropía de coherencia, para el caso de estados puros, indica el grado de superposición de un estado cuántico, siendo un estado propio de la base del Hamiltoniano del sistema aquel que tiene entropía nula. Por otro lado, un estado puro que es combinación lineal uniforme de todos los estados de la base es aquel que posee entropía máxima.\\
 
-Dado que entonces el algoritmo DMRG puede arrojar estados con entropía de coherencia nula o muy baja y donde además son estados que representan mínimos locales de energía, los VQA's empezarán en mínimos de los cuales será difícil escapar. Para evitar este fenómeno, se propone una nueva función de coste, dada por la expresión \ref{eq:new_cost} en base a la cual se busquen los estados $\ket{\psi}$ usados para inicializar los VQA's. 
+Dado que entonces el algoritmo DMRG puede arrojar estados con entropía de coherencia nula o muy baja y donde además son estados que representan mínimos locales de energía, los VQA empezarán en mínimos de los cuales será difícil escapar. Para evitar este fenómeno, se propone una nueva función de coste, dada por la expresión \ref{eq:new_cost} en base a la cual se busquen los estados $\ket{\psi}$ usados para inicializar los VQA. 
 
 \begin{equation}
     f = \bra{\psi}H\ket{\psi} - \alpha S_{d}(\ket{\psi})
@@ -325,7 +325,7 @@ Donde $S_{n}$ es la entropía termodinámica y $T$ la temperatura del sistema te
 
 \newpage
 
-Esta nueva función de coste, dada por la expresión \ref{eq:energy_gibbs}, es la utilizada, en este nuevo protocolo, para la inicialización de los VQA's, a diferencia de la usada por el protocolo DMRG, basaba en la expresión \ref{eq:expected_value}. Se sabe además de física estadística que los estados que minimizan la energía libre de Gibbs son aquellos estados puros que siguen la distribución Boltzman. Matemáticamente los estados que minimizan la función \ref{eq:energy_gibbs} y que denominamos estados de Gibbs puros, se definen por la expresión \ref{eq:gibbs_states}.
+Esta nueva función de coste, dada por la expresión \ref{eq:energy_gibbs}, es la utilizada, en este nuevo protocolo, para la inicialización de los VQA, a diferencia de la usada por el protocolo DMRG, basaba en la expresión \ref{eq:expected_value}. Se sabe además de física estadística que los estados que minimizan la energía libre de Gibbs son aquellos estados puros que siguen la distribución Boltzman. Matemáticamente los estados que minimizan la función \ref{eq:energy_gibbs} y que denominamos estados de Gibbs puros, se definen por la expresión \ref{eq:gibbs_states}.
 
 \begin{equation}
     \ket{\psi(\beta)}=\frac{1}{\sqrt{Z_\beta}}\sum_s e^{-\beta E(s)/2} e^{i\theta_s}\ket{s}
@@ -394,7 +394,7 @@ Bajo de este diagrama, el estado de superposición uniforme, también denominado
 
 \subsection{Algoritmo MPO Time Evolution}
 
-El algoritmo MPO Time Evolution \citep{zaletel}, es el algoritmo de tensor networks encargado de la creación de los estados de Gibbs puros, que serán utilizados en la inicialización de los VQA's.\\
+El algoritmo MPO Time Evolution \citep{zaletel}, es el algoritmo de tensor networks encargado de la creación de los estados de Gibbs puros, que serán utilizados en la inicialización de los VQA.\\
 
 MPO Time Evolution implementa una aproximación del operador $e^{- i \delta t H}$, es decir, el operador evolución temporal para un Hamiltoniano independiente del tiempo. Si se denota, $i \delta t$ como $\delta\tau$, entonces el operador que implementa MPO Time Evolution es $e^{- \delta \tau H}$ el cual es una evolución temporal imaginaria del sistema cuántico. La decisión de utilizar MPO Time Evolution para representar la evolución imaginaria del sistema cuántico reside en principalmente en dos aspectos. En primer lugar, el error introducido en la aproximación es independiente del tamaño del sistema, esto es importante, ya que garantiza el poder utilizar esta metodología para tamaños de problemas arbitrariamente grandes, manteniendo un error constante. En segundo lugar, esta metodología permite implementar la evolución temporal, real o imaginaria, de Hamiltonianos que poseen interacciones no locales. 
 

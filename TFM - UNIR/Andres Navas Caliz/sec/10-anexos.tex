@@ -58,7 +58,7 @@ Tal y como se puede observar en la Figura \ref{fig:r_mps_to_pqc_a}, con un MPS i
     \label{fig:r_mps_to_pqc_a_2}
 \end{figure}
 
-En \ref{fig:r_mps_to_pqc_a_2} se observa como mayor numero de capas no garantiza una mejora en la fidelidad conseguida entre el MPS inicial y el PQC generado.
+En la Figura \ref{fig:r_mps_to_pqc_a_2} se observa como mayor numero de capas no garantiza una mejora en la fidelidad conseguida entre el MPS inicial y el PQC generado.
 
 \subsection{Traducción por optimización}
 
@@ -116,6 +116,39 @@ Dada la forma de la expresión \ref{eq:coeficient_gibbs_log}, si se representa l
 
 Para la Figura \ref{fig:result_gibbs_pb} se puede observar como la pendiente de la recta posee valor $p=-1$, que es la temperatura esperada del estado de Gibbs.
 
+
+\section{Comparativa estados producto y estados Gibbs}
+\label{apendix:product_vs_hadamard}
+
+Presentamos de una forma no exhaustiva el código utilizado para poder realizar una comparativa de rendimiento entre el algoritmo QAOA inicializado con estados producto y el algoritmo QAOA inicializado con estados de Gibbs.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.6]{plt/a08-codigo_producto_vs_gibbs.png}
+    \caption{Bloque de código para la comparativa de rendimiento entre estados producto y estados de Gibbs}
+    \label{fig:code_gibbs_vs_producto}
+\end{figure}
+
+\newpage
+
+En la Figura \ref{fig:code_gibbs_vs_producto} se observa como en primer lugar se genera un grafo aleatorio del problema Max Cut mediante la función de \textit{nx.erdos-renyi-graph()}. En segundo lugar, la función denominada \textit{expectrum-hamiltonian()} toma como entrada el grafo anterior generado y calcula el Hamiltoniano asociado a ese problema en concreto. Una vez a calculado el Hamiltoniano, mediante el procedimiento de diagonalización obtiene todos los autovalores $E_i$ y los autovectores $\ket{i}$ del Hamiltoniano. Con los autovalores y autovectores calculados, podemos construir de forma analítica los estados de Gibbs, ya que es mas eficiente para problemas pequeños que usar el algoritmo MPO Time Evolution. Además el estado de Gibbs creado posee una temperatura especifica que ha sido fijada en un primer momento. Después de crear el estado de Gibbs, se calcula su energía mediante la función \textit{expected-value()}. Una vez se sabe cual es la energía del estado de Gibbs creado, utilizamos la función \textit{create-local-state()} para seleccionar de los estados propios del Hamiltoniano $\ket{i}$ cual es el que posee una energía mas cercana al estado de Gibbs creado. \\
+
+Continuando en la Figura \ref{fig:code_gibbs_vs_producto_2}, una vez se tiene el estado de Gibbs construido y seleccionando el estado producto del Hamiltoniano mas indicado, se construyen los operadores \textit{hamiltonian} y \textit{mixer-hamiltonian} a partir del grafo. Estos operadores corresponden con los operadores problema y de mezcla mostrados en la expresión \ref{eq:pqc_qaoa}.
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.6]{plt/a09-codigo_producto_vs_gibbs_2.png}
+    \caption{Segundo bloque de código para la comparativa de rendimiento entre estados producto y estados de Gibbs}
+    \label{fig:code_gibbs_vs_producto_2}
+\end{figure}
+
+Teniendo ya los dos estados que se usarán como estado iniciales y construido el algoritmo QAOA mediante la función \textit{models.QAOA} se pueden realizar las simulaciones del algoritmo QAOA. Para ello se ejecuta el algoritmo QAOA usando los mismos parámetros, mismos ángulos iniciales y optimizador clásico. El método \textit{qaoa.minimize()} ejecuta el algoritmo QAOA con el estado inicial que se le ha proporcionado. En ultimo lugar se guardan los datos en un json para posteriormente realizar un análisis estadístico. \\
+
+Para el resto de figuras del apartado \ref{sub_sec:result_gibbs_states} se ha seguido una estructura de código muy similar, cambiando solo ciertas funciones. Por ejemplo, para el caso de realizar una comparativa entre estados de Gibbs y estados de pseudoGibbs, la función \textit{create-local-state()} se sustituye por la función que crea los estados de pseudoGibbs utilizando una distribución gaussiana.
+
+
+
 \section{Análisis del campo de energías}
 \label{apendix:energy_landscape}
 
@@ -127,11 +160,12 @@ Una forma de intentar descubrir por que los estados de Gibbs maximizan el rendim
     \label{eq:pqc_qaoa_one_layer}
 \end{equation}
 
-Dado el QAOA formado por una sola capa, a traves del operador de la expresión \ref{eq:pqc_qaoa_one_layer}, que posee solo dos parámetros, podemos visualizar directamente el campo de energías. En la Figura \ref{fig:landscape_energy} se muestra cual es el campo de energías que genera el algoritmo QAOA de una sola capa para un problema concreto de Max Cut de $N=7$. El estado de Gibbs y el estado de pseudoGibbs poseen la misma energía pero el estado de pseudoGibbs contiene ligeramente menor entropía. 
+Dado el QAOA formado por una sola capa, a traves del operador de la expresión \ref{eq:pqc_qaoa_one_layer}, que posee solo dos parámetros, podemos visualizar directamente el campo de energías. En la Figura \ref{fig:landscape_energy} se muestra cual es el campo de energías que genera el algoritmo QAOA de una sola capa para un problema concreto de Max Cut de $N=7$. El estado de Gibbs y el estado de pseudoGibbs poseen la misma energía pero el estado de pseudoGibbs contiene ligeramente menor entropía. \\
 
-\newpage
 
 Los ejes $x$ e $y$ de ambos gráficos hacen referencia al valor que toman los parámetros $\alpha$ y $\beta$. El código de colores hace referencia al valor esperado energía que se obtiene cuando se ejecuta el QAOA con los valores de $\alpha$ y $\beta$ correspondientes.
+
+\newpage
 
 \begin{figure}[!h]
     \centering

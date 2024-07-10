@@ -395,7 +395,7 @@ Donde los estados $\ket{i_1}\otimes\ket{i_2}\otimes...\otimes \ket{i_N}$ son los
 En la Figura \ref{fig:orus} cada una de las patas del tensor $C$ representa cada uno de los índices del tensor. Sin embargo, la dimesionalidad del tensor $C$ es enorme para sistemas cuánticos de muchos qubits o partículas, por lo que es necesario descomponer el tensor $C$ en terminos de tensores mas pequeños para poder trabajar de forma eficiente con el. Formalmente y siguiendo la regla de índices de Einstein \citep{ahlander}, un tensor $C$ puede expresarse como producto de varios tensores de menor rango, menor dimesionalidad, tal y como se muestra en la expresión \ref{eq:contracction}.
 
 \begin{equation}
-    C_{i j} = \sum_{\alpha} A_{i  \alpha} B_{j \alpha} = A_{i  \alpha} B^{j \alpha}
+    C_{i j} = \sum_{\alpha} A_{i  \alpha} B_{\alpha j} = A_{i  \alpha} B^{\alpha j}
     \label{eq:contracction}
 \end{equation}
 
