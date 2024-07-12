@@ -4,15 +4,16 @@
 \usepackage{float}
 \usepackage{courier}
 \usepackage{listings}
-\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}}
-
+\usepackage{amsmath}
+\usepackage{setspace}
+\lstset{basicstyle=\ttfamily\scriptsize, breaklines=true, lineskip=-1pt,frame=single, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}}
 %---------------------------
 %título del trabajo y autor
 %---------------------------
 \title{ Algoritmos cuánticos para optimización de rutas}
 \titulacion{ Máster en Computación Cuántica}
 \author{ Gustavo Recalde Vásquez}
-\date{ 19 de junio de 2024}
+\date{ 10 de julio de 2024}
 \director{ Francisco Costa Cano}
 \nombreciudad{ Quito - Ecuador}
 
@@ -255,7 +256,7 @@ Con la llegada de la computación cuántica, han surgido nuevas técnicas que pr
 \begin{itemize}
 	\item \textbf{Quantum Annealing (QA):} Un método de optimización que utiliza fluctuaciones cuánticas para encontrar el mínimo global de una función de costo. Es particularmente efectivo para resolver problemas de optimización combinatoria, como el VRP y la carga de contenedores \cite{phillipson2024}.
 	\item \textbf{Quantum Approximate Optimization Algorithm (QAOA):} Un algoritmo híbrido que combina computación cuántica y clásica para aproximar soluciones a problemas de optimización. Ha mostrado ser prometedor en la optimización de rutas y otros problemas logísticos \cite{farhiQuantum}.
-    \item \textbf{Quantum Walks Algorithm (QW):} Los paseos cuantciso son una generalización cuántica de los paseos aleatorios clásicos, donde la probabilidad de transición entre estados se reemplaza por amplitudes de probabilidad. Estos paseos cuánticos han mostrado ventajas significativas en la búsqueda y optimización de grafos, proporcionando una mayor velocidad y eficiencia en la exploración de grandes espacios de soluciones. Por ejemplo en el contexto del problema del viajante de comercio (TSP), los paseos cuánticos permiten una exploración más rápida y eficiente de las rutas posibles, mejorando la probabilidad de encontrar soluciones óptimas. \cite{kempe2003}
+    \item \textbf{Quantum Walks Algorithm (QW):} Los paseos cuánticos son una generalización cuántica de los paseos aleatorios clásicos, donde la probabilidad de transición entre estados se reemplaza por amplitudes de probabilidad. Estos paseos cuánticos han mostrado ventajas significativas en la búsqueda y optimización de grafos, proporcionando una mayor velocidad y eficiencia en la exploración de grandes espacios de soluciones. Por ejemplo en el contexto del problema del viajante de comercio (TSP), los paseos cuánticos permiten una exploración más rápida y eficiente de las rutas posibles, mejorando la probabilidad de encontrar soluciones óptimas \cite{kempe2003}.
  
 \end{itemize}
 
@@ -487,7 +488,7 @@ La implementación de paseos cuánticos puede realizarse utilizando la plataform
 
 El problema que abordamos en este estudio es la optimización de rutas de entrega para una flota de camiones. Este problema, como vimos, es esencialmente un problema de ruteo de vehículos (VRP), donde el objetivo principal es determinar las rutas más eficientes para que un conjunto de camiones entregue productos a varios clientes. Este problema se puede modelar como un problema del viajante de comercio (TSP) cuando se considera un único camión, y se extiende a múltiples camiones en el caso del VRP.
 
-El TSP es un problema de optimización combinatoria en el que se busca encontrar la ruta más corta que visite un conjunto de ciudades (clientes) exactamente una vez y regrese al punto de partida. En el contexto de nuestro problema, cada "ciudad" representa un cliente, y la "ruta más corta" es la secuencia de entregas que minimiza la distancia total recorrida por un camión.
+El TSP es un problema de optimización combinatoria en el que se busca encontrar la ruta más corta que visite un conjunto de ciudades (clientes) exactamente una vez y regrese al punto de partida. En el contexto de nuestro problema, cada ``ciudad'' representa un cliente, y la ``ruta más corta'' es la secuencia de entregas que minimiza la distancia total recorrida por un camión.
 
 Para resolver este problema de manera efectiva, hemos implementado y comparado varios algoritmos de optimización tanto clásicos como cuánticos. Los algoritmos utilizados incluyen:
 
@@ -543,11 +544,12 @@ Para abordar el problema de múltiples camiones, utilizamos el algoritmo de k-me
     \item Optimización de Rutas: Dentro de cada cluster, optimizamos la ruta usando los algoritmos mencionados (Greedy, Simulated Annealing, Quantum Annealing, QAOA, y Quantum Walks) y aplicamos 2-opt para refinar las rutas y reducir la distancia total recorrida.
 \end{itemize}
 
-Este enfoque permite una distribución inicial equilibrada de los clientes entre los camiones, mejorando así la eficiencia en la planificación y ejecución de las rutas de entrega.
+Este enfoque permite una distribución inicial equilibrada de los clientes entre los camiones, mejorando así la eficiencia en la planificación y ejecución de las rutas de entrega.\\
 
 \textbf{Pseudocódigo:}
 
 \begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Kmeans, fontupper=\ttfamily]
+\begin{spacing}{0.9}
 \begin{enumerate}
     \item Aplicar K-means para agrupar clientes en `num\_camiones` clústeres.
     \item Para cada camión:
@@ -558,6 +560,7 @@ Este enfoque permite una distribución inicial equilibrada de los clientes entre
     \end{itemize}
     \item Calcular la distancia total recorrida por todos los camiones.
 \end{enumerate}
+\end{spacing}
 \end{tcolorbox}
 
 \section{Implementación de Algoritmos Clásicos}
@@ -574,6 +577,7 @@ Este método permite mejorar iterativamente la calidad de las soluciones inicial
 \end{itemize}
 
 \begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo 2-opt, fontupper=\ttfamily]
+\begin{spacing}{0.9}
 	\begin{enumerate}
 		\item Inicializar la mejor ruta del algoritmo principal
 		\item Repetir
@@ -592,6 +596,7 @@ Este método permite mejorar iterativamente la calidad de las soluciones inicial
 			\item Devolver la mejor ruta
 		\end{itemize}
 	\end{enumerate}
+ \end{spacing}
 \end{tcolorbox}
 
 
@@ -599,8 +604,8 @@ Este método permite mejorar iterativamente la calidad de las soluciones inicial
 
 Para adaptar el algoritmo Greedy a nuestro problema, comenzamos en el nodo de inicio (el depósito) y seleccionamos iterativamente el nodo más cercano no visitado hasta que todos los nodos hayan sido visitados. Finalmente, volvemos al nodo de inicio para completar la ruta. Este enfoque es simple pero puede resultar en soluciones subóptimas.
 
-\textbf{Pseudocódigo:}
 \begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo Greedy, fontupper=\ttfamily]
+\begin{spacing}{0.9}
 \begin{enumerate}
     \item Iniciar en un nodo aleatorio.
     \item Mientras no se hayan visitado todos los nodos hacer:
@@ -612,6 +617,7 @@ Para adaptar el algoritmo Greedy a nuestro problema, comenzamos en el nodo de in
     \item Añadir el nodo inicial al final de la ruta para completar el ciclo.
     \item Devolver la ruta
 \end{enumerate}
+\end{spacing}
 \end{tcolorbox}
 
 
@@ -620,7 +626,8 @@ Para adaptar el algoritmo Greedy a nuestro problema, comenzamos en el nodo de in
 Para adaptar Simulated Annealing a nuestro problema, inicialmente generamos una solución aleatoria y evaluamos su longitud. Luego, iterativamente generamos nuevas soluciones mediante permutaciones aleatorias de la ruta actual y las evaluamos. Aceptamos nuevas soluciones basadas en un criterio de probabilidad que disminuye con el tiempo (temperatura). Este proceso permite escapar de óptimos locales y encontrar soluciones cercanas al óptimo global.
 
 
-\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo de Recocido Simulado (SA), fontupper=\ttfamily]
+\begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Algoritmo Simulated Annealing (SA), fontupper=\ttfamily]
+\begin{spacing}{0.9}
 \begin{enumerate}
     \item Inicializar la temperatura y la solución actual.
     \item Mientras la temperatura no sea mínima:
@@ -632,6 +639,7 @@ Para adaptar Simulated Annealing a nuestro problema, inicialmente generamos una 
     \end{enumerate}
     \item Retornar la mejor solución encontrada.
 \end{enumerate}
+\end{spacing}
 \end{tcolorbox}
 
 
@@ -644,12 +652,14 @@ En nuestro problema, Quantum Annealing se usa para resolver la formulación QUBO
 
 \textbf{Pseudocódigo:}
 \begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Quantum Annealing (QA), fontupper=\ttfamily]
+\begin{spacing}{0.9}
 \begin{enumerate}
     \item Definir el problema en términos de QUBO.
     \item Preparar el sistema en el estado fundamental de \(H_0\).
     \item Evolucionar el sistema hacia \(H_1\) de manera adiabática.
     \item Medir el estado final para obtener la solución óptima.
 \end{enumerate}
+\end{spacing}
 \end{tcolorbox}
 
 \subsection{Algoritmo QAOA}
@@ -659,12 +669,14 @@ Para QAOA, preparamos un estado inicial de superposición uniforme y aplicamos s
 
 \textbf{Pseudocódigo:}
 \begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Quantum Approximate Optimization Algorithm (QAOA), fontupper=\ttfamily]
+\begin{spacing}{0.9}
 \begin{enumerate}
     \item Preparar el estado inicial en superposición.
     \item Aplicar operadores \(U(H_B, \gamma)\) y \(U(H_C, \beta)\) secuencialmente.
     \item Optimizar \(\gamma\) y \(\beta\) mediante un algoritmo clásico.
     \item Medir el estado final para obtener la solución aproximada.
 \end{enumerate}
+\end{spacing}
 \end{tcolorbox}
 
 
@@ -672,12 +684,14 @@ Para QAOA, preparamos un estado inicial de superposición uniforme y aplicamos s
 En el caso de Quantum Walks, inicializamos el estado cuántico del sistema y aplicamos un operador de evolución repetidamente. Este enfoque permite explorar el espacio de soluciones de manera eficiente. La medición del estado final nos da la ruta óptima.
 
 \begin{tcolorbox}[colback=white!95!blue, colframe=blue!50!black, title=Quantum Walks (QW), fontupper=\ttfamily]
+\begin{spacing}{0.9}
 \begin{enumerate}
     \item Inicializar el estado cuántico del sistema.
     \item Definir las operaciones de moneda y shift.
     \item Aplicar repetidamente las operaciones de moneda y shift.
     \item Medir el estado final para obtener la solución óptima.
 \end{enumerate}
+\end{spacing}
 \end{tcolorbox}
 
 
@@ -685,7 +699,43 @@ En el caso de Quantum Walks, inicializamos el estado cuántico del sistema y apl
 
 En este capítulo, se presentan y analizan los resultados obtenidos al aplicar tanto algoritmos clásicos como cuánticos para la optimización de rutas analizados. Los algoritmos evaluados incluyen Greedy, Recocido Simulado (Simulated Annealing), Quantum Annealing, Quantum Approximate Optimization Algorithm (QAOA) y Quantum Walks. Además, se ha utilizado el algoritmo de k-means para distribuir las rutas entre los camiones y el algoritmo 2-opt para optimizar localmente las soluciones generadas.
 
+
+\section{Recursos Computacionales Utilizados}
+
+Para la ejecución y validación de los algoritmos de optimización cuántica presentados en este trabajo, se utilizaron los siguientes recursos computacionales:
+
+\subsection{Google Colab}
+
+El código fue desarrollado y ejecutado en la plataforma Google Colab, utilizando un entorno Python 3. La configuración específica del hardware del computador donde feue ejecutado Google Colab incluye:
+
+\begin{itemize}
+    \item \textbf{Acelerador de Hardware:} CPU
+    \item \textbf{Procesador:} Intel(R) Core(TM) i5-8300H CPU \@ 2.30GHz 2.30 GHz
+    \item \textbf{Memoria RAM:} 8GB
+\end{itemize}
+
+Google Colab proporciona una infraestructura accesible y conveniente para la ejecución de código Python, permitiendo además el uso de bibliotecas de Qiskit y d-wave para simulaciones cuánticas.
+
+\subsection{Plataforma D-Wave}
+
+Para la implementación y pruebas de los algoritmos en un entorno cuántico real, se utilizó una cuenta de prueba en la plataforma D-Wave. Específicamente, se emplearon los solvers \texttt{Advantage\_system4.1} y \texttt{Advantage\_system5.4}, que son algunos de los solvers más avanzados ofrecidos por D-Wave. Los detalles del hardware utilizado en D-Wave al momento de las pruebas fueorn:
+
+\begin{itemize}
+    \item \textbf{Sistema Cuántico:} Advantage, quinta generación.
+    \item \textbf{Qubits:} Más de 5000.
+    \item \textbf{Conectividad:} 15 vías (topología Pegasus).
+    \item \textbf{Rendimiento:} Hasta 30 veces más rápido que el D-Wave 2000Q.
+    \item \textbf{Acceso:} A través de la plataforma Leap en la nube.
+    \item \textbf{Plan de Prueba:} 1 minuto de tiempo de QPU o 20 minutos de tiempo de solucionador híbrido por mes.
+\end{itemize}
+
+
+
+Esta combinación de recursos permitió una evaluación completa de los algoritmos en simulaciones clásicas y entornos cuánticos reales, proporcionando una visión integral del rendimiento y la viabilidad de las soluciones propuestas.
+
+
 \section{Metodología de Evaluación}
+
 
 \subsection{Métricas de Evaluación}
 
@@ -694,7 +744,7 @@ Las métricas principales utilizadas para la evaluación de los algoritmos fuero
 \begin{itemize}
     \item \textbf{Distancia Total Recorrida (km):} La suma de las distancias recorridas por todos los camiones en sus rutas de entrega.
     \item \textbf{Tiempo de Ejecución del Algoritmo (ms):} El tiempo necesario para que el algoritmo genere una solución.
-    \item \textbf{Tiempo de Ejecución del Código (s):} El tiempo total que incluye la ejecución del código en las plataformas cuánticas y clásicas unto con las metricas y graficos generados dentr del codigo.
+    \item \textbf{Tiempo de Ejecución del Código (s):} El tiempo total que incluye la ejecución del código en las plataformas cuánticas y clásicas junto con las métricas y gráficos generados dentro del codigo.
 \end{itemize}
 
 \subsection{Configuración Experimental}
@@ -713,11 +763,11 @@ La Tabla \ref{tab:comparison} muestra una comparación de los resultados obtenid
 \hline
 \textbf{Algoritmo} & \textbf{Distancia} & \multicolumn{2}{c|}{\textbf{Tiempos de ejecución}} \\ \cline{3-4}
 & \textbf{(km)} & \textbf{Algoritmo (ms)} & \textbf{Código (s)} \\ \hline
-Greedy & 766,73 & 258,6 & 107 \\ \hline
-Simulated Annealing & 765,24 & 315,8 & 45 \\ \hline
-Quantum Annealing & 767,83 & 55,5 & 83,88 \\ \hline
-QAOA & 767,83 & 52,4 & 81,8 \\ \hline
-Quantum Walks & 767,83 & 48,5 & 76,3 \\ \hline
+Greedy & 777,88 & 88,66 & 35 \\ \hline
+Simulated Annealing & 774,54 & 243,67 & 52 \\ \hline
+Quantum Annealing & 776,83 & 23,00 & 54,39 \\ \hline
+QAOA & 776,83 & 52,4 & 54,27 \\ \hline
+Quantum Walks & 776,83 & 22,94 & 75,6 \\ \hline
 \end{tabular}
 \caption{Comparación de Algoritmos}
 \label{tab:comparison}
@@ -725,11 +775,42 @@ Quantum Walks & 767,83 & 48,5 & 76,3 \\ \hline
 
 \subsection{Análisis de Distancias Recorridas}
 
-Los resultados indican que el algoritmo de Recocido Simulado (Simulated Annealing) logró la menor distancia total recorrida (765,24 km), seguido de cerca por el algoritmo Greedy (766,73 km). Los algoritmos cuánticos mostraron distancias recorridas similares (767,83 km), lo cual demuestra su capacidad para generar soluciones competitivas.
+Los resultados indican que el algoritmo de Recocido Simulado (Simulated Annealing) logró la menor distancia total recorrida (774,54 km). Los algoritmos cuánticos mostraron distancias recorridas similares (767,83 km), lo cual demuestra su capacidad para generar soluciones competitivas.
 
 \subsection{Análisis de Tiempos de Ejecución}
 
-En términos de tiempos de ejecución del algoritmo, los algoritmos cuánticos fueron significativamente más rápidos que los clásicos. Quantum Walks tuvo el menor tiempo de ejecución del algoritmo (48,5 ms), seguido de QAOA (52,4 ms) y Quantum Annealing (55,5 ms). Esto resalta la eficiencia computacional de los algoritmos cuánticos en comparación con sus contrapartes clásicas.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|>{\raggedright}m{4.5cm}|c|c|c|}
+\hline
+\textbf{Time} & \textbf{QA} & \textbf{QAOA} & \textbf{QW} \\
+\hline
+QPU SAMPLING TIME & 7.24 ms & 8.06 ms & 7.18 ms \\
+\hline
+QPU ANNEAL TIME PER SAMPLE & 20.0 µs & 20.0 µs & 20.0 µs \\
+\hline
+QPU READOUT TIME PER SAMPLE & 31.82 µs & 39.98 µs & 31.18 µs \\
+\hline
+QPU DELAY TIME PER SAMPLE & 20.58 µs & 20.58 µs & 20.58 µs \\
+\hline
+QPU ACCESS OVERHEAD TIME & 946.04 µs & 1.08 ms & 973.84 µs \\
+\hline
+QPU PROGRAMMING TIME & 15.76 ms & 15.76 ms & 15.76 ms \\
+\hline
+POST PROCESSING OVERHEAD TIME & 1.0 µs & 1.0 µs & 80.0 µs \\
+\hline
+TOTAL POST PROCESSING TIME & 1.0 µs & 1.0 µs & 80.0 µs \\
+\hline
+\makecell{\textbf{QPU ACCESS TIME}} & \makecell{\textbf{23.00 ms}} & \makecell{\textbf{23.81 ms}} & \makecell{\textbf{22.94 ms}} \\
+\hline
+\end{tabular}
+\caption{Comparación de tiempos de tres algoritmos cuánticos.}
+\label{tabla:timing}
+\end{table}
+
+
+En términos de tiempos de ejecución del algoritmo, los algoritmos cuánticos fueron significativamente más rápidos que los clásicos. Quantum Walks tuvo el menor tiempo de ejecución del algoritmo (22.94 ms), seguido de Quantum Annealing (23,00 ms) y QAOA (23,81 ms). Esto resalta la eficiencia computacional de los algoritmos cuánticos en comparación con sus contrapartes clásicas.
+
 
 \subsection{Análisis de Eficiencia en la Computación Cuántica}
 
@@ -743,10 +824,18 @@ La Figura \ref{fig:solucionSA2opt} muestra las rutas generadas por el algoritmo 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\linewidth]{solucionSA2opt.png}
+\includegraphics[width=1\linewidth]{SA.png}
 \caption{Rutas con Simulated Annealing optimizado con 2-opt y k-means}
 \label{fig:solucionSA2opt}
 \end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{tablaSA.png}
+\caption{Rutas con Simulated Annealing optimizado con 2-opt y k-means}
+\label{fig:tablaSA}
+\end{figure}
+
 
 \subsection{Solución Óptima Cuántica}
 
@@ -754,27 +843,17 @@ La Figura \ref{fig:solucionQW2opt} muestra las rutas generadas por el algoritmo 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.1\linewidth]{solucionQW2opt.png}
+\includegraphics[width=0.9\linewidth]{QW.png}
 \caption{Rutas con Quantum Walks optimizado con 2-opt y k-means}
 \label{fig:solucionQW2opt}
 \end{figure}
 
-\section{Conclusiones}
-
-\subsection{Rendimiento de los Algoritmos Cuánticos}
-
-Los algoritmos cuánticos demostraron ser eficientes en términos de tiempo de ejecución del algoritmo, logrando tiempos significativamente menores que los algoritmos clásicos. Sin embargo, la distancia total recorrida fue ligeramente mayor en comparación con los mejores algoritmos clásicos, lo que sugiere que los algoritmos cuánticos aún tienen margen de mejora en términos de optimización de rutas.
-
-\subsection{Viabilidad Técnica y Económica}
-
-La implementación de soluciones cuánticas en la logística de transporte es técnicamente viable y muestra una promesa significativa en términos de eficiencia computacional. No obstante, la latencia de comunicación con el hardware cuántico y los costos asociados a su uso deben considerarse cuidadosamente para evaluar la viabilidad económica.
-
-\subsection{Recomendaciones para Futuros Trabajos}
-
-Se recomienda continuar explorando y refinando los algoritmos cuánticos para mejorar su rendimiento en términos de distancia recorrida. Además, es importante investigar formas de reducir la latencia de comunicación con el hardware cuántico y optimizar los tiempos de ejecución del código. La integración de algoritmos cuánticos con técnicas de aprendizaje automático podría ofrecer mejoras adicionales en la optimización de rutas y carga en el contexto de la logística de transporte.
-
-
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{TablaQW.png}
+\caption{Rutas con Quantum Walks optimizado con 2-opt y k-means}
+\label{fig:tablaQW}
+\end{figure}
 
 \chapter{Conclusiones y Trabajo Futuro}
 
@@ -784,11 +863,11 @@ El presente estudio abordó el desarrollo y aplicación de algoritmos cuánticos
 
 \subsection{Rendimiento de Algoritmos Clásicos y Cuánticos}
 
-Los resultados mostraron que los algoritmos cuánticos pueden ofrecer tiempos de ejecución significativamente menores en comparación con los algoritmos clásicos. En particular, el algoritmo Quantum Walks demostró ser el más eficiente en términos de tiempo de ejecución del algoritmo (48,5 ms), seguido de cerca por QAOA (52,4 ms) y Quantum Annealing (55,5 ms). Estos tiempos son considerablemente menores que los obtenidos por los algoritmos clásicos Greedy y Simulated Annealing, que registraron 258,6 ms y 315,8 ms respectivamente (ver Tabla \ref{tab:comparison}).
+Los resultados mostraron que los algoritmos cuánticos pueden ofrecer tiempos de ejecución significativamente menores en comparación con los algoritmos clásicos. En particular, el algoritmo Quantum Walks demostró ser el más eficiente en términos de tiempo de ejecución del algoritmo (22,94 ms), seguido de cerca por Quantum Annealing (23,0 ms) y QAOA (23,81 ms). Estos tiempos son considerablemente menores que los obtenidos por los algoritmos clásicos Greedy y Simulated Annealing, que registraron 88,66 ms y 243,67 ms respectivamente (ver Tabla \ref{tab:comparison}).
 
 \subsection{Eficiencia en la Distancia Recorrida}
 
-En términos de distancia total recorrida, los algoritmos clásicos mostraron un mejor rendimiento. El Recocido Simulado (Simulated Annealing) logró la menor distancia total recorrida (765,24 km), seguido por el algoritmo Greedy (766,73 km). Los algoritmos cuánticos presentaron distancias recorridas similares (767,83 km), lo que indica que aún hay margen de mejora para estos algoritmos en términos de optimización de rutas.
+En términos de distancia total recorrida, los algoritmos clásicos mostraron un mejor rendimiento. El Recocido Simulado (Simulated Annealing) logró la menor distancia total recorrida (774,54 km). Los algoritmos cuánticos presentaron distancias recorridas similares (776,83 km), lo que indica que aún hay margen de mejora para estos algoritmos en términos de optimización de rutas.
 
 \subsection{Viabilidad Técnica y Económica}
 
@@ -1219,24 +1298,5 @@ for route in routes:
                     route = new_route
                     improvement = True
 \end{lstlisting}
-
-
-\section{Mejor resultado de algortimos Clásico y Cuántico}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=1\linewidth]{solucionSA2opt.png}
-    \caption{Rutas con SA optimizado con 2-opt y K-means}
-    \label{fig:enter-label}
-\end{figure}
-
-
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1.1\linewidth]{solucionQW2opt.png}
-    \caption{Rutas con QW optimizado con 2-opt y K-means}
-    \label{fig:enter-label}
-\end{figure}
 
 \end{document}
